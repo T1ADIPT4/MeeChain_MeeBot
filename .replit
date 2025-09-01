@@ -1,9 +1,10 @@
-modules = ["nodejs-20", "web", "postgresql-16"]
+modules = ["nodejs-20", "postgresql-16", "web"]
 run = "npm run dev"
 hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
 channel = "stable-24_05"
+packages = ["uwhoisd", "run"]
 
 [deployment]
 deploymentTarget = "autoscale"
@@ -18,7 +19,7 @@ externalPort = 80
 PORT = "5000"
 
 [workflows]
-runButton = "Project"
+runButton = "Start application"
 
 [[workflows.workflow]]
 name = "Project"
@@ -35,8 +36,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm run dev"
-waitForPort = 5000
+args = "run npm dev"
 
 [agent]
-integrations = ["javascript_mem_db==1.0.0", "javascript_log_in_with_replit==1.0.0"]
+integrations = ["javascript_database==1.0.0", "javascript_log_in_with_replit==1.0.0"]
