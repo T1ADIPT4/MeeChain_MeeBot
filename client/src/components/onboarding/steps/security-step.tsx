@@ -71,8 +71,10 @@ export function SecurityStep({ onNext, onPrev }: SecurityStepProps) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       
+      const data = await response.json();
+      
       setPinSet(true);
-      updateOnboardingData({ pinSet: true });
+      updateOnboardingData({ pinSet: true, pinHash: data.pinHash });
       toast({
         title: "ตั้งรหัส PIN สำเร็จ",
         description: "รหัส PIN ของคุณได้รับการตั้งค่าเรียบร้อยแล้ว",

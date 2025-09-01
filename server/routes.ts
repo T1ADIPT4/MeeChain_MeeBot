@@ -97,6 +97,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.json({ wallet: existingWallet });
       }
 
+      // Get security settings from onboarding progress
+      const progress = await storage.getOnboardingProgress(userId);
+      const completedSteps = (progress?.completedSteps as string[]) || [];
+      const hasPinStep = completedSteps.includes("pin");
+      const hasBiometricStep = completedSteps.includes("biometric");
+
       // Generate a mock wallet address (in real implementation, this would call smart contract)
       const address = `0x${crypto.randomBytes(20).toString('hex')}`;
       
@@ -104,8 +110,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         userId,
         address,
         type: "smart",
-        biometricEnabled: biometricEnabled || false,
-        pinHash,
+        biometricEnabled: biometricEnabled || hasBiometricStep,
+        pinHash: pinHash || (hasPinStep ? "temp_pin_hash" : null),
       });
       
       const wallet = await storage.createWallet(walletData);
@@ -144,13 +150,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Hash the PIN (in real implementation, use proper bcrypt)
       const pinHash = crypto.createHash('sha256').update(pin).digest('hex');
       
+      // Try to update existing wallet, or store PIN in onboarding progress
       const wallet = await storage.getWalletByUserId(userId);
-      if (!wallet) {
-        return res.status(404).json({ message: "Wallet not found" });
+      if (wallet) {
+        await storage.updateWallet(wallet.id, { pinHash });
+      } else {
+        // Store PIN hash in onboarding progress for later use
+        const progress = await storage.getOnboardingProgress(userId);
+        if (progress) {
+          await storage.updateOnboardingProgress(userId, { 
+            completedSteps: [...(progress.completedSteps as string[] || []), "pin"],
+          });
+        }
       }
-
-      await storage.updateWallet(wallet.id, { pinHash });
-      res.json({ success: true });
+      
+      res.json({ success: true, pinHash });
     } catch (error) {
       console.error("Set PIN error:", error);
       res.status(500).json({ message: "Failed to set PIN" });
@@ -165,12 +179,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "User ID is required" });
       }
 
+      // Try to update existing wallet, or store biometric setting in onboarding progress
       const wallet = await storage.getWalletByUserId(userId);
-      if (!wallet) {
-        return res.status(404).json({ message: "Wallet not found" });
+      if (wallet) {
+        await storage.updateWallet(wallet.id, { biometricEnabled: true });
+      } else {
+        // Store biometric setting in onboarding progress for later use
+        const progress = await storage.getOnboardingProgress(userId);
+        if (progress) {
+          await storage.updateOnboardingProgress(userId, { 
+            completedSteps: [...(progress.completedSteps as string[] || []), "biometric"],
+          });
+        }
       }
 
-      await storage.updateWallet(wallet.id, { biometricEnabled: true });
       res.json({ success: true });
     } catch (error) {
       console.error("Enable biometric error:", error);

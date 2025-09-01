@@ -31,7 +31,7 @@ export function WalletStep({ onNext, onPrev }: WalletStepProps) {
       const response = await apiRequest("POST", "/api/wallet/create", {
         userId: onboardingData.userId,
         biometricEnabled: onboardingData.biometricEnabled,
-        pinHash: onboardingData.pinSet ? "hashed_pin" : null,
+        pinHash: onboardingData.pinHash || null,
       });
       
       if (!response.ok) {
