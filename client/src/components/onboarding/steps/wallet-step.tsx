@@ -17,6 +17,15 @@ export function WalletStep({ onNext, onPrev }: WalletStepProps) {
   const { onboardingData, updateOnboardingData } = useOnboarding();
 
   const handleCreateWallet = async () => {
+    if (!onboardingData.userId) {
+      toast({
+        title: "เกิดข้อผิดพลาด",
+        description: "กรุณาเข้าสู่ระบบก่อนสร้าง Wallet",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsCreating(true);
     try {
       const response = await apiRequest("POST", "/api/wallet/create", {
@@ -24,6 +33,10 @@ export function WalletStep({ onNext, onPrev }: WalletStepProps) {
         biometricEnabled: onboardingData.biometricEnabled,
         pinHash: onboardingData.pinSet ? "hashed_pin" : null,
       });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
       
       const data = await response.json();
       updateOnboardingData({ 
@@ -39,9 +52,10 @@ export function WalletStep({ onNext, onPrev }: WalletStepProps) {
       
       setTimeout(() => onNext(), 2000);
     } catch (error) {
+      console.error('Create wallet error:', error);
       toast({
         title: "เกิดข้อผิดพลาด",
-        description: "ไม่สามารถสร้าง Smart Wallet ได้",
+        description: "ไม่สามารถสร้าง Smart Wallet ได้ กรุณาลองใหม่อีกครั้ง",
         variant: "destructive",
       });
     } finally {

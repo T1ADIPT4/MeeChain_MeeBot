@@ -42,7 +42,11 @@ export class MemStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
     const user: User = { 
-      ...insertUser, 
+      ...insertUser,
+      email: insertUser.email ?? null,
+      firstName: insertUser.firstName ?? null,
+      lastName: insertUser.lastName ?? null,
+      profileImageUrl: insertUser.profileImageUrl ?? null,
       id,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -60,7 +64,10 @@ export class MemStorage implements IStorage {
   async createWallet(insertWallet: InsertWallet): Promise<Wallet> {
     const id = randomUUID();
     const wallet: Wallet = { 
-      ...insertWallet, 
+      ...insertWallet,
+      type: insertWallet.type ?? "smart",
+      biometricEnabled: insertWallet.biometricEnabled ?? false,
+      pinHash: insertWallet.pinHash ?? null,
       id,
       createdAt: new Date(),
     };
@@ -86,7 +93,12 @@ export class MemStorage implements IStorage {
   async createOnboardingProgress(insertProgress: InsertOnboardingProgress): Promise<OnboardingProgress> {
     const id = randomUUID();
     const progress: OnboardingProgress = { 
-      ...insertProgress, 
+      ...insertProgress,
+      mode: insertProgress.mode ?? null,
+      currentStep: insertProgress.currentStep ?? "1",
+      completedSteps: insertProgress.completedSteps ?? [],
+      isCompleted: insertProgress.isCompleted ?? false,
+      firstMissionCompleted: insertProgress.firstMissionCompleted ?? false,
       id,
       updatedAt: new Date(),
     };

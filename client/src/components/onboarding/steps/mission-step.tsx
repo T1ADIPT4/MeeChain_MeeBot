@@ -35,11 +35,24 @@ export function MissionStep({ onNext, onPrev }: MissionStepProps) {
   };
 
   const completeMission = async () => {
+    if (!onboardingData.userId) {
+      toast({
+        title: "เกิดข้อผิดพลาด",
+        description: "กรุณาเข้าสู่ระบบก่อนทำภารกิจ",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const response = await apiRequest("POST", "/api/mission/complete", {
         userId: onboardingData.userId,
         missionId: "first",
       });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
       
       const data = await response.json();
       updateOnboardingData({ firstMissionCompleted: true });
@@ -52,9 +65,10 @@ export function MissionStep({ onNext, onPrev }: MissionStepProps) {
       
       setTimeout(() => onNext(), 2000);
     } catch (error) {
+      console.error('Complete mission error:', error);
       toast({
         title: "เกิดข้อผิดพลาด",
-        description: "ไม่สามารถบันทึกผลภารกิจได้",
+        description: "ไม่สามารถบันทึกผลภารกิจได้ กรุณาลองใหม่อีกครั้ง",
         variant: "destructive",
       });
     } finally {
