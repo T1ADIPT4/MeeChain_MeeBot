@@ -51,39 +51,23 @@ export function SecurityStep({ onNext, onPrev }: SecurityStepProps) {
       return;
     }
 
-    if (!/^\d{6}$/.test(pinValue)) {
-      toast({
-        title: "PIN ไม่ถูกต้อง",
-        description: "PIN ต้องเป็นตัวเลข 6 หลักเท่านั้น",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsLoading(true);
     try {
-      const response = await apiRequest("POST", "/api/security/pin", {
+      await apiRequest("POST", "/api/security/pin", {
         userId: onboardingData.userId,
         pin: pinValue,
       });
       
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      
-      const data = await response.json();
-      
       setPinSet(true);
-      updateOnboardingData({ pinSet: true, pinHash: data.pinHash });
+      updateOnboardingData({ pinSet: true });
       toast({
         title: "ตั้งรหัส PIN สำเร็จ",
         description: "รหัส PIN ของคุณได้รับการตั้งค่าเรียบร้อยแล้ว",
       });
     } catch (error) {
-      console.error('Set PIN error:', error);
       toast({
         title: "เกิดข้อผิดพลาด",
-        description: "ไม่สามารถตั้งรหัส PIN ได้ กรุณาลองใหม่อีกครั้ง",
+        description: "ไม่สามารถตั้งรหัส PIN ได้",
         variant: "destructive",
       });
     } finally {
@@ -94,13 +78,9 @@ export function SecurityStep({ onNext, onPrev }: SecurityStepProps) {
   const handleEnableBiometric = async () => {
     setIsLoading(true);
     try {
-      const response = await apiRequest("POST", "/api/security/biometric", {
+      await apiRequest("POST", "/api/security/biometric", {
         userId: onboardingData.userId,
       });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
       
       setBiometricEnabled(true);
       updateOnboardingData({ biometricEnabled: true });
@@ -109,10 +89,9 @@ export function SecurityStep({ onNext, onPrev }: SecurityStepProps) {
         description: "การยืนยันตัวตนด้วยข้อมูลชีวภาพเปิดใช้งานแล้ว",
       });
     } catch (error) {
-      console.error('Enable biometric error:', error);
       toast({
         title: "เกิดข้อผิดพลาด",
-        description: "ไม่สามารถเปิดใช้งาน Biometric ได้ กรุณาลองใหม่อีกครั้ง",
+        description: "ไม่สามารถเปิดใช้งาน Biometric ได้",
         variant: "destructive",
       });
     } finally {

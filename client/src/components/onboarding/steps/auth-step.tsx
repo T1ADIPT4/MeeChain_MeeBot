@@ -30,11 +30,6 @@ export function AuthStep({ onNext, onPrev }: AuthStepProps) {
       };
 
       const response = await apiRequest("POST", "/api/auth/social", mockUserData);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      
       const data = await response.json();
 
       updateOnboardingData({ 
@@ -49,7 +44,6 @@ export function AuthStep({ onNext, onPrev }: AuthStepProps) {
         description: `เข้าสู่ระบบด้วย ${provider} เรียบร้อยแล้ว`,
       });
     } catch (error) {
-      console.error('Auth error:', error);
       toast({
         title: "เกิดข้อผิดพลาด",
         description: "ไม่สามารถเข้าสู่ระบบได้ กรุณาลองใหม่อีกครั้ง",

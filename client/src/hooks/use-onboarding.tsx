@@ -5,7 +5,6 @@ interface OnboardingData {
   userId?: string;
   user?: any;
   pinSet?: boolean;
-  pinHash?: string;
   biometricEnabled?: boolean;
   walletCreated?: boolean;
   walletAddress?: string;
