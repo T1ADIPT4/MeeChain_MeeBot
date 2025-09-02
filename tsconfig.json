@@ -17,12 +17,9 @@
       "@shared/*": ["server/shared/*"],
       "@onboarding/*": ["server/shared/Onboarding/*"],
       "@activities/*": ["server/shared/Onboarding/activities/*"]
-    }
-  },
-  "include": ["client", "server", "server/shared"],
+      "include": ["client", "server", "server/shared"],
   "exclude": ["node_modules", ".git"]
-}
+    } 
+};
 
-"paths": {
-  "@onboarding/*": ["server/shared/Onboarding/*"]
-}
+

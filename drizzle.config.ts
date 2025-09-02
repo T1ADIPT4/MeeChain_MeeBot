@@ -12,3 +12,6 @@ export default defineConfig({
     url: process.env.DATABASE_URL,
   },
 });
+`env
+DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
+`

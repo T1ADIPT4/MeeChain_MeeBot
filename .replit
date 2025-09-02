@@ -39,4 +39,12 @@ task = "shell.exec"
 args = "run npm dev"
 
 [agent]
-integrations = ["javascript_database==1.0.0", "javascript_log_in_with_replit==1.0.0"]
+
+[rules]
+
+[rules.formatter]
+
+[rules.formatter.fileExtensions]
+
+[rules.formatter.fileExtensions.".ts"]
+id = "module:web/languageServer:typescript-language-server"
