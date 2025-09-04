@@ -2,6 +2,15 @@
 
 MeeChain Wallet is a secure digital Web3 wallet application designed for the Thai market. The project is built as a full-stack web application with a React frontend and Express.js backend, featuring a comprehensive 7-step onboarding flow that guides users through social authentication, security setup, wallet creation, and initial missions. The wallet supports both demo and live modes, includes biometric authentication options, and provides users with rewards for completing onboarding tasks.
 
+# Recent Changes
+
+## September 4, 2025 - Project Restructure
+- **Restructured project organization**: Created new directory structure with frontend/, backend/, shared/, and assets/branding/
+- **Added MeeChain branding**: Integrated official MeeChain logo (cute bear with chain design) into the application, replacing generic wallet icons
+- **Improved modularity**: Separated concerns with dedicated folders for components, API logic, and shared resources
+- **Created documentation**: Added README.md explaining the project structure and key features
+- **Maintained compatibility**: Ensured all import paths and configurations work correctly with the new structure
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
