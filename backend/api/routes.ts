@@ -523,6 +523,97 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Wallet API endpoints
+  app.get("/api/wallet/me", async (req, res) => {
+    try {
+      const userId = req.session?.userId || req.query.userId as string;
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const wallet = await storage.getWalletByUserId(userId);
+      if (!wallet) {
+        return res.status(404).json({ message: "Wallet not found" });
+      }
+
+      res.json(wallet);
+    } catch (error) {
+      console.error("Get wallet error:", error);
+      res.status(500).json({ message: "Failed to get wallet" });
+    }
+  });
+
+  app.get("/api/wallet/balances", async (req, res) => {
+    try {
+      const userId = req.session?.userId || req.query.userId as string;
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Get all user token balances
+      const balances = await storage.getAllUserTokenBalances(userId);
+      
+      // Get token details and combine with balances
+      const tokens = await Promise.all(
+        balances.map(async (balance) => {
+          const token = await storage.getTokenById(balance.tokenId);
+          return {
+            ...token,
+            balance: balance.balance,
+            totalEarned: balance.totalEarned || "0",
+            lastFaucetClaim: balance.lastFaucetClaim
+          };
+        })
+      );
+
+      res.json({ tokens });
+    } catch (error) {
+      console.error("Get balances error:", error);
+      res.status(500).json({ message: "Failed to get balances" });
+    }
+  });
+
+  // Transaction history endpoint
+  app.get("/api/wallet/transactions", async (req, res) => {
+    try {
+      const userId = req.session?.userId || req.query.userId as string;
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // For now, return mock transaction history
+      const transactions = [
+        {
+          id: "tx_1",
+          type: "receive",
+          amount: "5.0",
+          token: "MEE",
+          from: "Faucet",
+          to: "You",
+          status: "completed",
+          timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          hash: "0x123...abc"
+        },
+        {
+          id: "tx_2", 
+          type: "receive",
+          amount: "100.0",
+          token: "MEE",
+          from: "Mission Reward",
+          to: "You",
+          status: "completed",
+          timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+          hash: "0x456...def"
+        }
+      ];
+
+      res.json({ transactions });
+    } catch (error) {
+      console.error("Get transactions error:", error);
+      res.status(500).json({ message: "Failed to get transactions" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -7,12 +7,20 @@ import { OnboardingProvider } from "@/hooks/use-onboarding";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Missions from "@/pages/missions";
+import Dashboard from "@/pages/dashboard";
+import TransactionHistory from "@/pages/transaction-history";
+import ReceiveTokens from "@/pages/receive-tokens";
+import SendTokens from "@/pages/send-tokens";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/missions" component={Missions} />
+      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/history" component={TransactionHistory} />
+      <Route path="/receive" component={ReceiveTokens} />
+      <Route path="/send" component={SendTokens} />
       <Route component={NotFound} />
     </Switch>
   );
