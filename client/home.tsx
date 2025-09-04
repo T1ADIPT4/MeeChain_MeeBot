@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { OnboardingModal } from "@/components/onboarding/onboarding-modal";
+import { OnboardingModal } from "../onboarding/onboarding-modal";
 import { Wallet } from "lucide-react";
 
 export default function Home() {
@@ -34,7 +34,7 @@ export default function Home() {
       <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
         <div className="text-center">
           <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-purple-600 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-            <img src="@assets/branding/logo.png" alt="MeeChain Logo" className="w-16 h-16" />
+            <Wallet className="w-12 h-12 text-white" />
           </div>
           <h1 className="text-4xl font-bold mb-4 text-white">
             ยินดีต้อนรับสู่ MeeChain Wallet
@@ -68,7 +68,7 @@ export default function Home() {
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-muted">
       <div className="text-center">
         <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center shadow-lg">
-          <img src="@assets/branding/logo.png" alt="MeeChain Logo" className="w-16 h-16" />
+          <Wallet className="w-12 h-12 text-white" />
         </div>
         <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
           MeeChain Wallet
