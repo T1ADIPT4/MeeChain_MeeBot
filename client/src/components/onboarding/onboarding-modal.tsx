@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { WelcomeStep } from "./steps/welcome-step";
 import { AuthStep } from "./steps/auth-step";
 import { SecurityStep } from "./steps/security-step";
@@ -46,7 +47,16 @@ export function OnboardingModal({ onComplete }: OnboardingModalProps) {
       <DialogContent 
         className="max-w-lg w-full bg-card border-border rounded-2xl shadow-2xl p-0 overflow-hidden"
         data-testid="modal-onboarding"
+        aria-describedby="onboarding-description"
       >
+        <VisuallyHidden>
+          <DialogTitle>การตั้งค่าเริ่มต้น MeeChain Wallet</DialogTitle>
+        </VisuallyHidden>
+        <VisuallyHidden>
+          <div id="onboarding-description">
+            กระบวนการตั้งค่าเริ่มต้นสำหรับ MeeChain Wallet ใน 7 ขั้นตอน
+          </div>
+        </VisuallyHidden>
         {/* Progress Header */}
         <div className="p-6 border-b border-border bg-card/50">
           <div className="flex items-center justify-between mb-4">
