@@ -6,7 +6,7 @@ import {
   type UserTokenBalance, type InsertUserTokenBalance,
   type Mission, type InsertMission,
   type UserMission, type InsertUserMission
-} from "@shared/schema";
+} from "../../shared/schema";
 import { randomUUID } from "crypto";
 
 export interface IStorage {
