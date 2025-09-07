@@ -18,11 +18,15 @@ interface OnboardingModalProps {
 export function OnboardingModal({ onComplete }: OnboardingModalProps) {
   const { currentStep, totalSteps, nextStep, prevStep, onboardingData, resetOnboarding } = useOnboarding();
   const [isOpen] = useState(true);
+  const [hasInitialized, setHasInitialized] = useState(false);
 
-  // Reset onboarding to step 1 when modal first opens
+  // Reset onboarding only once when modal first opens
   useEffect(() => {
-    resetOnboarding();
-  }, []);
+    if (!hasInitialized) {
+      resetOnboarding();
+      setHasInitialized(true);
+    }
+  }, [hasInitialized, resetOnboarding]);
 
   const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
 
