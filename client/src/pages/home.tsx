@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "wouter";
 import { OnboardingModal } from "@/components/onboarding/onboarding-modal";
 import { Wallet } from "lucide-react";
 import logoUrl from "@assets/branding/logo.png";
