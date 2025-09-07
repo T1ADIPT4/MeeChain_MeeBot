@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -16,8 +16,13 @@ interface OnboardingModalProps {
 }
 
 export function OnboardingModal({ onComplete }: OnboardingModalProps) {
-  const { currentStep, totalSteps, nextStep, prevStep, onboardingData } = useOnboarding();
+  const { currentStep, totalSteps, nextStep, prevStep, onboardingData, resetOnboarding } = useOnboarding();
   const [isOpen] = useState(true);
+
+  // Reset onboarding to step 1 when modal first opens
+  useEffect(() => {
+    resetOnboarding();
+  }, []);
 
   const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
 

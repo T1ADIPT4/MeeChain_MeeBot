@@ -14,6 +14,9 @@ export default function Home() {
   }, []);
 
   const handleStartOnboarding = () => {
+    // Clear any existing onboarding data and reset to step 1
+    localStorage.removeItem('meechain_onboarding_complete');
+    localStorage.removeItem('meechain_user');
     setShowOnboarding(true);
   };
 
