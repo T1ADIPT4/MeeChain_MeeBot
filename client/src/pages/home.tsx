@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { OnboardingModal } from "@/components/onboarding/onboarding-modal";
 import { Wallet } from "lucide-react";
 import logoUrl from "@assets/branding/logo.png";
@@ -54,13 +55,13 @@ export default function Home() {
             กระเป๋าเงินดิจิทัลของคุณพร้อมใช้งานแล้ว
           </p>
           <div className="space-y-4">
-            <a 
-              href="/missions"
+            <Link 
+              to="/missions"
               className="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:opacity-90 transition-all duration-200 hover:scale-105 shadow-lg"
               data-testid="link-missions"
             >
               ดูภารกิจ & รางวัล
-            </a>
+            </Link>
             <br />
             <button 
               onClick={handleStartOnboarding}

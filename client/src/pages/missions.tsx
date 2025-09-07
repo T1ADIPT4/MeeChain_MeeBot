@@ -269,7 +269,7 @@ export default function Missions() {
           {/* Token Balances & Faucet */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-white">ยอดคงเหลือ & Faucet</h2>
-            
+
             {/* Token Balances */}
             {loadingBalances ? (
               <Card className="bg-black/50 border-purple-500/30">
