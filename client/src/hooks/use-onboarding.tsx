@@ -26,30 +26,49 @@ interface OnboardingContextType {
 const OnboardingContext = createContext<OnboardingContextType | null>(null);
 
 export function OnboardingProvider({ children }: { children: ReactNode }) {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [onboardingData, setOnboardingData] = useState<OnboardingData>({});
+  // Initialize from localStorage if available
+  const getInitialStep = () => {
+    const saved = localStorage.getItem('meechain_onboarding_step');
+    return saved ? parseInt(saved) : 1;
+  };
+
+  const getInitialData = () => {
+    const saved = localStorage.getItem('meechain_onboarding_data');
+    return saved ? JSON.parse(saved) : {};
+  };
+
+  const [currentStep, setCurrentStep] = useState(getInitialStep);
+  const [onboardingData, setOnboardingData] = useState<OnboardingData>(getInitialData);
   
   const totalSteps = 7;
 
   const nextStep = () => {
     if (currentStep < totalSteps) {
-      setCurrentStep(prev => prev + 1);
+      const newStep = currentStep + 1;
+      setCurrentStep(newStep);
+      localStorage.setItem('meechain_onboarding_step', newStep.toString());
     }
   };
 
   const prevStep = () => {
     if (currentStep > 1) {
-      setCurrentStep(prev => prev - 1);
+      const newStep = currentStep - 1;
+      setCurrentStep(newStep);
+      localStorage.setItem('meechain_onboarding_step', newStep.toString());
     }
   };
 
   const updateOnboardingData = (data: Partial<OnboardingData>) => {
-    setOnboardingData(prev => ({ ...prev, ...data }));
+    const newData = { ...onboardingData, ...data };
+    setOnboardingData(newData);
+    localStorage.setItem('meechain_onboarding_data', JSON.stringify(newData));
   };
 
   const resetOnboarding = () => {
     setCurrentStep(1);
     setOnboardingData({});
+    localStorage.setItem('meechain_onboarding_step', '1');
+    localStorage.setItem('meechain_onboarding_data', '{}');
   };
 
   const value: OnboardingContextType = {
