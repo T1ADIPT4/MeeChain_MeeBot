@@ -67,6 +67,10 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
   const resetOnboarding = () => {
     setCurrentStep(1);
     setOnboardingData({});
+    // Clear all onboarding-related data
+    localStorage.removeItem('meechain_onboarding_complete');
+    localStorage.removeItem('meechain_user');
+    localStorage.removeItem('meechain_mode');
     localStorage.setItem('meechain_onboarding_step', '1');
     localStorage.setItem('meechain_onboarding_data', '{}');
   };

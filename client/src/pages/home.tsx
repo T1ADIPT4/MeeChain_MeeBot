@@ -14,8 +14,14 @@ export default function Home() {
   }, []);
 
   const handleStartOnboarding = () => {
-    // Clear completion status and reset onboarding data completely
+    // Clear all onboarding-related localStorage completely
     localStorage.removeItem('meechain_onboarding_complete');
+    localStorage.removeItem('meechain_onboarding_step');
+    localStorage.removeItem('meechain_onboarding_data');
+    localStorage.removeItem('meechain_user');
+    localStorage.removeItem('meechain_mode');
+    
+    // Reset to initial state
     localStorage.setItem('meechain_onboarding_step', '1');
     localStorage.setItem('meechain_onboarding_data', '{}');
     setShowOnboarding(true);
