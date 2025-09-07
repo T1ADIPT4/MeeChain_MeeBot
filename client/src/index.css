@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(70.91, 21.57%, 90%);
+  --background: hsl(0, 0%, 7.06%);
   --foreground: hsl(0, 0%, 8.24%);
   --card: hsl(180 6.6667% 97.0588%);
   --card-foreground: hsl(210 25% 7.8431%);
@@ -14,12 +14,12 @@
   --primary-foreground: hsl(0, 0%, 8.24%);
   --secondary: hsl(0, 0%, 8.24%);
   --secondary-foreground: hsl(70.91, 21.57%, 90%);
-  --muted: hsl(72, 12.82%, 84.71%);
-  --muted-foreground: hsl(72, 2.39%, 40.98%);
+  --muted: hsl(0, 61.61%, 43.92%);
+  --muted-foreground: hsl(301.95, 82.55%, 70.78%);
   --accent: hsl(292.13, 48.03%, 75.1%);
   --accent-foreground: hsl(0, 0%, 8.24%);
   --destructive: hsl(0.49, 54.19%, 55.49%);
-  --destructive-foreground: hsl(0 0% 100%);
+  --destructive-foreground: hsl(0, 0%, 92.16%);
   --border: hsl(35, 10.53%, 77.65%);
   --input: hsl(35.29, 11.41%, 70.78%);
   --ring: hsl(166.76, 29.82%, 44.71%);
@@ -36,7 +36,7 @@
   --sidebar-accent-foreground: hsl(203.8863 88.2845% 53.1373%);
   --sidebar-border: hsl(205.0000 25.0000% 90.5882%);
   --sidebar-ring: hsl(202.8169 89.1213% 53.1373%);
-  --font-sans: 'Inter', sans-serif;
+  --font-sans: 'Fira Code', monospace;
   --font-serif: 'Source Serif Pro', serif;
   --font-mono: 'IBM Plex Mono', monospace;
   --radius: 0.875rem;

@@ -11,6 +11,7 @@ import Dashboard from "@/pages/dashboard";
 import TransactionHistory from "@/pages/transaction-history";
 import ReceiveTokens from "@/pages/receive-tokens";
 import SendTokens from "@/pages/send-tokens";
+import ScheduledTasks from "@/pages/scheduled-tasks";
 
 function Router() {
   return (
@@ -21,6 +22,7 @@ function Router() {
       <Route path="/history" component={TransactionHistory} />
       <Route path="/receive" component={ReceiveTokens} />
       <Route path="/send" component={SendTokens} />
+      <Route path="/tasks" component={ScheduledTasks} />
       <Route component={NotFound} />
     </Switch>
   );
