@@ -1,14 +1,23 @@
 import { useState, useEffect } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { OnboardingModal } from "@/components/onboarding/onboarding-modal";
 import { Wallet } from "lucide-react";
 import logoUrl from "@assets/branding/logo.png";
 
 export default function Home() {
+  const [location, navigate] = useLocation();
   const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     const isCompleted = localStorage.getItem('meechain_onboarding_complete');
+    const user = localStorage.getItem('meechain_user');
+    
+    // ถ้าทำ onboarding เสร็จแล้วและมีข้อมูลผู้ใช้ ให้ไปหน้า dashboard ทันที
+    if (isCompleted && user) {
+      navigate('/dashboard');
+      return;
+    }
+    
     if (!isCompleted) {
       setShowOnboarding(true);
     }
@@ -31,6 +40,8 @@ export default function Home() {
   const handleOnboardingComplete = () => {
     setShowOnboarding(false);
     localStorage.setItem('meechain_onboarding_complete', 'true');
+    // เปลี่ยนเส้นทางไปหน้า dashboard หลังจบ onboarding
+    navigate('/dashboard');
   };
 
   if (showOnboarding) {
