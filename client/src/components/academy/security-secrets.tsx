@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -76,7 +75,7 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
     try {
       const response = await fetch('/api/secrets/health');
       const result = await response.json();
-      
+
       if (result.success) {
         setSecretsStatus(result.data);
       }
@@ -134,7 +133,7 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 flex items-center justify-center p-6">
       <div className="max-w-4xl w-full space-y-8">
-        
+
         {/* Progress Indicator */}
         <div className="flex justify-center space-x-3 mb-8">
           <div className="w-3 h-3 bg-green-400 rounded-full flex items-center justify-center">
@@ -157,13 +156,13 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
           {/* Background decorations */}
           <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-indigo-400/10 to-transparent rounded-full -translate-y-8 translate-x-8"></div>
           <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-purple-400/10 to-transparent rounded-full translate-y-6 -translate-x-6"></div>
-          
+
           {/* Floating sparkles */}
           <Sparkles className="absolute top-6 right-12 w-4 h-4 text-yellow-400 animate-bounce" />
           <Sparkles className="absolute bottom-12 left-16 w-3 h-3 text-indigo-400 animate-pulse" />
 
           <CardContent className="p-8 relative z-10">
-            
+
             {/* Header */}
             <div className="text-center mb-8">
               <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-xl flex items-center justify-center border-2 border-white/20">
@@ -180,7 +179,7 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
             {/* Success State with Badge */}
             {showBadge ? (
               <div className="text-center space-y-6">
-                
+
                 {/* MeeBot with treasure box */}
                 <div className="relative">
                   <div className="w-32 h-32 mx-auto bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center border-4 border-white/20 relative overflow-hidden">
@@ -190,14 +189,14 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
                       className="w-20 h-20 object-contain"
                     />
                   </div>
-                  
+
                   {/* Treasure box below MeeBot */}
                   <div className={`absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-16 h-12 bg-gradient-to-br from-yellow-600 to-orange-600 rounded-lg border-2 border-yellow-400/50 relative transition-all duration-1000 ${treasureBoxOpen ? 'animate-bounce' : ''}`}>
                     {/* Lock/keyhole */}
                     <div className="absolute top-1 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-yellow-300 rounded-full flex items-center justify-center">
                       <div className="w-1 h-1 bg-yellow-700 rounded-full"></div>
                     </div>
-                    
+
                     {/* Treasure sparkles when open */}
                     {treasureBoxOpen && (
                       <div className="absolute inset-0 pointer-events-none">
@@ -207,7 +206,7 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
                       </div>
                     )}
                   </div>
-                  
+
                   {/* Sparkle effects around MeeBot */}
                   <div className="absolute inset-0 pointer-events-none">
                     <Sparkles className="absolute top-8 left-8 w-6 h-6 text-yellow-400 animate-ping" />
@@ -220,7 +219,7 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
                 {/* Speech Bubble */}
                 <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/30 rounded-xl p-6 relative max-w-md mx-auto">
                   <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border-l border-t border-indigo-500/30 rotate-45"></div>
-                  
+
                   <p className="text-indigo-100 text-lg italic leading-relaxed text-center">
                     "อย่าลืมเก็บความลับไว้นะ! 🔐✨ 
                     คุณเป็น Security Guardian แล้ว!"
@@ -241,12 +240,12 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
                           />
                         </div>
                       </div>
-                      
+
                       <div>
                         <h3 className="text-xl font-bold text-white mb-1">🛡️ Security Guardian</h3>
                         <p className="text-indigo-100 text-sm">ผู้พิทักษ์ความปลอดภัย MeeChain</p>
                       </div>
-                      
+
                       <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">
                         <Trophy className="w-3 h-3 mr-1" />
                         +250 EXP
@@ -271,7 +270,7 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
             ) : (
               /* Learning Steps */
               <div className="space-y-6">
-                
+
                 {/* Current Step */}
                 <div className="text-center mb-8">
                   <div className="w-20 h-20 mx-auto bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full flex items-center justify-center mb-4 border-2 border-white/20">
@@ -279,7 +278,7 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
                     {currentStep === 1 && <Key className="w-10 h-10 text-white" />}
                     {currentStep === 2 && <Bot className="w-10 h-10 text-white" />}
                   </div>
-                  
+
                   <h2 className="text-2xl font-bold text-white mb-2">
                     {steps[currentStep].title}
                   </h2>
@@ -291,7 +290,7 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
                 {/* MeeBot Speech Bubble */}
                 <div className="bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border border-indigo-500/30 rounded-xl p-4 mb-6 relative">
                   <div className="absolute -bottom-2 left-8 w-4 h-4 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 border-l border-b border-indigo-500/30 rotate-45"></div>
-                  
+
                   <div className="flex items-start gap-3">
                     <div className="w-12 h-12 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0 animate-bounce">
                       <img 
@@ -371,7 +370,7 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
                               }`}>
                                 {secretsStatus.message}
                               </p>
-                              
+
                               {(secretsStatus.missing.length > 0 || secretsStatus.warnings.length > 0) && (
                                 <div className="mt-3 space-y-2">
                                   <Button
@@ -383,7 +382,7 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
                                     {showSecrets ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
                                     {showSecrets ? 'ซ่อนรายละเอียด' : 'ดูรายละเอียด'}
                                   </Button>
-                                  
+
                                   {showSecrets && (
                                     <div className="space-y-3 pt-2 border-t border-gray-600">
                                       {secretsStatus.missing.length > 0 && (
@@ -436,12 +435,12 @@ export function SecuritySecrets({ onNext, onPrev }: SecuritySecretsProps) {
                           <Shield className="w-4 h-4 text-white" />
                         </div>
                       </div>
-                      
+
                       <div>
                         <h4 className="text-xl font-bold text-white mb-2">MeeBot Guardian Mode</h4>
                         <p className="text-gray-300">ระบบเฝ้าระวังอัตโนมัติของ MeeBot</p>
                       </div>
-                      
+
                       <div className="grid grid-cols-2 gap-4 mt-6">
                         {[
                           { icon: Database, label: "Monitor Secrets", desc: "เฝ้าระวัง API Keys" },
