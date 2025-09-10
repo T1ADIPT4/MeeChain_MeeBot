@@ -1,7 +1,6 @@
-
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,8 +13,9 @@ import { TOKEN_ADDRESSES } from '@/lib/swap-bridge';
 import FuseNetworkHelper from '@/components/meebot/fuse-network-helper';
 import { MeeBotFallbackCard } from '@/components/meebot/meebot-fallback-card';
 import logoUrl from '@assets/branding/logo.png';
+import WalletConnectHelper from '@/components/meebot/wallet-connect-helper';
 
-export default function TokenActions() {
+export default function TokenActionsPage() {
   const [location, navigate] = useLocation();
   const [mintAddress, setMintAddress] = useState('');
   const [mintAmount, setMintAmount] = useState('');
@@ -23,6 +23,8 @@ export default function TokenActions() {
   const [depositAmount, setDepositAmount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [txHash, setTxHash] = useState<string | null>(null);
+  const [currentChainId, setCurrentChainId] = useState('');
+  const [isWalletConnect, setIsWalletConnect] = useState(false);
   const { toast } = useToast();
 
   // Fetch user wallet data
@@ -38,6 +40,42 @@ export default function TokenActions() {
       return response.json();
     },
   });
+
+  const detectWalletType = () => {
+    // ตรวจสอบว่าเป็น WalletConnect หรือไม่
+    if (window.ethereum && window.ethereum.isWalletConnect) {
+      setIsWalletConnect(true);
+    }
+  };
+
+  const checkWalletConnection = async () => {
+    if (!window.ethereum) return;
+
+    try {
+      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+      const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+
+      setCurrentChainId(chainId);
+
+      if (accounts.length > 0) {
+        setUserAddress(accounts[0]);
+        await updateBalance(accounts[0]);
+      }
+    } catch (error) {
+      console.error('Failed to check wallet connection:', error);
+    }
+  };
+
+  const updateBalance = async (address: string) => {
+    try {
+      const tokenAddress = TOKEN_ADDRESSES[depositToken_ as keyof typeof TOKEN_ADDRESSES];
+      const newBalance = await getTokenBalance(tokenAddress, address, 122);
+      setBalance(newBalance);
+    } catch (error) {
+      console.error('Failed to get balance:', error);
+    }
+  };
+
 
   const handleMint = async () => {
     if (!mintAddress || !mintAmount) {
@@ -64,7 +102,7 @@ export default function TokenActions() {
     try {
       const hash = await mintToken(mintAddress, mintAmount);
       setTxHash(hash);
-      
+
       toast({
         title: "Mint สำเร็จ! 🎉",
         description: `Transaction Hash: ${hash.slice(0, 10)}...`,
@@ -110,7 +148,7 @@ export default function TokenActions() {
       const tokenAddress = TOKEN_ADDRESSES[depositToken_ as keyof typeof TOKEN_ADDRESSES];
       const hash = await depositToken(tokenAddress, depositAmount);
       setTxHash(hash);
-      
+
       toast({
         title: "Deposit สำเร็จ! 🎉",
         description: `Transaction Hash: ${hash.slice(0, 10)}...`,
@@ -129,7 +167,16 @@ export default function TokenActions() {
     }
   };
 
+  const handleNetworkChanged = () => {
+    checkWalletConnection();
+    toast({
+      title: "เปลี่ยนเครือข่ายสำเร็จ! 🎉",
+      description: "ตอนนี้คุณสามารถใช้งาน Token Actions ได้แล้ว",
+    });
+  };
+
   const tokens = Object.keys(TOKEN_ADDRESSES);
+  const isCorrectNetwork = currentChainId === "0x7A"; // Fuse Network Chain ID
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
@@ -150,6 +197,16 @@ export default function TokenActions() {
       </div>
 
       <div className="px-6 pb-6 space-y-6">
+        
+        {/* Network Helper */}
+        {!isCorrectNetwork && (
+          <WalletConnectHelper
+            targetChainId={"0x7A"}
+            onNetworkChanged={handleNetworkChanged}
+            isWalletConnect={isWalletConnect}
+          />
+        )}
+
         {/* Mint Token Card */}
         <Card className="bg-white/10 border-white/20 backdrop-blur-sm">
           <CardHeader>

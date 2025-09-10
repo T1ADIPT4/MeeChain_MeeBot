@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,6 +12,7 @@ import {
   ArrowRight,
   Zap
 } from 'lucide-react';
+import WalletConnectHelper from './wallet-connect-helper';
 
 interface WalletConnectFallbackProps {
   targetChainId: string;
@@ -94,7 +94,7 @@ export function WalletConnectFallback({
               <HelpCircle className="w-5 h-5 text-yellow-400" />
               <h3 className="text-lg font-semibold text-white">🆘 MeeBot วิธีช่วยเหลือ</h3>
             </div>
-            
+
             <div className="space-y-3">
               <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
                 <p className="text-blue-300 font-medium text-sm flex items-center gap-2">
@@ -102,14 +102,14 @@ export function WalletConnectFallback({
                   เปิด Wallet ของคุณ (MetaMask, Trust Wallet, etc.)
                 </p>
               </div>
-              
+
               <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
                 <p className="text-green-300 font-medium text-sm flex items-center gap-2">
                   <span className="w-6 h-6 bg-green-500/30 rounded-full flex items-center justify-center text-xs">2</span>
                   เลือกเครือข่าย {targetNetworkName}
                 </p>
               </div>
-              
+
               <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3">
                 <p className="text-purple-300 font-medium text-sm flex items-center gap-2">
                   <span className="w-6 h-6 bg-purple-500/30 rounded-full flex items-center justify-center text-xs">3</span>
