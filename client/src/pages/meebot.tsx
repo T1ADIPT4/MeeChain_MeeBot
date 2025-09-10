@@ -333,6 +333,11 @@ export default function MeeBotPage() {
                     ถัดไป: ภารกิจ
                   </Button>
                 </Link>
+                <Link to="/team-dashboard">
+                  <Button variant="outline" className="border-cyan-500 text-cyan-300 hover:bg-cyan-800/50">
+                    🤝 ทีมแดชบอร์ด
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
