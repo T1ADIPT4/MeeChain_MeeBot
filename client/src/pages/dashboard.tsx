@@ -479,40 +479,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <Button
-            onClick={() => navigate('/send-tokens')}
-            className="h-20 bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 flex-col gap-2"
-          >
-            <Send className="w-6 h-6" />
-            <span>ส่งโทเค็น</span>
-          </Button>
-
-          <Button
-            onClick={() => navigate('/receive-tokens')}
-            className="h-20 bg-gradient-to-r from-green-600 to-teal-600 hover:opacity-90 flex-col gap-2"
-          >
-            <QrCode className="w-6 h-6" />
-            <span>รับโทเค็น</span>
-          </Button>
-
-          <Button
-            onClick={() => navigate('/swap-bridge')}
-            className="h-20 bg-gradient-to-r from-orange-600 to-red-600 hover:opacity-90 flex-col gap-2"
-          >
-            <GitBranch className="w-6 h-6" />
-            <span>Swap/Bridge</span>
-          </Button>
-
-          <Button
-            onClick={() => navigate('/scheduled-tasks')}
-            className="h-20 bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 flex-col gap-2"
-          >
-            <Calendar className="w-6 h-6" />
-            <span>Scheduled</span>
-          </Button>
-        </div>
+        
 
         {/* ปุ่ม มีบอท - MeeBot Assistant */}
         <div className="mb-8">
