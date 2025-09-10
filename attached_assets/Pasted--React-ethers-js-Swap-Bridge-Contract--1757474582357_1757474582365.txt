@@ -1,0 +1,201 @@
+ได้เลยครับ!  
+นี่คือตัวอย่างโค้ด React + ethers.js สำหรับเชื่อมกับ **Swap/Bridge Contract**  
+โค้ดนี้จะออกแบบส่วน logic ให้ชัดเจน, รองรับการ swap หรือ bridge ระหว่าง token/network  
+คุณสามารถปรับ address/ABI ให้ตรงกับ smart contract จริงของคุณได้ทันที
+
+---
+
+## 1. ฟังก์ชันเรียก Swap หรือ Bridge Contract
+
+```typescript name=src/utils/swapBridge.ts
+import { ethers } from "ethers";
+
+// ใส่ address และ ABI ของ swap/bridge contract จริง
+const CONTRACT_ADDRESS = "0xYourSwapBridgeContractAddress";
+const CONTRACT_ABI = [
+  // ตัวอย่าง ABI สำหรับ swap/bridge function
+  {
+    "inputs": [
+      { "internalType": "address", "name": "tokenFrom", "type": "address" },
+      { "internalType": "address", "name": "tokenTo", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "internalType": "uint256", "name": "targetChainId", "type": "uint256" }
+    ],
+    "name": "swapOrBridge",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
+
+export async function swapOrBridgeToken(
+  tokenFrom: string,
+  tokenTo: string,
+  amount: string,
+  targetChainId?: string // ถ้า bridge ใส่ chain id ด้วย
+) {
+  if (!window.ethereum) throw new Error("Wallet not found");
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+
+  const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+  const tx = await contract.swapOrBridge(
+    tokenFrom,
+    tokenTo,
+    ethers.parseUnits(amount, 18),
+    targetChainId ? ethers.toBigInt(targetChainId) : 0
+  );
+  return tx.hash;
+}
+```
+
+---
+
+## 2. ตัวอย่าง Component React สำหรับ Swap/Bridge
+
+```typescript name=src/components/SwapBridgeForm.tsx
+import React, { useState } from "react";
+import { swapOrBridgeToken } from "../utils/swapBridge";
+
+const TOKEN_ADDRESSES = {
+  ETH: "0xEthAddress...",
+  USDT: "0xUsdtAddress...",
+  BTC: "0xBtcAddress...",
+};
+
+const CHAIN_OPTIONS = [
+  { id: "1", name: "Ethereum" },
+  { id: "56", name: "BSC" },
+  { id: "137", name: "Polygon" },
+];
+
+const SwapBridgeForm: React.FC = () => {
+  const [fromToken, setFromToken] = useState("ETH");
+  const [toToken, setToToken] = useState("USDT");
+  const [amount, setAmount] = useState("");
+  const [mode, setMode] = useState<"swap" | "bridge">("swap");
+  const [targetChain, setTargetChain] = useState("1");
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async () => {
+    setError(null);
+    setTxHash(null);
+    try {
+      const hash = await swapOrBridgeToken(
+        TOKEN_ADDRESSES[fromToken],
+        TOKEN_ADDRESSES[toToken],
+        amount,
+        mode === "bridge" ? targetChain : undefined
+      );
+      setTxHash(hash);
+    } catch (err: any) {
+      setError(err.message || "Transaction Error");
+    }
+  };
+
+  return (
+    <section style={{
+      padding: 32,
+      background: "#f0f6ff",
+      borderRadius: 18,
+      boxShadow: "0 2px 10px #b3cfff",
+      fontFamily: "'Nunito', Arial, sans-serif"
+    }}>
+      <h2 style={{ color: "#1a62d6" }}>🦄 Swap / Bridge Token</h2>
+      <div style={{ marginBottom: 16 }}>
+        <label>
+          Mode:
+          <select value={mode} onChange={e => setMode(e.target.value as "swap" | "bridge")} style={{ marginLeft: 10 }}>
+            <option value="swap">Swap</option>
+            <option value="bridge">Bridge</option>
+          </select>
+        </label>
+      </div>
+      <div>
+        <label>
+          From Token:
+          <select value={fromToken} onChange={e => setFromToken(e.target.value)} style={{ marginLeft: 10 }}>
+            {Object.keys(TOKEN_ADDRESSES).map(token => (
+              <option key={token} value={token}>{token}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <div>
+        <label>
+          To Token:
+          <select value={toToken} onChange={e => setToToken(e.target.value)} style={{ marginLeft: 10 }}>
+            {Object.keys(TOKEN_ADDRESSES).map(token => (
+              <option key={token} value={token}>{token}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <div>
+        <label>
+          Amount:
+          <input type="number" value={amount} onChange={e => setAmount(e.target.value)} style={{ marginLeft: 10, width: 80 }} />
+        </label>
+      </div>
+      {mode === "bridge" && (
+        <div>
+          <label>
+            Target Chain:
+            <select value={targetChain} onChange={e => setTargetChain(e.target.value)} style={{ marginLeft: 10 }}>
+              {CHAIN_OPTIONS.map(chain => (
+                <option key={chain.id} value={chain.id}>{chain.name}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+      )}
+      <div style={{ marginTop: 18 }}>
+        <button
+          onClick={handleSubmit}
+          style={{
+            background: "#1a62d6",
+            color: "#fff",
+            border: "none",
+            padding: "10px 24px",
+            borderRadius: 8,
+            fontWeight: "bold",
+            fontSize: 18,
+            cursor: "pointer"
+          }}>
+          {mode === "swap" ? "Swap" : "Bridge"}
+        </button>
+      </div>
+      {txHash && (
+        <div style={{ marginTop: 16, color: "green" }}>
+          สำเร็จ! Tx Hash: <a href={`https://etherscan.io/tx/${txHash}`} target="_blank" rel="noopener noreferrer">{txHash}</a>
+        </div>
+      )}
+      {error && (
+        <div style={{ marginTop: 16, color: "red" }}>
+          {error}
+        </div>
+      )}
+    </section>
+  );
+};
+
+export default SwapBridgeForm;
+```
+
+---
+
+## วิธีใช้งาน
+1. ใส่ไฟล์ `swapBridge.ts` ใน `src/utils/` และไฟล์ `SwapBridgeForm.tsx` ใน `src/components/`
+2. นำ `SwapBridgeForm` ไปแสดงในหน้า App เช่น
+   ```typescript name=src/App.tsx
+   import SwapBridgeForm from './components/SwapBridgeForm';
+   // ...
+   <SwapBridgeForm />
+   ```
+3. **แก้ไข TOKEN_ADDRESSES, CONTRACT_ADDRESS, และ ABI ให้ตรงกับของจริง**
+4. หาก contract มี logic เฉพาะเพิ่มเติม เช่น ต้อง approve, fee, หรือเช็ค balance สามารถเพิ่มในโค้ดนี้ได้
+
+---
+
+ถ้าต้องการเชื่อมกับ contract จริง, เพิ่มฟีเจอร์ (approve, เช็ค balance, fee) หรือธีมน่ารักเพิ่มเติม แจ้งได้เลยครับ!
