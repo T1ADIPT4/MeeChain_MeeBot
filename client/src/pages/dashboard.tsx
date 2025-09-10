@@ -32,7 +32,8 @@ import {
   MessageCircle, // Added MessageCircle icon
   BookOpen, // Added BookOpen icon
   ArrowRightLeft, // Added ArrowRightLeft icon
-  Target // Added Target icon
+  Target, // Added Target icon
+  Trophy // Added Trophy icon
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
@@ -41,9 +42,12 @@ import { QRCodeGenerator } from '@/components/web3/qr-code-generator';
 import logoUrl from '@assets/branding/logo.png';
 import { MeeBotSecretsAlert } from '@/components/meebot/secrets-alert';
 import { Link } from 'wouter'; // Assuming Link is needed for navigation
+import ContractHealthMonitor from '@/components/meebot/contract-health-monitor';
+import BadgeViewer from '@/components/nft/badge-viewer';
+import { useSmartContracts } from '@/hooks/use-smart-contracts';
 
-export default function Dashboard() {
-  const [location, navigate] = useLocation(); // navigate is used instead of useLocation() directly
+export default function DashboardPage() {
+  const [, navigate] = useLocation(); // navigate is used instead of useLocation() directly
   const [showBalance, setShowBalance] = useState(true);
   const [showQR, setShowQR] = useState(false);
   const [isTaskRunning, setIsTaskRunning] = useState(false);
@@ -58,6 +62,8 @@ export default function Dashboard() {
   const [botEmotion, setBotEmotion] = useState<'happy' | 'waving' | 'excited'>('happy');
   const [botStatus, setBotStatus] = useState<'idle' | 'running' | 'paused' | 'stopped'>('idle'); // Added botStatus state
 
+  // Smart Contracts Hook
+  const { userAddress, isConnected, connectWallet } = useSmartContracts();
 
   // Breathing animation for logo
   useEffect(() => {
@@ -219,7 +225,63 @@ export default function Dashboard() {
       </nav>
 
       <div className="px-6 pb-6 space-y-6">
-        {/* === ส่วนที่ 1: หน้าจอหลัก (MeeBot Monitoring) === */}
+        {/* === ส่วนที่ 1: ส่วนหัว (Profile & Quick Stats) === */}
+
+        {/* Profile Header */}
+        <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-4">
+                <Avatar className="w-16 h-16 border-2 border-blue-400/50">
+                  <AvatarImage src="/api/placeholder/64/64" alt="Profile" />
+                  <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white font-bold">
+                    {walletData?.name?.charAt(0) || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    {walletData?.name || 'Anonymous User'}
+                  </h1>
+                  <p className="text-slate-400 text-sm">
+                    {walletData?.email || 'user@meechain.app'}
+                  </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge variant="outline" className="text-xs bg-blue-500/10 text-blue-400 border-blue-500/30">
+                      {walletData?.tier || 'Bronze'} Member
+                    </Badge>
+                    <Badge variant="outline" className="text-xs bg-purple-500/10 text-purple-400 border-purple-500/30">
+                      Level {walletData?.level || 1}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {!isConnected ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={connectWallet}
+                    className="border-blue-500/50 text-blue-400 hover:bg-blue-500/10"
+                  >
+                    Connect Wallet
+                  </Button>
+                ) : null}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowBalance(!showBalance)}
+                  className="h-8 w-8 p-0"
+                  title={showBalance ? "ซ่อนยอด" : "แสดงยอด"}
+                >
+                  {showBalance ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </Button>
+              </div>
+            </div>
+
+            {/* Compact Contract Health Monitor */}
+            <ContractHealthMonitor compact />
+          </CardContent>
+        </Card>
 
         {/* MeeBot Secrets Health Check - แถบแจ้งเตือนด้านบน */}
         <MeeBotSecretsAlert />
@@ -549,7 +611,13 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* === ส่วนที่ 3: ส่วนท้าย (Token Actions & Network) === */}
+        {/* === ส่วนที่ 3: ส่วนท้าย (Badge Collection & Contract Health) === */}
+
+        {/* Badge Collection */}
+        <BadgeViewer userAddress={userAddress || undefined} />
+
+        {/* Contract Health Monitor */}
+        <ContractHealthMonitor />
 
         {/* Token Actions Section */}
         <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm">
@@ -565,23 +633,23 @@ export default function Dashboard() {
                 className="bg-gradient-to-r from-green-500 to-blue-500 hover:opacity-90 hover:scale-105 transition-all duration-200 h-16 group"
                 onClick={() => navigate('/receive')}
                 data-testid="button-receive"
-                title="ซื้อหรือรับโทเค็น"
+                title="ซื้อหรือรับโทเค็นฟรี"
               >
                 <div className="text-center">
                   <Download className="w-6 h-6 mx-auto mb-1 group-hover:animate-bounce" />
-                  <span className="text-sm font-semibold">ซื้อโทเค็น</span>
+                  <div className="text-sm font-medium">Receive</div>
                 </div>
               </Button>
 
               <Button
-                className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 hover:scale-105 transition-all duration-200 h-16 group"
-                onClick={() => navigate('/send-tokens')}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 hover:scale-105 transition-all duration-200 h-16 group"
+                onClick={() => navigate('/send')}
                 data-testid="button-send"
-                title="ส่งโทเค็นให้ผู้อื่น"
+                title="ส่งโทเค็นไปยังที่อยู่อื่น"
               >
                 <div className="text-center">
                   <Send className="w-6 h-6 mx-auto mb-1 group-hover:animate-pulse" />
-                  <span className="text-sm font-semibold">ส่งโทเค็น</span>
+                  <div className="text-sm font-medium">Send</div>
                 </div>
               </Button>
 
@@ -701,7 +769,7 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-              
+
               <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-3">
                 <div className="flex items-center gap-2">
                   <Bot className="w-4 h-4 text-cyan-400" />

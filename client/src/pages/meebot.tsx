@@ -4,9 +4,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsTrigger, TabsList } from '@/components/ui/tabs';
-import { 
-  Bot, 
-  Sparkles, 
+import {
+  Bot,
+  Sparkles,
   Heart,
   ArrowLeft,
   MessageCircle,
@@ -35,6 +35,8 @@ import { WeeklyQuest } from '@/components/meebot/weekly-quest';
 import { MeeBotChat } from '@/components/meebot/meebot-chat';
 import { CustomerContacts } from '@/components/meebot/customer-contacts';
 import ContractConnectionCheck from '@/components/meebot/contract-connection-check';
+import AutoWalletConnector from '@/components/meebot/auto-wallet-connector';
+import ContractHealthMonitor from '@/components/meebot/contract-health-monitor';
 
 
 // Placeholder for the new SystemCheck component
@@ -314,7 +316,7 @@ export default function MeeBotPage() {
 
       {/* Overlay */}
       {isSidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
           onClick={() => setIsSidebarOpen(false)}
         />
@@ -337,7 +339,7 @@ export default function MeeBotPage() {
 
               <Link to="/dashboard">
                 <Button
-                  variant="ghost" 
+                  variant="ghost"
                   size="sm"
                   className="text-gray-400 hover:text-white bg-slate-800/50 backdrop-blur-sm border border-slate-700 flex items-center gap-2"
                 >
@@ -398,15 +400,15 @@ export default function MeeBotPage() {
           {/* Tabs for MeeBot Features */}
           <Tabs defaultValue="chat" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger 
-                value="chat" 
+              <TabsTrigger
+                value="chat"
                 className="flex items-center gap-2 data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300"
               >
                 <MessageCircle className="w-4 h-4" />
                 MeeBot Chat
               </TabsTrigger>
-              <TabsTrigger 
-                value="contacts" 
+              <TabsTrigger
+                value="contacts"
                 className="flex items-center gap-2 data-[state=active]:bg-green-500/20 data-[state=active]:text-green-300"
               >
                 <Users className="w-4 h-4" />
@@ -438,9 +440,9 @@ export default function MeeBotPage() {
       </div>
 
       {/* MeeBot Onboarding Modal */}
-      <MeeBotOnboardingModal 
-        isOpen={showOnboarding} 
-        onClose={() => setShowOnboarding(false)} 
+      <MeeBotOnboardingModal
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
       />
       </div>
     </div>
