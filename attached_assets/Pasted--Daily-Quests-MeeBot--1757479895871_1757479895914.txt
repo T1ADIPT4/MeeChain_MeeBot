@@ -1,0 +1,126 @@
+มาเลยครับธณวัฒน์! 🎮 ผมจะจัดให้ครบทั้งระบบ **เควสรายวัน (Daily Quests)** และ **MeeBot พูดแบบฮา ๆ เมื่อผู้ใช้เลเวลอัป** โดยใช้ React + TypeScript แบบ modular เพื่อให้คุณนำไปใช้ใน TaskPilot ได้ทันที
+
+---
+
+## 🧩 1. โครงสร้างเควสรายวัน (DailyQuest.tsx)
+
+```tsx
+// components/DailyQuest.tsx
+import React from 'react';
+
+type Quest = {
+  id: number;
+  title: string;
+  description: string;
+  reward: string;
+  completed: boolean;
+};
+
+const sampleQuests: Quest[] = [
+  {
+    id: 1,
+    title: 'เคลียร์ 3 งานก่อนเที่ยง',
+    description: 'เริ่มวันด้วยพลัง! ลุย 3 งานก่อน 12:00',
+    reward: '+10 XP, Badge “Early Riser”',
+    completed: false,
+  },
+  {
+    id: 2,
+    title: 'ลองใช้ฟีเจอร์ Swap',
+    description: 'สำรวจระบบใหม่ แล้วรับ Badge “Explorer”',
+    reward: '+5 XP',
+    completed: false,
+  },
+  {
+    id: 3,
+    title: 'พัก 5 นาทีหลังทำงาน 1 ชั่วโมง',
+    description: 'Productivity ต้องมีความสมดุลนะฮะ!',
+    reward: '+5 XP, Badge “Zen Pilot”',
+    completed: false,
+  },
+];
+
+const DailyQuest = () => {
+  return (
+    <div style={{ padding: '1rem', background: '#f0f8ff', borderRadius: '12px' }}>
+      <h3>🎯 เควสรายวันจาก MeeBot</h3>
+      {sampleQuests.map((quest) => (
+        <div key={quest.id} style={{ marginBottom: '1rem', background: '#fff', padding: '1rem', borderRadius: '8px' }}>
+          <h4>{quest.title}</h4>
+          <p>{quest.description}</p>
+          <p><strong>รางวัล:</strong> {quest.reward}</p>
+          <button disabled={quest.completed}>ทำเควสนี้</button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default DailyQuest;
+```
+
+---
+
+## 🤣 2. MeeBot พูดเมื่อเลเวลอัป (LevelUpToast.tsx)
+
+```tsx
+// components/LevelUpToast.tsx
+import React from 'react';
+
+const funnyQuotes = [
+  "เลเวลอัปแล้วเหรอ!? ระวังนะ เดี๋ยวระบบจะคิดว่าคุณเป็นบอทแทนผม!",
+  "คุณเก่งจน MeeBot ต้องอัปเกรดตัวเองตามแล้วนะครับ!",
+  "ต่อไปผมจะเรียกคุณว่า ‘กัปตัน’!",
+  "TaskPilot ต้องเพิ่มความยากแล้วล่ะ!",
+  "คุณลุยแซง MeeBot ไปแล้วนะครับ!"
+];
+
+const LevelUpToast = () => {
+  const quote = funnyQuotes[Math.floor(Math.random() * funnyQuotes.length)];
+
+  return (
+    <div style={{
+      position: 'fixed',
+      bottom: '20px',
+      right: '20px',
+      background: '#4fc3f7',
+      color: 'white',
+      padding: '1rem 1.5rem',
+      borderRadius: '12px',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+    }}>
+      <strong>🎉 MeeBot:</strong> {quote}
+    </div>
+  );
+};
+
+export default LevelUpToast;
+```
+
+---
+
+## 🧠 วิธีใช้งานใน Dashboard หรือ MeeBotPage
+
+```tsx
+import DailyQuest from '../components/DailyQuest';
+import LevelUpToast from '../components/LevelUpToast';
+
+function MeeBotPage() {
+  const [leveledUp, setLeveledUp] = React.useState(false);
+
+  return (
+    <div>
+      <h2>🤖 MeeBot ภารกิจวันนี้</h2>
+      <DailyQuest />
+      {leveledUp && <LevelUpToast />}
+    </div>
+  );
+}
+```
+
+> 💡 คุณสามารถเรียก `setLeveledUp(true)` เมื่อผู้ใช้ทำ task หรือเควสสำเร็จ เพื่อให้ MeeBot โผล่มาแสดงคำพูดฮา ๆ
+
+---
+
+ถ้าธณวัฒน์อยากให้ผมช่วยเสริมระบบ XP, badge unlock, หรือ mission tracker ที่ MeeBot พูดแนะนำทีละขั้น ผมพร้อมลุยต่อเลยครับ 😄  
+อยากให้ MeeBot มีระบบ “เควสพิเศษประจำสัปดาห์” หรือ “ภารกิจทีม” ด้วยไหมครับ?
