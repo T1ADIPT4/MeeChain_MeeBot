@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'wouter'; // Corrected import for useNavigate
+import { useLocation } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -35,6 +35,7 @@ import {
   Target, // Added Target icon
   Trophy // Added Trophy icon
 } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import { truncateAddress } from '@/lib/web3-utils';
@@ -260,7 +261,7 @@ export default function DashboardPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={connectWallet}
+                    onClick={() => connectWallet()}
                     className="border-blue-500/50 text-blue-400 hover:bg-blue-500/10"
                   >
                     Connect Wallet
