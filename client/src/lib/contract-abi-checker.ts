@@ -1,31 +1,133 @@
 
 import { ethers } from 'ethers';
 
-// MeeToken Contract ABI (สำคัญๆ)
+// Real Token Contract ABI (จาก Fuse Network)
 export const MEE_TOKEN_ABI = [
-  // ERC-20 Standard
-  "function name() view returns (string)",
-  "function symbol() view returns (string)", 
-  "function decimals() view returns (uint8)",
-  "function totalSupply() view returns (uint256)",
-  "function balanceOf(address) view returns (uint256)",
-  "function transfer(address, uint256) returns (bool)",
-  "function approve(address, uint256) returns (bool)",
-  "function allowance(address, address) view returns (uint256)",
+  // ERC-20 Standard Functions
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "name",
+    "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "symbol", 
+    "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "decimals",
+    "outputs": [{"internalType": "uint8", "name": "", "type": "uint8"}],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "totalSupply",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [{"internalType": "address", "name": "account", "type": "address"}],
+    "name": "balanceOf",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"internalType": "address", "name": "recipient", "type": "address"},
+      {"internalType": "uint256", "name": "amount", "type": "uint256"}
+    ],
+    "name": "transfer",
+    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"internalType": "address", "name": "spender", "type": "address"},
+      {"internalType": "uint256", "name": "amount", "type": "uint256"}
+    ],
+    "name": "approve",
+    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {"internalType": "address", "name": "owner", "type": "address"},
+      {"internalType": "address", "name": "spender", "type": "address"}
+    ],
+    "name": "allowance",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "type": "function"
+  },
   
-  // MeeToken Specific
-  "function mintReward(address, uint256)",
-  "function getUserTier(address) view returns (uint8)",
-  "function checkTierEligibility(address) view returns (uint8)",
-  "function setMembershipNFT(address)",
-  "function totalEarned(address) view returns (uint256)",
-  "function userTier(address) view returns (uint8)",
+  // Advanced Functions
+  {
+    "constant": false,
+    "inputs": [
+      {"internalType": "address", "name": "account", "type": "address"},
+      {"internalType": "uint256", "name": "amount", "type": "uint256"}
+    ],
+    "name": "mint",
+    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {"internalType": "address", "name": "_to", "type": "address"},
+      {"internalType": "uint256", "name": "_value", "type": "uint256"},
+      {"internalType": "bytes", "name": "_data", "type": "bytes"}
+    ],
+    "name": "transferAndCall",
+    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [{"internalType": "address", "name": "account", "type": "address"}],
+    "name": "isMinter",
+    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "tokenURI",
+    "outputs": [{"internalType": "string", "name": "", "type": "string"}],
+    "type": "function"
+  },
   
   // Events
-  "event Transfer(address indexed, address indexed, uint256)",
-  "event Approval(address indexed, address indexed, uint256)",
-  "event TierUpgraded(address indexed, uint8)",
-  "event NFTRewardMinted(address indexed, uint8, uint256)"
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "internalType": "address", "name": "from", "type": "address"},
+      {"indexed": true, "internalType": "address", "name": "to", "type": "address"},
+      {"indexed": false, "internalType": "uint256", "name": "value", "type": "uint256"}
+    ],
+    "name": "Transfer",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {"indexed": true, "internalType": "address", "name": "owner", "type": "address"},
+      {"indexed": true, "internalType": "address", "name": "spender", "type": "address"},
+      {"indexed": false, "internalType": "uint256", "name": "value", "type": "uint256"}
+    ],
+    "name": "Approval",
+    "type": "event"
+  }
 ];
 
 // MembershipNFT Contract ABI
@@ -110,22 +212,39 @@ export const getContractInstances = (signer?: ethers.Signer) => {
 // Check if user has contracts interaction capability
 export const checkUserContractAccess = async (userAddress: string) => {
   try {
-    const { meeToken, membershipNFT } = getContractInstances();
+    const { meeToken } = getContractInstances();
     
-    // Get user data
-    const [balance, tier, totalEarned, highestNFTTier] = await Promise.all([
+    // Test basic contract functions
+    const [balance, name, symbol, decimals, totalSupply] = await Promise.all([
       meeToken.balanceOf(userAddress),
-      meeToken.getUserTier(userAddress),
-      meeToken.totalEarned(userAddress),
-      membershipNFT.getUserHighestTier(userAddress),
+      meeToken.name(),
+      meeToken.symbol(), 
+      meeToken.decimals(),
+      meeToken.totalSupply(),
     ]);
+    
+    // Check if user is a minter (optional)
+    let isMinter = false;
+    try {
+      isMinter = await meeToken.isMinter(userAddress);
+    } catch (e) {
+      // isMinter function might not exist in all contracts
+      console.log('isMinter check skipped:', e.message);
+    }
     
     return {
       success: true,
-      balance: ethers.formatEther(balance),
-      tier: Number(tier),
-      totalEarned: ethers.formatEther(totalEarned),
-      highestNFTTier: Number(highestNFTTier),
+      contractInfo: {
+        name: name,
+        symbol: symbol,
+        decimals: Number(decimals),
+        totalSupply: ethers.formatEther(totalSupply),
+      },
+      userInfo: {
+        balance: ethers.formatEther(balance),
+        isMinter: isMinter,
+        address: userAddress,
+      },
     };
   } catch (error) {
     console.error('User contract access check failed:', error);

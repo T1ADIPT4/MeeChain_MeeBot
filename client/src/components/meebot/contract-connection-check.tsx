@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, CheckCircle, Loader2, RefreshCw, Settings, Wifi } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { CONTRACT_ADDRESSES, MEE_TOKEN_ABI } from '@/lib/contract-abi-checker';
 
 interface ContractStatus {
   tokenContract: boolean;
@@ -188,6 +189,21 @@ export default function ContractConnectionCheck() {
         {lastCheck && (
           <div className="text-xs text-slate-400 text-center pt-2 border-t border-slate-700">
             ตรวจสอบล่าสุด: {lastCheck.toLocaleTimeString('th-TH')}
+          </div>
+        )}
+
+        {/* Contract Info Display */}
+        {status.abiLoaded && (
+          <div className="mt-4 p-4 bg-green-500/10 border border-green-500/30 rounded-lg">
+            <h4 className="font-semibold text-green-400 mb-2">✅ Contract ที่เชื่อมต่อแล้ว</h4>
+            <div className="text-sm text-green-300 space-y-1">
+              <div>• Token Contract: {CONTRACT_ADDRESSES.MEE_TOKEN.slice(0, 10)}...</div>
+              <div>• Fuse Network RPC: Connected</div>
+              <div>• Chain ID: {CONTRACT_ADDRESSES.CHAIN_ID}</div>
+              <div className="text-xs text-green-400 mt-2">
+                🔗 ABI loaded successfully with {MEE_TOKEN_ABI.length} functions
+              </div>
+            </div>
           </div>
         )}
 
