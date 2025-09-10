@@ -153,10 +153,10 @@ export const MEMBERSHIP_NFT_ABI = [
 
 // Contract addresses (ใส่ address จริงตอน deploy)
 export const CONTRACT_ADDRESSES = {
-  MEE_TOKEN: process.env.VITE_TOKEN_CONTRACT_ADDRESS || "0x0000000000000000000000000000000000000000",
-  MEMBERSHIP_NFT: process.env.VITE_NFT_CONTRACT_ADDRESS || "0x0000000000000000000000000000000000000000",
-  FUSE_RPC: process.env.VITE_FUSE_RPC_URL || "https://rpc.fuse.io",
-  CHAIN_ID: parseInt(process.env.VITE_CHAIN_ID || "122"),
+  MEE_TOKEN: import.meta.env.VITE_TOKEN_CONTRACT_ADDRESS || "0x0000000000000000000000000000000000000000",
+  MEMBERSHIP_NFT: import.meta.env.VITE_NFT_CONTRACT_ADDRESS || "0x0000000000000000000000000000000000000000",
+  FUSE_RPC: import.meta.env.VITE_FUSE_RPC_URL || "https://rpc.fuse.io",
+  CHAIN_ID: parseInt(import.meta.env.VITE_CHAIN_ID || "122"),
 };
 
 // Validate contract connection
