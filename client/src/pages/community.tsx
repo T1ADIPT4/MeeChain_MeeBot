@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,35 +20,9 @@ import {
   Eye,
   ChevronRight,
   Plus,
-  Filter,
-  User,
-  Bug,
-  Wrench,
-  DollarSign,
-  BookOpen,
-  Send,
-  Smile,
-  ThumbsUp,
-  Zap,
-  Gift,
-  Coins,
-  Shield,
-  MoreHorizontal,
-  CheckCircle,
+  Filter
 } from 'lucide-react';
 import { Link } from 'wouter';
-
-
-interface CommunityComment {
-  id: string;
-  userId: string;
-  username: string;
-  userAvatar: string;
-  content: string;
-  timestamp: string;
-  isMeeBot: boolean;
-  meeBotMood?: 'excited' | 'happy' | 'supportive' | 'amazed';
-}
 
 interface CommunityPost {
   id: string;
@@ -64,12 +39,10 @@ interface CommunityPost {
   }[];
   timestamp: string;
   likes: number;
-  comments: CommunityComment[];
+  comments: number;
   isLiked: boolean;
   meeBotReaction?: string;
-  meeBotMood?: 'excited' | 'happy' | 'supportive' | 'amazed';
   tags: string[];
-  meePoints: number;
 }
 
 interface TrendingTopic {
@@ -84,9 +57,6 @@ export default function CommunityPage() {
   const [posts, setPosts] = useState<CommunityPost[]>([]);
   const [trendingTopics, setTrendingTopics] = useState<TrendingTopic[]>([]);
   const [filter, setFilter] = useState<'all' | 'achievements' | 'tips' | 'questions'>('all');
-  const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set());
-  const [newComments, setNewComments] = useState<Record<string, string>>({});
-  const [isCommenting, setIsCommenting] = useState<Record<string, boolean>>({});
 
   // Mock community data
   useEffect(() => {
@@ -96,7 +66,7 @@ export default function CommunityPage() {
         userId: 'user1',
         username: 'CryptoPilot99',
         userAvatar: '',
-        userBadges: ['Explorer', 'Security Expert', 'Swap Ninja'],
+        userBadges: ['Explorer', 'Security Expert'],
         content: 'เย้! ผมลองใช้ Swap ครั้งแรกแล้วได้ badge นี้! รู้สึกภูมิใจมาก ❤️ ขอบคุณ MeeBot ที่แนะนำทุกขั้นตอน',
         achievements: [
           {
@@ -108,32 +78,10 @@ export default function CommunityPage() {
         ],
         timestamp: '2 ชั่วโมงที่แล้ว',
         likes: 24,
-        comments: [
-          {
-            id: 'c1',
-            userId: 'meebot',
-            username: 'MeeBot',
-            userAvatar: '',
-            content: 'สุดยอดเลยจ้า! คุณเก่งมาก ๆ เลยนะ! ผมภูมิใจในตัวคุณมาก! 🎉✨',
-            timestamp: '1 ชั่วโมงที่แล้ว',
-            isMeeBot: true,
-            meeBotMood: 'excited'
-          },
-          {
-            id: 'c2',
-            userId: 'user5',
-            username: 'TokenMaster',
-            userAvatar: '',
-            content: 'ยินดีด้วยครับ! ผมก็เพิ่งได้ badge นี้เหมือนกัน 😊',
-            timestamp: '30 นาทีที่แล้ว',
-            isMeeBot: false
-          }
-        ],
+        comments: 8,
         isLiked: false,
         meeBotReaction: 'สุดยอดเลยจ้า! คุณเก่งมาก ๆ เลยนะ! 🎉',
-        meeBotMood: 'excited',
-        tags: ['swap', 'beginner', 'achievement'],
-        meePoints: 150
+        tags: ['swap', 'beginner', 'achievement']
       },
       {
         id: '2',
@@ -144,84 +92,31 @@ export default function CommunityPage() {
         content: 'สำหรับมือใหม่ที่จะเริ่มเรียน Web3: แนะนำให้เริ่มจาก Academy ก่อนนะครับ เนื้อหาดีมาก เข้าใจง่าย MeeBot อธิบายชัดเจนด้วย! 📚',
         timestamp: '5 ชั่วโมงที่แล้ว',
         likes: 156,
-        comments: [
-          {
-            id: 'c3',
-            userId: 'meebot',
-            username: 'MeeBot',
-            userAvatar: '',
-            content: 'ขอบคุณที่ช่วยแนะนำเพื่อน ๆ นะครับ! คุณเป็น Community Hero จริง ๆ! ผมให้คุณได้ 50 MeePoints เพิ่มเลย! 🦸‍♂️💫',
-            timestamp: '4 ชั่วโมงที่แล้ว',
-            isMeeBot: true,
-            meeBotMood: 'supportive'
-          },
-          {
-            id: 'c4',
-            userId: 'user6',
-            username: 'WebThreeLearner',
-            userAvatar: '',
-            content: 'ขอบคุณมากครับ! จะไปลองดูที่ Academy เลย 🙏',
-            timestamp: '3 ชั่วโมงที่แล้ว',
-            isMeeBot: false
-          },
-          {
-            id: 'c5',
-            userId: 'user7',
-            username: 'CryptoNewbie',
-            userAvatar: '',
-            content: 'ผมก็เพิ่งเริ่มเรียน ขอบคุณสำหรับคำแนะนำครับ!',
-            timestamp: '2 ชั่วโมงที่แล้ว',
-            isMeeBot: false
-          }
-        ],
+        comments: 32,
         isLiked: true,
         meeBotReaction: 'ขอบคุณที่ช่วยแนะนำเพื่อน ๆ นะครับ! คุณเป็น Community Hero จริง ๆ! 🦸‍♂️',
-        meeBotMood: 'supportive',
-        tags: ['tips', 'academy', 'beginner'],
-        meePoints: 280
+        tags: ['tips', 'academy', 'beginner']
       },
       {
         id: '3',
         userId: 'user3',
         username: 'TokenHunter',
         userAvatar: '',
-        userBadges: ['Token Collector', 'Insight Seeker'],
+        userBadges: ['Token Collector'],
         content: 'มีใครพอจะรู้วิธีเชื่อมต่อ Wallet กับ Fuse Network บ้างไหม? ลองทำตาม Tutorial แล้วแต่ติดขั้นตอนสุดท้าย 🤔',
         timestamp: '1 วันที่แล้ว',
         likes: 12,
-        comments: [
-          {
-            id: 'c6',
-            userId: 'meebot',
-            username: 'MeeBot',
-            userAvatar: '',
-            content: 'อย่าเครียดนะครับ! ผมมี Tutorial พิเศษให้ ลองไปดูที่ Academy เซคชั่น "Network Setup" นะ! ผมจะช่วยแนะนำทุกขั้นตอนเลย! 💪✨',
-            timestamp: '20 ชั่วโมงที่แล้ว',
-            isMeeBot: true,
-            meeBotMood: 'supportive'
-          },
-          {
-            id: 'c7',
-            userId: 'user2',
-            username: 'BlockchainGuru',
-            userAvatar: '',
-            content: 'ลองเช็ค RPC URL ให้ถูกต้องนะครับ บางทีอาจจะผิดตรงนั้น',
-            timestamp: '18 ชั่วโมงที่แล้ว',
-            isMeeBot: false
-          }
-        ],
+        comments: 15,
         isLiked: false,
         meeBotReaction: 'อย่าเครียดนะครับ! ผมมี Tutorial พิเศษให้ ลองไปดูที่ Academy เซคชั่น "Network Setup" นะ! 💪',
-        meeBotMood: 'supportive',
-        tags: ['question', 'wallet', 'network'],
-        meePoints: 75
+        tags: ['question', 'wallet', 'network']
       },
       {
         id: '4',
         userId: 'user4',
         username: 'NFTArtist',
         userAvatar: '',
-        userBadges: ['Creative Mind', 'First Flight', 'UX Wizard'],
+        userBadges: ['Creative Mind', 'First Flight'],
         content: 'สร้าง NFT ใหม่เสร็จแล้ว! ขอบคุณ MeeChain ที่ทำให้การสร้าง NFT ง่ายขึ้นมาก ใครสนใจมาดูผลงานกันนะ ✨',
         achievements: [
           {
@@ -233,32 +128,10 @@ export default function CommunityPage() {
         ],
         timestamp: '2 วันที่แล้ว',
         likes: 89,
-        comments: [
-          {
-            id: 'c8',
-            userId: 'meebot',
-            username: 'MeeBot',
-            userAvatar: '',
-            content: 'ว้าววววว! NFT สวยมาก ๆ เลย! คุณมีพรสวรรค์จริง ๆ นะ! ผมตื่นเต้นไปด้วยเลย! 🎨✨🎉',
-            timestamp: '1 วันที่แล้ว',
-            isMeeBot: true,
-            meeBotMood: 'amazed'
-          },
-          {
-            id: 'c9',
-            userId: 'user8',
-            username: 'ArtLover',
-            userAvatar: '',
-            content: 'งดงามมากเลย! ขอดู collection ทั้งหมดได้ไหม?',
-            timestamp: '1 วันที่แล้ว',
-            isMeeBot: false
-          }
-        ],
+        comments: 23,
         isLiked: false,
         meeBotReaction: 'ว้าววววว! NFT สวยมาก ๆ เลย! คุณมีพรสวรรค์จริง ๆ นะ! 🎨✨',
-        meeBotMood: 'amazed',
-        tags: ['nft', 'creative', 'achievement'],
-        meePoints: 200
+        tags: ['nft', 'creative', 'achievement']
       }
     ];
 
@@ -291,119 +164,10 @@ export default function CommunityPage() {
   const handleMeeBotReact = (postId: string) => {
     const post = posts.find(p => p.id === postId);
     if (post?.meeBotReaction) {
-      // สุ่ม MeeBot reaction แบบใหม่
-      const randomReactions = [
-        "สุดยอดเลยจ้า! ผมชอบโพสต์นี้มาก! 🎉",
-        "เก่งมาก ๆ เลยนะ! ผมภูมิใจในตัวคุณ! ⭐",
-        "ว้าว! นี่คือสิ่งที่ผมรอคอย! 🚀",
-        "คุณเป็นแรงบันดาลใจให้ผมเลย! 💫",
-        "ยอดเยี่ยม! ผมจะแจก bonus MeePoints ให้! 🎁"
-      ];
-
-      const randomReaction = randomReactions[Math.floor(Math.random() * randomReactions.length)];
-
       toast({
-        title: "🤖 MeeBot React!",
-        description: randomReaction,
+        title: "🤖 MeeBot พูดว่า:",
+        description: post.meeBotReaction,
       });
-
-      // เพิ่ม MeePoints สุ่ม
-      const bonusPoints = Math.floor(Math.random() * 30) + 10;
-      setTimeout(() => {
-        toast({
-          title: "🎉 Bonus MeePoints!",
-          description: `คุณได้รับ ${bonusPoints} MeePoints จาก MeeBot!`,
-        });
-      }, 1500);
-    }
-  };
-
-  const toggleComments = (postId: string) => {
-    setExpandedComments(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(postId)) {
-        newSet.delete(postId);
-      } else {
-        newSet.add(postId);
-      }
-      return newSet;
-    });
-  };
-
-  const handleAddComment = (postId: string) => {
-    const commentText = newComments[postId]?.trim();
-    if (!commentText) return;
-
-    setIsCommenting(prev => ({ ...prev, [postId]: true }));
-
-    // จำลองการเพิ่มคอมเมนต์
-    setTimeout(() => {
-      setPosts(prev => 
-        prev.map(post => {
-          if (post.id === postId) {
-            const newComment: CommunityComment = {
-              id: `c${Date.now()}`,
-              userId: 'currentUser',
-              username: 'คุณ',
-              userAvatar: '',
-              content: commentText,
-              timestamp: 'เมื่อสักครู่',
-              isMeeBot: false
-            };
-
-            // MeeBot อาจจะตอบกลับ
-            const shouldMeeBotReply = Math.random() > 0.5;
-            const meeBotReplies = [
-              "ความคิดเห็นดีมาก! ผมชอบ! 👍",
-              "เห็นด้วยกับคุณเลย! สุดยอด! ✨",
-              "คอมเมนต์นี้มีประโยชน์มาก! 🧠",
-              "ผมเรียนรู้อะไรใหม่จากคุณแล้ว! 📚",
-              "คุณพูดถูกมาก ๆ เลย! 💯"
-            ];
-
-            const comments = [...post.comments, newComment];
-
-            if (shouldMeeBotReply) {
-              const meeBotReply: CommunityComment = {
-                id: `c${Date.now() + 1}`,
-                userId: 'meebot',
-                username: 'MeeBot',
-                userAvatar: '',
-                content: meeBotReplies[Math.floor(Math.random() * meeBotReplies.length)],
-                timestamp: 'เมื่อสักครู่',
-                isMeeBot: true,
-                meeBotMood: 'happy'
-              };
-              comments.push(meeBotReply);
-            }
-
-            return {
-              ...post,
-              comments,
-              meePoints: post.meePoints + 5 // บวก MeePoints สำหรับการคอมเมนต์
-            };
-          }
-          return post;
-        })
-      );
-
-      setNewComments(prev => ({ ...prev, [postId]: '' }));
-      setIsCommenting(prev => ({ ...prev, [postId]: false }));
-
-      toast({
-        title: "✅ คอมเมนต์สำเร็จ!",
-        description: "ขอบคุณที่แชร์ความคิดเห็น! +5 MeePoints",
-      });
-    }, 1000);
-  };
-
-  const getMeeBotMoodEmoji = (mood?: string) => {
-    switch (mood) {
-      case 'excited': return '🎉';
-      case 'happy': return '😊';
-      case 'supportive': return '💪';
-      case 'amazed': return '🤩';
-      default: return '🤖';
     }
   };
 
@@ -429,29 +193,9 @@ export default function CommunityPage() {
       'Bug Buster': 'bg-red-500/20 text-red-300 border-red-500/30',
       'Token Collector': 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
       'Creative Mind': 'bg-pink-500/20 text-pink-300 border-pink-500/30',
-      'First Flight': 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
-      'Swap Ninja': 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30',
-      'UX Wizard': 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30',
-      'Insight Seeker': 'bg-teal-500/20 text-teal-300 border-teal-500/30'
+      'First Flight': 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30'
     };
     return colors[badge as keyof typeof colors] || 'bg-gray-500/20 text-gray-300 border-gray-500/30';
-  };
-
-  const getBadgeIcon = (badge: string) => {
-    const icons = {
-      'Explorer': <User className="w-3 h-3" />,
-      'Guardian': <Award className="w-3 h-3" />,
-      'Security Expert': <Shield className="w-3 h-3" />,
-      'Helpful Hero': <Star className="w-3 h-3" />,
-      'Bug Buster': <Bug className="w-3 h-3" />,
-      'Token Collector': <DollarSign className="w-3 h-3" />,
-      'Creative Mind': <Sparkles className="w-3 h-3" />,
-      'First Flight': <TrendingUp className="w-3 h-3" />,
-      'Swap Ninja': <DollarSign className="w-3 h-3" />,
-      'UX Wizard': <Wrench className="w-3 h-3" />,
-      'Insight Seeker': <BookOpen className="w-3 h-3" />
-    };
-    return icons[badge as keyof typeof icons] || null;
   };
 
   return (
@@ -480,7 +224,7 @@ export default function CommunityPage() {
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-4">
             {/* MeeBot Recommendations */}
-            <UICard className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border-cyan-500/30">
+            <Card className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border-cyan-500/30">
               <CardHeader className="pb-3">
                 <CardTitle className="text-cyan-300 flex items-center gap-2">
                   <Bot className="w-5 h-5" />
@@ -507,10 +251,10 @@ export default function CommunityPage() {
                   </div>
                 </div>
               </CardContent>
-            </UICard>
+            </Card>
 
             {/* Trending Topics */}
-            <UICard className="bg-black/50 border-purple-500/30">
+            <Card className="bg-black/50 border-purple-500/30">
               <CardHeader className="pb-3">
                 <CardTitle className="text-purple-300 flex items-center gap-2">
                   <TrendingUp className="w-5 h-5" />
@@ -534,10 +278,10 @@ export default function CommunityPage() {
                   </div>
                 ))}
               </CardContent>
-            </UICard>
+            </Card>
 
             {/* Community Stats */}
-            <UICard className="bg-black/50 border-orange-500/30">
+            <Card className="bg-black/50 border-orange-500/30">
               <CardHeader className="pb-3">
                 <CardTitle className="text-orange-300 flex items-center gap-2">
                   <Users className="w-5 h-5" />
@@ -558,7 +302,7 @@ export default function CommunityPage() {
                   <p className="text-sm text-gray-300">Badge แจกไปแล้ว</p>
                 </div>
               </CardContent>
-            </UICard>
+            </Card>
           </div>
 
           {/* Main Feed */}
@@ -590,7 +334,7 @@ export default function CommunityPage() {
             {/* Posts Feed */}
             <div className="space-y-4">
               {getFilteredPosts().map((post) => (
-                <UICard key={post.id} className="bg-black/50 border-slate-600 hover:border-purple-500/50 transition-colors">
+                <Card key={post.id} className="bg-black/50 border-slate-600 hover:border-purple-500/50 transition-colors">
                   <CardHeader className="pb-3">
                     <div className="flex items-start gap-3">
                       <Avatar className="w-10 h-10">
@@ -604,8 +348,7 @@ export default function CommunityPage() {
                           <h4 className="font-semibold text-white">{post.username}</h4>
                           <div className="flex items-center gap-1">
                             {post.userBadges.map((badge) => (
-                              <Badge key={badge} className={`text-xs ${getBadgeColor(badge)} flex items-center gap-1`}>
-                                <span>{getBadgeIcon(badge)}</span>
+                              <Badge key={badge} className={`text-xs ${getBadgeColor(badge)}`}>
                                 {badge}
                               </Badge>
                             ))}
@@ -666,16 +409,6 @@ export default function CommunityPage() {
                       </div>
                     )}
 
-                    {/* MeePoints Display */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">
-                          <Coins className="w-3 h-3 mr-1" />
-                          {post.meePoints} MeePoints
-                        </Badge>
-                      </div>
-                    </div>
-
                     {/* Actions */}
                     <div className="flex items-center gap-4 pt-2 border-t border-slate-700">
                       <Button
@@ -687,106 +420,17 @@ export default function CommunityPage() {
                         <Heart className={`w-4 h-4 mr-1 ${post.isLiked ? 'fill-current' : ''}`} />
                         {post.likes}
                       </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="text-gray-400 hover:text-blue-400"
-                        onClick={() => toggleComments(post.id)}
-                      >
+                      <Button variant="ghost" size="sm" className="text-gray-400 hover:text-blue-400">
                         <MessageCircle className="w-4 h-4 mr-1" />
-                        {post.comments.length}
+                        {post.comments}
                       </Button>
                       <Button variant="ghost" size="sm" className="text-gray-400 hover:text-green-400">
                         <Share2 className="w-4 h-4 mr-1" />
                         แชร์
                       </Button>
                     </div>
-
-                    {/* Comments Section */}
-                    {expandedComments.has(post.id) && (
-                      <div className="mt-4 space-y-3 border-t border-slate-700 pt-4">
-                        {/* Existing Comments */}
-                        {post.comments.map((comment) => (
-                          <div key={comment.id} className={`flex gap-3 ${comment.isMeeBot ? 'flex-row-reverse' : ''}`}>
-                            <Avatar className="w-8 h-8 flex-shrink-0">
-                              <AvatarImage src={comment.userAvatar} />
-                              <AvatarFallback className={comment.isMeeBot 
-                                ? 'bg-gradient-to-br from-cyan-500 to-blue-500 text-white' 
-                                : 'bg-gradient-to-br from-purple-500 to-pink-500 text-white'
-                              }>
-                                {comment.isMeeBot ? '🤖' : comment.username.slice(0, 2)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className={`flex-1 ${comment.isMeeBot ? 'text-right' : ''}`}>
-                              <div className={`inline-block max-w-[80%] p-3 rounded-2xl ${
-                                comment.isMeeBot 
-                                  ? 'bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-100' 
-                                  : 'bg-slate-700/50 text-gray-200'
-                              }`}>
-                                <div className="flex items-center gap-2 mb-1">
-                                  <span className="font-medium text-sm">
-                                    {comment.isMeeBot ? (
-                                      <span className="flex items-center gap-1">
-                                        <Bot className="w-3 h-3" />
-                                        MeeBot
-                                        {comment.meeBotMood && (
-                                          <span>{getMeeBotMoodEmoji(comment.meeBotMood)}</span>
-                                        )}
-                                      </span>
-                                    ) : comment.username}
-                                  </span>
-                                  <span className="text-xs opacity-70">{comment.timestamp}</span>
-                                </div>
-                                <p className="text-sm leading-relaxed">{comment.content}</p>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-
-                        {/* Add Comment Form */}
-                        <div className="flex gap-3 mt-4 pt-3 border-t border-slate-600">
-                          <Avatar className="w-8 h-8 flex-shrink-0">
-                            <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white">
-                              คุณ
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 flex gap-2">
-                            <div className="flex-1 relative">
-                              <input
-                                type="text"
-                                placeholder="แสดงความคิดเห็น..."
-                                value={newComments[post.id] || ''}
-                                onChange={(e) => setNewComments(prev => ({
-                                  ...prev,
-                                  [post.id]: e.target.value
-                                }))}
-                                onKeyPress={(e) => {
-                                  if (e.key === 'Enter' && !isCommenting[post.id]) {
-                                    handleAddComment(post.id);
-                                  }
-                                }}
-                                className="w-full bg-slate-700/50 border border-slate-600 rounded-full px-4 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 pr-12"
-                                disabled={isCommenting[post.id]}
-                              />
-                              <Button
-                                size="sm"
-                                onClick={() => handleAddComment(post.id)}
-                                disabled={!newComments[post.id]?.trim() || isCommenting[post.id]}
-                                className="absolute right-1 top-1 h-6 w-6 rounded-full bg-purple-500 hover:bg-purple-600 p-0"
-                              >
-                                {isCommenting[post.id] ? (
-                                  <div className="w-3 h-3 border border-white border-t-transparent rounded-full animate-spin" />
-                                ) : (
-                                  <Send className="w-3 h-3" />
-                                )}
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
                   </CardContent>
-                </UICard>
+                </Card>
               ))}
             </div>
           </div>

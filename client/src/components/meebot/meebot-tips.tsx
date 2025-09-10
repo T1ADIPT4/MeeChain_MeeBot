@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import {
+import { 
   Bot,
   Lightbulb,
   RefreshCw,
@@ -11,16 +12,12 @@ import {
   Target,
   Clock,
   MessageCircle,
-  TrendingUp,
-  CheckCircle,
-  Star
+  TrendingUp
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 
 export function MeeBotTips() {
   const [currentTip, setCurrentTip] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const { toast } = useToast();
 
   // MeeBot tips แบบขำ ๆ และเป็นประโยชน์
   const tips = [
@@ -115,26 +112,6 @@ export function MeeBotTips() {
     }, 300);
   };
 
-  const handleCheckPoints = () => {
-    // เพิ่ม XP 10 คะแนนให้ผู้ใช้
-    const currentXP = parseInt(localStorage.getItem('meebot_xp') || '0');
-    const newXP = currentXP + 10;
-    localStorage.setItem('meebot_xp', newXP.toString());
-
-    toast({
-      title: "🎉 รับ XP สำเร็จ!",
-      description: "คุณได้รับ 10 XP จากการเช็คพอยท์!",
-    });
-  };
-
-  const handleCompleteAllTips = () => {
-    toast({
-      title: "🎉 ยอดเยี่ยม!",
-      description: "คุณอ่าน MeeBot Tips ครบถ้วนแล้ว",
-      variant: "success"
-    });
-  };
-
   return (
     <Card className={`bg-gradient-to-r ${getPriorityColor(tip.priority)} transition-all duration-500 ${
       isAnimating ? 'scale-95 opacity-70' : 'scale-100 opacity-100'
@@ -192,34 +169,24 @@ export function MeeBotTips() {
         </div>
 
         <div className="flex gap-2">
-          <Button
+          <Button 
             size="sm"
             className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
           >
             <Target className="w-4 h-4 mr-2" />
             {tip.action}
           </Button>
-
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleCheckPoints}
-            className="border-emerald-500 text-emerald-300 hover:bg-emerald-800/50"
-            title="เช็คพอยท์ - รับ 10 XP"
-          >
-            <CheckCircle className="w-4 h-4" />
-          </Button>
-
-          <Button
-            variant="outline"
+          
+          <Button 
+            variant="outline" 
             size="sm"
             className="border-cyan-500 text-cyan-300 hover:bg-cyan-800/50"
           >
             <MessageCircle className="w-4 h-4" />
           </Button>
-
-          <Button
-            variant="outline"
+          
+          <Button 
+            variant="outline" 
             size="sm"
             className="border-green-500 text-green-300 hover:bg-green-800/50"
           >

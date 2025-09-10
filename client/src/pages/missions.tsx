@@ -37,7 +37,7 @@ interface TokenBalance {
   };
 }
 
-function MissionsPage() {
+export default function Missions() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -345,7 +345,6 @@ function MissionsPage() {
     </div>
   );
 }
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -400,7 +399,7 @@ interface UserStats {
   meePoints: number;
 }
 
-function Missions() {
+export default function MissionsPage() {
   const { toast } = useToast();
   const [missions, setMissions] = useState<Mission[]>([]);
   const [userStats, setUserStats] = useState<UserStats>({
@@ -644,9 +643,9 @@ function Missions() {
                       </h4>
                       {mission.completed && <CheckCircle className="w-5 h-5 text-green-400" />}
                     </div>
-
+                    
                     <p className="text-gray-300 text-sm mb-3">{mission.description}</p>
-
+                    
                     <div className="flex items-center gap-2 flex-wrap mb-3">
                       <Badge className={getCategoryColor(mission.category)}>
                         {getCategoryIcon(mission.category)}
@@ -785,4 +784,3 @@ function Missions() {
     </div>
   );
 }
-
