@@ -199,18 +199,20 @@ export default function Dashboard() {
       </nav>
 
       <div className="px-6 pb-6 space-y-6">
-        {/* MeeBot Secrets Health Check */}
+        {/* === ส่วนที่ 1: หน้าจอหลัก (MeeBot Monitoring) === */}
+        
+        {/* MeeBot Secrets Health Check - แถบแจ้งเตือนด้านบน */}
         <MeeBotSecretsAlert />
 
-        {/* Main MeeChain Card with Breathing Logo */}
+        {/* Main MeeBot Card with Control Buttons */}
         <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm mt-6">
           <CardContent className="p-8 text-center">
-            {/* Task Control Buttons */}
+            {/* MeeBot Control Buttons - จัดเรียงในแนวนอน */}
             <div className="flex justify-center gap-3 mb-6">
               <Button
                 onClick={() => handleTaskControl('start')}
                 disabled={isTaskRunning}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2"
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 font-semibold"
                 data-testid="button-start-task"
               >
                 <Play className="w-4 h-4 mr-2" />
@@ -220,7 +222,7 @@ export default function Dashboard() {
               <Button
                 onClick={() => handleTaskControl('pause')}
                 disabled={!isTaskRunning}
-                className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2"
+                className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 font-semibold"
                 data-testid="button-pause-task"
               >
                 <Pause className="w-4 h-4 mr-2" />
@@ -230,7 +232,7 @@ export default function Dashboard() {
               <Button
                 onClick={() => handleTaskControl('stop')}
                 disabled={!isTaskRunning}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2"
+                className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 font-semibold"
                 data-testid="button-stop-task"
               >
                 <Square className="w-4 h-4 mr-2" />
@@ -239,7 +241,7 @@ export default function Dashboard() {
 
               <Button
                 variant="outline"
-                className="border-slate-500 text-slate-300 hover:bg-slate-700 px-4 py-2"
+                className="border-slate-500 text-slate-300 hover:bg-slate-700 px-6 py-3 font-semibold"
                 onClick={() => navigate('/settings')}
                 data-testid="button-task-settings"
               >
@@ -248,7 +250,7 @@ export default function Dashboard() {
               </Button>
             </div>
 
-            {/* Breathing Logo */}
+            {/* MeeBot Logo ตรงกลาง */}
             <div 
               ref={logoRef}
               className="w-32 h-32 mx-auto mb-4 bg-slate-700/50 rounded-full flex items-center justify-center shadow-2xl"
@@ -259,25 +261,32 @@ export default function Dashboard() {
             >
               <img 
                 src={logoUrl} 
-                alt="MeeChain Logo" 
+                alt="MeeBot Logo" 
                 className="w-24 h-24 object-contain"
               />
             </div>
 
             <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              MeeChain
+              MeeBot
             </h2>
 
+            {/* สถานะ MeeBot */}
             {isTaskRunning ? (
-              <div className="flex items-center justify-center gap-2 text-blue-300 mb-4">
+              <div className="flex items-center justify-center gap-2 text-blue-300 mb-6">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
-                <span>Monitoring in progress...</span>
+                <span>Ready to start monitoring</span>
               </div>
             ) : (
-              <p className="text-slate-400 mb-4">Ready to start monitoring</p>
+              <p className="text-slate-400 mb-6">Ready to start monitoring</p>
             )}
+          </CardContent>
+        </Card>
 
-            {/* Simple Chart Visualization */}
+        {/* === ส่วนที่ 2: ส่วนกลาง (Task Progress & Wallet) === */}
+        
+        {/* Task Progress Chart */}
+        <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm">
+          <CardContent className="p-6">
             <div className="bg-slate-900/50 rounded-lg p-4 mb-4">
               <h3 className="text-sm font-semibold text-blue-300 mb-3">Task Progress</h3>
               <div className="flex items-end justify-center gap-1 h-20">
@@ -353,7 +362,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Balance Card */}
+        {/* Balance Card พร้อม Toggle Visibility */}
         <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm">
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center justify-between text-blue-300">
@@ -399,7 +408,9 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Action Buttons */}
+        {/* === ส่วนที่ 3: ส่วนท้าย (Token Actions & Network) === */}
+        
+        {/* Token Actions Grid - 2x2 */}
         <div className="grid grid-cols-2 gap-4">
           <Button
             className="bg-gradient-to-r from-green-500 to-blue-500 hover:opacity-90 h-16"
@@ -408,7 +419,7 @@ export default function Dashboard() {
           >
             <div className="text-center">
               <Download className="w-6 h-6 mx-auto mb-1" />
-              <span className="text-sm">รับโทเค็น</span>
+              <span className="text-sm font-semibold">ซื้อโทเค็น</span>
             </div>
           </Button>
 
@@ -419,7 +430,7 @@ export default function Dashboard() {
           >
             <div className="text-center">
               <Send className="w-6 h-6 mx-auto mb-1" />
-              <span className="text-sm">ส่งโทเค็น</span>
+              <span className="text-sm font-semibold">ส่งโทเค็น</span>
             </div>
           </Button>
 
@@ -429,7 +440,7 @@ export default function Dashboard() {
           >
             <div className="text-center">
               <GitBranch className="w-6 h-6 mx-auto mb-1" />
-              <span className="text-sm">Swap/Bridge</span>
+              <span className="text-sm font-semibold">Swap/Bridge</span>
             </div>
           </Button>
 
@@ -439,39 +450,12 @@ export default function Dashboard() {
           >
             <div className="text-center">
               <Coins className="w-6 h-6 mx-auto mb-1" />
-              <span className="text-sm">Token Actions</span>
+              <span className="text-sm font-semibold">Token Actions</span>
             </div>
           </Button>
         </div>
 
-        {/* Menu Grid */}
-        <div className="grid grid-cols-2 gap-4">
-          <Button
-            variant="outline"
-            className="border-slate-600 bg-slate-800/50 hover:bg-slate-700 h-16 text-slate-300"
-            onClick={() => navigate('/earnings')}
-            data-testid="button-earnings"
-          >
-            <div className="text-center">
-              <History className="w-6 h-6 mx-auto mb-1" />
-              <span className="text-sm">รายได้</span>
-            </div>
-          </Button>
-
-          <Button
-            variant="outline"
-            className="border-slate-600 bg-slate-800/50 hover:bg-slate-700 h-16 text-slate-300"
-            onClick={() => navigate('/faucet')}
-            data-testid="button-faucet"
-          >
-            <div className="text-center">
-              <Plus className="w-6 h-6 mx-auto mb-1" />
-              <span className="text-sm">รับโทเค็นฟรี</span>
-            </div>
-          </Button>
-        </div>
-
-        {/* Network Status */}
+        {/* Network Status - Polygon */}
         <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
@@ -484,7 +468,32 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
+        {/* รับโทเค็นฟรี และ รายได้ */}
+        <div className="grid grid-cols-2 gap-4">
+          <Button
+            variant="outline"
+            className="border-slate-600 bg-slate-800/50 hover:bg-slate-700 h-16 text-slate-300"
+            onClick={() => navigate('/faucet')}
+            data-testid="button-faucet"
+          >
+            <div className="text-center">
+              <Plus className="w-6 h-6 mx-auto mb-1" />
+              <span className="text-sm">รับโทเค็นฟรี</span>
+            </div>
+          </Button>
 
+          <Button
+            variant="outline"
+            className="border-slate-600 bg-slate-800/50 hover:bg-slate-700 h-16 text-slate-300"
+            onClick={() => navigate('/earnings')}
+            data-testid="button-earnings"
+          >
+            <div className="text-center">
+              <History className="w-6 h-6 mx-auto mb-1" />
+              <span className="text-sm">รายได้</span>
+            </div>
+          </Button>
+        </div>
 
         {/* ปุ่ม มีบอท - MeeBot Assistant */}
         <div className="mb-8">
