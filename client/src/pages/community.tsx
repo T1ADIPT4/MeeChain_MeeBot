@@ -37,15 +37,6 @@ import {
 } from 'lucide-react';
 import { Link } from 'wouter';
 
-// Assuming UICard is imported or defined elsewhere if it's a custom component
-// For this example, we'll assume it's a direct replacement for Card and its imports are handled.
-// If UICard were a separate component, you'd need its import statement here.
-// For demonstration, we'll treat it as a direct alias or a typo fix.
-const UICard = Card; 
-const UICardContent = CardContent;
-const UICardHeader = CardHeader;
-const UICardTitle = CardTitle;
-
 
 interface CommunityComment {
   id: string;
@@ -489,14 +480,14 @@ export default function CommunityPage() {
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-4">
             {/* MeeBot Recommendations */}
-            <UICard className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border-cyan-500/30">
-              <UICardHeader className="pb-3">
-                <UICardTitle className="text-cyan-300 flex items-center gap-2">
+            <Card className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border-cyan-500/30">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-cyan-300 flex items-center gap-2">
                   <Bot className="w-5 h-5" />
                   MeeBot แนะนำ
-                </UICardTitle>
-              </UICardHeader>
-              <UICardContent className="space-y-3">
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
                 <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3">
                   <div className="flex items-start gap-2">
                     <Sparkles className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" />
@@ -515,18 +506,18 @@ export default function CommunityPage() {
                     </div>
                   </div>
                 </div>
-              </UICardContent>
-            </UICard>
+              </CardContent>
+            </Card>
 
             {/* Trending Topics */}
-            <UICard className="bg-black/50 border-purple-500/30">
-              <UICardHeader className="pb-3">
-                <UICardTitle className="text-purple-300 flex items-center gap-2">
+            <Card className="bg-black/50 border-purple-500/30">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-purple-300 flex items-center gap-2">
                   <TrendingUp className="w-5 h-5" />
                   หัวข้อกำลังฮิต
-                </UICardTitle>
-              </UICardHeader>
-              <UICardContent className="space-y-2">
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
                 {trendingTopics.map((topic) => (
                   <div 
                     key={topic.id}
@@ -542,18 +533,18 @@ export default function CommunityPage() {
                     </div>
                   </div>
                 ))}
-              </UICardContent>
-            </UICard>
+              </CardContent>
+            </Card>
 
             {/* Community Stats */}
-            <UICard className="bg-black/50 border-orange-500/30">
-              <UICardHeader className="pb-3">
-                <UICardTitle className="text-orange-300 flex items-center gap-2">
+            <Card className="bg-black/50 border-orange-500/30">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-orange-300 flex items-center gap-2">
                   <Users className="w-5 h-5" />
                   สถิติชุมชน
-                </UICardTitle>
-              </UICardHeader>
-              <UICardContent className="space-y-3 text-center">
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-center">
                 <div>
                   <p className="text-2xl font-bold text-orange-300">1,247</p>
                   <p className="text-sm text-gray-300">สมาชิกทั้งหมด</p>
@@ -566,8 +557,8 @@ export default function CommunityPage() {
                   <p className="text-2xl font-bold text-purple-300">456</p>
                   <p className="text-sm text-gray-300">Badge แจกไปแล้ว</p>
                 </div>
-              </UICardContent>
-            </UICard>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Main Feed */}
@@ -599,8 +590,8 @@ export default function CommunityPage() {
             {/* Posts Feed */}
             <div className="space-y-4">
               {getFilteredPosts().map((post) => (
-                <UICard key={post.id} className="bg-black/50 border-slate-600 hover:border-purple-500/50 transition-colors">
-                  <UICardHeader className="pb-3">
+                <Card key={post.id} className="bg-black/50 border-slate-600 hover:border-purple-500/50 transition-colors">
+                  <CardHeader className="pb-3">
                     <div className="flex items-start gap-3">
                       <Avatar className="w-10 h-10">
                         <AvatarImage src={post.userAvatar} />
@@ -626,9 +617,9 @@ export default function CommunityPage() {
                         </p>
                       </div>
                     </div>
-                  </UICardHeader>
+                  </CardHeader>
 
-                  <UICardContent className="space-y-4">
+                  <CardContent className="space-y-4">
                     <p className="text-gray-300 leading-relaxed">{post.content}</p>
 
                     {/* Achievements Display */}
@@ -794,8 +785,8 @@ export default function CommunityPage() {
                         </div>
                       </div>
                     )}
-                  </UICardContent>
-                </UICard>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </div>
