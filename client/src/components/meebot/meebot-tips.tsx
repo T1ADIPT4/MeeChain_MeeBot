@@ -115,10 +115,14 @@ export function MeeBotTips() {
   };
 
   const handleCheckPoints = () => {
+    // เพิ่ม XP 10 คะแนนให้ผู้ใช้
+    const currentXP = parseInt(localStorage.getItem('meebot_xp') || '0');
+    const newXP = currentXP + 10;
+    localStorage.setItem('meebot_xp', newXP.toString());
+
     toast({
-      title: "เช็คพอยท์สำเร็จ!",
-      description: "คุณได้รับ 10 XP สำหรับการเช็คพอยท์ในครั้งนี้",
-      variant: "success"
+      title: "🎉 รับ XP สำเร็จ!",
+      description: "คุณได้รับ 10 XP จากการเช็คพอยท์!",
     });
   };
 
