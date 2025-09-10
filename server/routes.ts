@@ -583,9 +583,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/secrets/health', getSecretsHealth);
   app.get('/api/secrets/report', getDetailedSecretsReport);
 
-  // User tier endpoint
-  app.get('/api/user-tier/:userId', getUserTier);
-
   // Wallet endpoints
   app.post('/api/wallet/create', createWallet);
   app.get('/api/wallet/me', (req, res) => {
