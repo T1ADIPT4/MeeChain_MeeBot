@@ -28,6 +28,26 @@ import { LevelUpNotification } from '@/components/meebot/level-up-notification';
 import { MeeBotOnboardingModal } from '@/components/meebot/meebot-onboarding-modal';
 import { Link } from 'wouter';
 
+// Placeholder for the new SystemCheck component
+const SystemCheck = () => {
+  return (
+    <Card className="bg-gradient-to-r from-green-500/10 to-teal-500/10 border-green-500/30">
+      <CardContent className="p-6 text-center">
+        <CheckCircle className="w-12 h-12 text-green-400 mx-auto mb-4" />
+        <h3 className="text-xl font-bold text-green-300 mb-2">
+          ✅ ระบบตรวจสอบ MeeBot
+        </h3>
+        <p className="text-green-200">
+          สถานะระบบ: <Badge variant="outline" className="border-green-400 text-green-300">ปกติ</Badge>
+        </p>
+        <p className="text-xs text-gray-400 mt-2">
+          อัปเดตล่าสุด: {new Date().toLocaleTimeString().slice(0, 5)}
+        </p>
+      </CardContent>
+    </Card>
+  );
+};
+
 
 export default function MeeBotPage() {
   const [, navigate] = useLocation();
@@ -347,8 +367,21 @@ export default function MeeBotPage() {
           {/* Daily Quests */}
           <DailyQuests />
 
-          {/* Level Up Notification */}
-          <LevelUpNotification />
+          {/* System Check */}
+          <SystemCheck />
+
+          {/* Additional MeeBot Features Placeholder */}
+          <Card className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-purple-500/30">
+            <CardContent className="p-6 text-center">
+              <Sparkles className="w-12 h-12 text-purple-400 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-purple-300 mb-2">
+                🚀 ฟีเจอร์ใหม่กำลังมา
+              </h3>
+              <p className="text-purple-200">
+                MeeBot กำลังเตรียมฟีเจอร์เจ๋ง ๆ มาให้ ติดตามได้เลย!
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
