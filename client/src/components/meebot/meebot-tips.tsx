@@ -114,11 +114,22 @@ export function MeeBotTips() {
     }, 300);
   };
 
-  const handleCheckPoints = () => {
+  const handleCompleteAllTips = () => {
     toast({
-      title: "เช็คพอยท์สำเร็จ!",
-      description: "คุณได้รับ 10 XP สำหรับการเช็คพอยท์ในครั้งนี้",
-      variant: "success"
+      title: "เยี่ยมมาก!",
+      description: "คุณได้อ่านเทคนิคครบทุกข้อแล้ว! 🎉",
+    });
+  };
+
+  const handleCheckPoints = () => {
+    // เพิ่ม XP 10 คะแนนให้ผู้ใช้
+    const currentXP = parseInt(localStorage.getItem('meebot_xp') || '0');
+    const newXP = currentXP + 10;
+    localStorage.setItem('meebot_xp', newXP.toString());
+
+    toast({
+      title: "🎉 รับ XP สำเร็จ!",
+      description: "คุณได้รับ 10 XP จากการเช็คพอยท์!",
     });
   };
 
