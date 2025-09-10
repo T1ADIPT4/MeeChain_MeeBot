@@ -223,19 +223,19 @@ export default function MeeBotPage() {
         </div>
       </nav>
 
-      <div className="px-6 py-8 min-h-0 flex-1">
+      <div className="px-4 py-4 min-h-0 flex-1 overflow-y-auto">
         {/* Main Container */}
-        <div className="max-w-2xl mx-auto space-y-6 min-h-0">
+        <div className="max-w-md mx-auto space-y-4 min-h-0">
 
           {/* MeeBot Intro Card */}
           <Card className="bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border-cyan-300/30 overflow-hidden relative">
-            <CardContent className="p-8 text-center">
+            <CardContent className="p-4 text-center">
               {/* MeeBot Avatar */}
-              <div className="relative mb-6">
+              <div className="relative mb-4">
                 <img 
                   src={logoUrl} 
                   alt="MeeBot" 
-                  className={`w-24 h-24 mx-auto rounded-full transition-all duration-500 ${
+                  className={`w-16 h-16 mx-auto rounded-full transition-all duration-500 ${
                     botEmotion === 'excited' ? 'scale-125 animate-bounce' :
                     botEmotion === 'waving' ? 'animate-pulse scale-110' : 
                     'scale-100'
@@ -245,18 +245,18 @@ export default function MeeBotPage() {
                   }}
                 />
                 {botEmotion === 'excited' && (
-                  <div className="absolute -top-2 -right-2">
-                    <Sparkles className="w-6 h-6 text-yellow-400 animate-spin" />
+                  <div className="absolute -top-1 -right-1">
+                    <Sparkles className="w-4 h-4 text-yellow-400 animate-spin" />
                   </div>
                 )}
-                <Heart className="absolute -top-1 -right-1 w-5 h-5 text-red-400 animate-pulse" />
+                <Heart className="absolute -top-1 -right-1 w-3 h-3 text-red-400 animate-pulse" />
               </div>
 
-              <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
+              <h2 className="text-xl font-bold mb-3 bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
                 เฮ้ย! ผมมีบอท ครูพี่เมนเตอร์ตัวจริง! 🧠
               </h2>
 
-              <p className="text-gray-300 mb-6 leading-relaxed text-lg">
+              <p className="text-gray-300 mb-4 leading-relaxed text-sm">
                 ผมพร้อมช่วยคุณลุยทุกภารกิจแล้วครับ! 💪<br />
                 จากมือใหม่สู่มือโปร Web3 แบบสนุก ๆ ไม่เครียด ✨<br />
                 <span className="text-cyan-300 font-semibold">อย่าห่วงเลย ถ้าคุณล้ม ผมจะช่วยลุก!</span><br />
@@ -264,40 +264,40 @@ export default function MeeBotPage() {
               </p>
 
               {/* Features Badges */}
-              <div className="flex flex-wrap justify-center gap-2 mb-8">
-                <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30">
-                  <Zap className="w-3 h-3 mr-1" />
+              <div className="flex flex-wrap justify-center gap-1 mb-4">
+                <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-xs">
+                  <Zap className="w-2 h-2 mr-1" />
                   คุยได้เป็นเพื่อน
                 </Badge>
-                <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
-                  <Bot className="w-3 h-3 mr-1" />
+                <Badge className="bg-green-500/20 text-green-300 border-green-500/30 text-xs">
+                  <Bot className="w-2 h-2 mr-1" />
                   โค้ชส่วนตัว
                 </Badge>
-                <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30">
-                  <Sparkles className="w-3 h-3 mr-1" />
+                <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30 text-xs">
+                  <Sparkles className="w-2 h-2 mr-1" />
                   ปลดล็อกความรู้
                 </Badge>
-                <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">
-                  <Heart className="w-3 h-3 mr-1" />
+                <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30 text-xs">
+                  <Heart className="w-2 h-2 mr-1" />
                   ให้กำลังใจ
                 </Badge>
               </div>
 
               {/* Enhanced Main MeeBot Button */}
-              <div className="flex flex-wrap justify-center gap-3 mb-8">
+              <div className="flex flex-col gap-2 mb-4">
                 <Button
                   onClick={() => setShowOnboardingModal(true)}
-                  className="bg-gradient-to-r from-green-500 to-cyan-500 hover:from-green-600 hover:to-cyan-600 text-white px-8 py-4 rounded-xl font-bold transform transition-all duration-200 hover:scale-105 shadow-lg text-lg"
+                  className="bg-gradient-to-r from-green-500 to-cyan-500 hover:from-green-600 hover:to-cyan-600 text-white px-4 py-3 rounded-lg font-bold transform transition-all duration-200 hover:scale-105 shadow-lg text-sm w-full"
                 >
-                  <Rocket className="w-6 h-6 mr-2" />
+                  <Rocket className="w-4 h-4 mr-2" />
                   🎯 เริ่มภารกิจ TaskPilot
                 </Button>
 
                 <Button
                   onClick={handleStartChat}
-                  className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-xl font-semibold transform transition-all duration-200 hover:scale-105 shadow-lg"
+                  className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg font-semibold transform transition-all duration-200 hover:scale-105 shadow-lg text-sm w-full"
                 >
-                  <MessageCircle className="w-5 h-5 mr-2" />
+                  <MessageCircle className="w-4 h-4 mr-2" />
                   คุยกับ MeeBot
                 </Button>
               </div>
@@ -312,26 +312,26 @@ export default function MeeBotPage() {
           <DailyQuests onLevelUp={handleLevelUp} />
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <Button
               variant="outline"
-              className="border-slate-600 bg-slate-800/50 hover:bg-slate-700 h-20 text-slate-300"
+              className="border-slate-600 bg-slate-800/50 hover:bg-slate-700 h-16 text-slate-300"
               onClick={() => navigate('/missions')}
             >
               <div className="text-center">
-                <Sparkles className="w-6 h-6 mx-auto mb-2" />
-                <span className="text-sm">ดูภารกิจ</span>
+                <Sparkles className="w-5 h-5 mx-auto mb-1" />
+                <span className="text-xs">ดูภารกิจ</span>
               </div>
             </Button>
 
             <Button
               variant="outline"
-              className="border-slate-600 bg-slate-800/50 hover:bg-slate-700 h-20 text-slate-300"
+              className="border-slate-600 bg-slate-800/50 hover:bg-slate-700 h-16 text-slate-300"
               onClick={() => navigate('/dashboard')}
             >
               <div className="text-center">
-                <Bot className="w-6 h-6 mx-auto mb-2" />
-                <span className="text-sm">Dashboard</span>
+                <Bot className="w-5 h-5 mx-auto mb-1" />
+                <span className="text-xs">Dashboard</span>
               </div>
             </Button>
           </div>
