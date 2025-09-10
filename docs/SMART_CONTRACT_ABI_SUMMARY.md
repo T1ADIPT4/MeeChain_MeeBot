@@ -50,7 +50,21 @@ This contract implements a robust ERC-20 token with advanced role and metadata m
 
 ## 📡 Extended Functionality
 
-- `transferAndCall(address _to, uint256 _value, bytes _data) → bool` – Transfer tokens and trigger function on recipient (for DApp composability)
+- `transferAndCall(address to, uint256 value, bytes data) → bool` – Transfer tokens and call recipient contract function (ERC-677/ERC-1363 style)
+  - Transfers tokens to recipient address
+  - If recipient is a contract, calls `onTokenTransfer(address,uint256,bytes)` function
+  - Emits `TransferAndCall` event for DApp integration
+  - Enables seamless token transfers with immediate contract interaction
+
+---
+
+## 📢 Events
+
+- `Transfer(address indexed from, address indexed to, uint256 value)` – Standard ERC-20 transfer event
+- `Approval(address indexed owner, address indexed spender, uint256 value)` – Standard ERC-20 approval event
+- `TransferAndCall(address indexed from, address indexed to, uint256 value, bytes data)` – Extended transfer with call event
+- `TierUpgraded(address indexed user, uint8 newTier)` – User tier upgrade event
+- `NFTRewardMinted(address indexed user, uint8 tier, uint256 tokenId)` – NFT reward minting event
 
 ---
 
