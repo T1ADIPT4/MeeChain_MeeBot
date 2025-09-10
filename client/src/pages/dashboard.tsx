@@ -30,7 +30,8 @@ import {
   Coins,
   Download,
   MessageCircle, // Added MessageCircle icon
-  BookOpen // Added BookOpen icon
+  BookOpen, // Added BookOpen icon
+  ArrowRightLeft // Added ArrowRightLeft icon
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
