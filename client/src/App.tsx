@@ -32,6 +32,9 @@ function Router() {
       <Route path="/token-actions" component={lazy(() => import("@/pages/token-actions"))} />
       <Route path="/meebot" component={MeeBotPage} />
       <Route path="/academy" component={Academy} />
+      <Route path="/missions" component={lazy(() => import('./pages/missions'))} />
+      <Route path="/community" component={lazy(() => import('./pages/community'))} />
+      <Route path="/team-dashboard" component={TeamDashboard} />
       <Route path="*" component={NotFound} />
     </Switch>
   );
