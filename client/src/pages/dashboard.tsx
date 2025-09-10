@@ -118,27 +118,25 @@ export default function Dashboard() {
     });
   };
 
-  const handleTaskControl = (action: 'start' | 'pause' | 'stop') => {
-    switch (action) {
-      case 'start':
-        setIsTaskRunning(true);
-        showToast("เริ่มทำงานแล้วครับ! 🚀");
-        // Simulate new data point
-        const newTime = new Date().toLocaleTimeString().slice(0, 5);
-        const newValue = Math.floor(Math.random() * 30) + 10;
-        setTaskData(prev => [...prev.slice(-6), newValue]);
-        setChartLabels(prev => [...prev.slice(-6), newTime]);
-        break;
-      case 'pause':
-        setIsTaskRunning(false);
-        showToast("หยุดชั่วคราวแล้ว ⏸️");
-        break;
-      case 'stop':
-        setIsTaskRunning(false);
-        showToast("หยุดการทำงานแล้ว ⏹️");
-        break;
-    }
-  };
+  const startTask = () => {
+    setIsTaskRunning(true);
+    showToast("เริ่มทำงานแล้วครับ! 🚀");
+    // Simulate new data point
+    const newTime = new Date().toLocaleTimeString().slice(0, 5);
+    const newValue = Math.floor(Math.random() * 30) + 10;
+    setTaskData(prev => [...prev.slice(-6), newValue]);
+    setChartLabels(prev => [...prev.slice(-6), newTime]);
+  }
+
+  const pauseTask = () => {
+    setIsTaskRunning(false);
+    showToast("หยุดชั่วคราวแล้ว ⏸️");
+  }
+
+  const stopTask = () => {
+    setIsTaskRunning(false);
+    showToast("หยุดการทำงานแล้ว ⏹️");
+  }
 
   const handleCopyAddress = async () => {
     if (!walletData?.address) return;
@@ -250,52 +248,94 @@ export default function Dashboard() {
         {/* MeeBot Control Panel - จัดกลุ่มในกรอบ */}
         <Card className="bg-slate-900/50 border-slate-600/30">
           <CardHeader className="pb-3">
-            <CardTitle className="text-sm text-blue-300 flex items-center gap-2">
-              <Bot className="w-4 h-4" />
+            <CardTitle className="text-lg text-cyan-300 flex items-center gap-2">
+              <Bot className="w-5 h-5" />
               MeeBot Control Panel
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-0">
-            <div className="grid grid-cols-2 gap-3">
+          <CardContent className="space-y-4">
+            {/* ปุ่มควบคุมหลัก - จัดแนวตั้งบนมือถือ, แนวนอนบน desktop */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               <Button
-                onClick={() => handleTaskControl('start')}
-                disabled={isTaskRunning}
-                className="bg-green-600 hover:bg-green-700 text-white py-3 font-semibold"
-                data-testid="button-start-task"
+                size="lg"
+                className={`${
+                  isTaskRunning 
+                    ? 'bg-amber-600 hover:bg-amber-500 text-white' 
+                    : 'bg-green-600 hover:bg-green-500 text-white'
+                } font-medium transition-all duration-200 py-3 px-4 h-auto`}
+                onClick={isTaskRunning ? pauseTask : startTask}
               >
-                <Play className="w-4 h-4 mr-2" />
-                Start
+                <div className="flex flex-col items-center gap-1">
+                  {isTaskRunning ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                  <span className="text-sm font-medium">
+                    {isTaskRunning ? 'หยุดชั่วคราว' : 'เริ่มทำงาน'}
+                  </span>
+                </div>
               </Button>
 
               <Button
-                onClick={() => handleTaskControl('pause')}
+                size="lg"
+                className="bg-red-600 hover:bg-red-500 text-white font-medium transition-all duration-200 py-3 px-4 h-auto disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => {
+                  if (window.confirm('🤖 MeeBot ถาม: แน่ใจไหมว่าจะหยุดทำงานทั้งหมด?')) {
+                    stopTask();
+                    toast({
+                      title: "🛑 MeeBot หยุดทำงานแล้ว",
+                      description: "ได้พักผ่อนหน่อยนะ! เรียกได้เมื่อไหร่ก็ได้ครับ 😴",
+                    });
+                  }
+                }}
                 disabled={!isTaskRunning}
-                className="bg-yellow-600 hover:bg-yellow-700 text-white py-3 font-semibold"
-                data-testid="button-pause-task"
               >
-                <Pause className="w-4 h-4 mr-2" />
-                Pause
+                <div className="flex flex-col items-center gap-1">
+                  <Square className="w-5 h-5" />
+                  <span className="text-sm font-medium">หยุดทำงาน</span>
+                </div>
               </Button>
 
               <Button
-                onClick={() => handleTaskControl('stop')}
-                disabled={!isTaskRunning}
-                className="bg-red-600 hover:bg-red-700 text-white py-3 font-semibold"
-                data-testid="button-stop-task"
-              >
-                <Square className="w-4 h-4 mr-2" />
-                Stop
-              </Button>
-
-              <Button
+                size="lg"
                 variant="outline"
-                className="border-slate-500 text-slate-300 hover:bg-slate-700 py-3 font-semibold"
-                onClick={() => navigate('/settings')}
-                data-testid="button-task-settings"
+                className="border-slate-500 text-slate-300 hover:bg-slate-700 hover:text-white font-medium transition-all duration-200 py-3 px-4 h-auto"
+                onClick={() => {
+                  toast({
+                    title: "⚙️ MeeBot Settings",
+                    description: "การตั้งค่าจะมาเร็ว ๆ นี้! ติดตามได้เลยครับ 🔧",
+                  });
+                }}
               >
-                <Settings className="w-4 h-4 mr-2" />
-                Settings
+                <div className="flex flex-col items-center gap-1">
+                  <Settings className="w-5 h-5" />
+                  <span className="text-sm font-medium">ตั้งค่า</span>
+                </div>
               </Button>
+
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-purple-500 text-purple-300 hover:bg-purple-700 hover:text-white font-medium transition-all duration-200 py-3 px-4 h-auto"
+                onClick={() => navigate('/meebot')}
+              >
+                <div className="flex flex-col items-center gap-1">
+                  <Sparkles className="w-5 h-5" />
+                  <span className="text-sm font-medium">MeeBot หน้าหลัก</span>
+                </div>
+              </Button>
+            </div>
+
+            {/* Status indicator */}
+            <div className="bg-slate-800/50 rounded-lg p-3 border border-slate-700/50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className={`w-2 h-2 rounded-full ${isTaskRunning ? 'bg-green-400 animate-pulse' : 'bg-gray-400'}`}></div>
+                  <span className="text-sm text-slate-300">
+                    สถานะ: {isTaskRunning ? 'กำลังทำงาน' : 'พร้อมเริ่มทำงาน'}
+                  </span>
+                </div>
+                <Badge variant="outline" className={`${isTaskRunning ? 'border-green-400 text-green-300' : 'border-gray-400 text-gray-300'}`}>
+                  {isTaskRunning ? 'Active' : 'Standby'}
+                </Badge>
+              </div>
             </div>
           </CardContent>
         </Card>
