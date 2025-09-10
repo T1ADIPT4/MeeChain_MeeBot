@@ -786,4 +786,3 @@ function Missions() {
   );
 }
 
-export default MissionsPage;
