@@ -284,6 +284,79 @@ body {
   }
 }
 
+/* Community Feed Styles */
+.community-comment-bubble {
+  transition: all 0.3s ease;
+  animation: comment-appear 0.5s ease-out;
+}
+
+.community-comment-bubble:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.meebot-comment {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  position: relative;
+}
+
+.meebot-comment::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #06b6d4, #3b82f6, #06b6d4);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.3;
+  animation: border-glow 2s ease-in-out infinite alternate;
+}
+
+.user-comment {
+  background: rgba(51, 65, 85, 0.5);
+  border: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+.meepoints-badge {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.2) 0%, rgba(255, 152, 0, 0.2) 100%);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  animation: meepoints-glow 3s ease-in-out infinite;
+}
+
+@keyframes comment-appear {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes border-glow {
+  0% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.6;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes meepoints-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 193, 7, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.5);
+  }
+}
+
   @keyframes wiggle {
     0%, 100% { transform: rotate(0deg); }
     25% { transform: rotate(1deg); }
