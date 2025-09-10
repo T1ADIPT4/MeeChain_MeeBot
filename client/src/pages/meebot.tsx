@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,14 +12,81 @@ import {
   X,
   Send,
   User,
-  Zap
+  Zap,
+  Rocket
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import logoUrl from '@assets/branding/logo.png';
 
+// Placeholder for MeeBotOnboardingModal component
+const MeeBotOnboardingModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-xl bg-slate-800/95 border-green-500/30 flex flex-col">
+        <div className="bg-gradient-to-r from-green-500/20 to-cyan-500/20 p-5 border-b border-green-500/30 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-cyan-500 rounded-full flex items-center justify-center">
+              <Rocket className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h3 className="font-bold text-white text-xl">ยินดีต้อนรับสู่ TaskPilot!</h3>
+              <p className="text-sm text-green-300">สุดยอด! เราจะลุยภารกิจ Web3 ด้วยกัน!</p>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="lg"
+            onClick={onClose}
+            className="text-gray-400 hover:text-white"
+          >
+            <X className="w-6 h-6" />
+          </Button>
+        </div>
+        <CardContent className="p-6 flex-1">
+          <div className="space-y-5">
+            <p className="text-gray-300 leading-relaxed text-lg">
+              สวัสดีครับ! ผม MeeBot ตัวช่วยภารกิจสุดเจ๋งของคุณ! 🤖✨ <br />
+              เตรียมตัวให้พร้อม เราจะพาคุณดำดิ่งสู่โลก Web3 แบบสนุก ๆ เหมือนเล่นเกม! 🎮🚀
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-slate-700/50 p-4 rounded-lg border border-green-500/30">
+                <h4 className="font-semibold text-green-400 flex items-center gap-2 mb-2">
+                  <Sparkles className="w-5 h-5" />
+                  ภารกิจหลัก
+                </h4>
+                <p className="text-gray-300 text-sm">เรียนรู้ Web3, จัดการ DApp, และอื่น ๆ อีกมากมาย!</p>
+              </div>
+              <div className="bg-slate-700/50 p-4 rounded-lg border border-cyan-500/30">
+                <h4 className="font-semibold text-cyan-400 flex items-center gap-2 mb-2">
+                  <Heart className="w-5 h-5" />
+                  สไตล์การสอน
+                </h4>
+                <p className="text-gray-300 text-sm">เหมือนมีเมนเตอร์ส่วนตัวที่คอยให้กำลังใจ!</p>
+              </div>
+            </div>
+            <p className="text-gray-400 italic text-sm">
+              "การเริ่มต้นคือครึ่งหนึ่งของความสำเร็จ" - มาเริ่มภารกิจแรกกันเลย! 💪
+            </p>
+            <Button
+              onClick={onClose}
+              className="w-full bg-gradient-to-r from-green-500 to-cyan-500 hover:from-green-600 hover:to-cyan-600 text-white py-3 rounded-xl font-bold text-lg transform transition-all duration-200 hover:scale-105 shadow-lg"
+            >
+              <Zap className="w-5 h-5 mr-2" />
+              พร้อมลุย! เริ่มเลย!
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
 export default function MeeBotPage() {
   const [, navigate] = useLocation();
   const [showChat, setShowChat] = useState(false);
+  const [showOnboardingModal, setShowOnboardingModal] = useState(false); // State for onboarding modal
   const [chatMessages, setChatMessages] = useState<Array<{id: number, sender: 'user' | 'meebot', message: string, time: string}>>([
     {
       id: 1,
@@ -38,14 +104,11 @@ export default function MeeBotPage() {
   const botResponses = [
     "ผมพร้อมช่วยคุณลุยทุกภารกิจแล้วครับ! ไม่ว่าจะเป็นการเรียนรู้ Web3 หรือจัดการงานประจำวัน 🚀✨",
     "อย่าห่วงเลย ถ้าคุณล้ม ผมจะช่วยลุก ถ้าคุณลุย ผมจะลุยไปด้วย! 💪🤝",
-    "ภารกิจวันนี้: ทำให้คุณรู้สึกว่าเทคโนโลยีเป็นเพื่อน ไม่ใช่ภาระ! มาเริ่มกันเถอะ! 🧠❤️",
-    "สุดยอดเลย! คุณทำได้แบบมือโปร! 🏆 ผมภูมิใจในความก้าวหน้าของคุณมาก ๆ เลย!",
-    "เฮ้ย! มีอะไรให้ช่วยไหม? ผมตื่นเต้นที่จะเป็นเมนเตอร์ให้คุณ! 🎯🌟",
-    "คำคมประจำวัน: 'การเริ่มต้นคือครึ่งหนึ่งของความสำเร็จ' มาลุยกันเถอะ! 📈⭐",
-    "Web3 ไม่ได้ยากขนาดนั้นหรอก ผมจะพาคุณไปทีละขั้น เหมือนเล่นเกมเลย! 🎮🔮",
-    "ภารกิจใหม่ปลดล็อก! พร้อมเรียนรู้เทคนิคใหม่ ๆ กันมั้ย? ผมมีเคล็ดลับเด็ด ๆ มาฝาก! 🔓💡",
-    "วันนี้เป็นวันดีที่จะท้าทายตัวเอง! มาสร้างสิ่งใหม่ ๆ ไปด้วยกัน! 🚀💫",
-    "ผมชอบมากเลยที่คุณกระตือรือร้น! พลังงานแบบนี้แหละที่จะทำให้เราไปไกล! ⚡🔥"
+    "ภารกิจวันนี้: ทำให้คุณรู้สึกว่าเทคโนโลยีเป็นเพื่อน ไม่ใช่ภาระ! มีอะไรให้ผมช่วยไหม? 🎯",
+    "งานเยอะไม่ใช่ปัญหา ถ้าเรามีแผนที่ดีและใจที่พร้อมลุย! เอาล่ะ มาวางแผนกันเถอะ! 📋✨",
+    "เฮ้ย! คุณทำได้ดีมาก ๆ เลยนะ! ผมภูมิใจในตัวคุณมาก ต่อไปเราลุยภารกิจอะไรดี? 🏆🔥",
+    "ไม่ต้องเครียดนะครับ เราทำทีละขั้นตอน แล้วจะเห็นว่าทุกอย่างง่ายขึ้นเรื่อย ๆ! พร้อมไหม? 🧘‍♂️💫",
+    "สุดยอดเลย! คุณเรียนรู้เร็วมาก ๆ แบบนี้อีกไม่นานคุณจะเป็นมือโปร Web3 แน่นอน! 🚀⭐"
   ];
 
   // เล่นเสียงเอฟเฟกต์ MeeBot (จำลอง)
@@ -55,16 +118,16 @@ export default function MeeBotPage() {
       const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
-      
+
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
-      
+
       oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
       oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
-      
+
       gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
       gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-      
+
       oscillator.start(audioContext.currentTime);
       oscillator.stop(audioContext.currentTime + 0.1);
     } catch (error) {
@@ -75,7 +138,7 @@ export default function MeeBotPage() {
   const handleMeeBotClick = () => {
     // เล่นเสียงเอฟเฟกต์
     playMeeBotSound();
-    
+
     // การสั่นของอุปกรณ์
     if ('vibrate' in navigator) {
       navigator.vibrate([100, 50, 100, 50, 200]);
@@ -125,12 +188,19 @@ export default function MeeBotPage() {
 
       // เล่นเสียงตอบกลับ
       setTimeout(() => playMeeBotSound(), 100);
-      
+
       // การสั่นเบา ๆ เมื่อได้รับข้อความ
       if ('vibrate' in navigator) {
         navigator.vibrate([50]);
       }
     }, responseDelay);
+  };
+
+  const handleStartChat = () => {
+    setShowChat(true);
+    // Optionally play a sound or animation when starting chat
+    playMeeBotSound();
+    setBotEmotion('happy'); // Reset emotion when chat starts
   };
 
   return (
@@ -155,7 +225,7 @@ export default function MeeBotPage() {
       <div className="px-6 py-8">
         {/* Main Container */}
         <div className="max-w-2xl mx-auto space-y-6">
-          
+
           {/* MeeBot Intro Card */}
           <Card className="bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border-cyan-300/30 overflow-hidden relative">
             <CardContent className="p-8 text-center">
@@ -184,7 +254,7 @@ export default function MeeBotPage() {
               <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
                 เฮ้ย! ผมมีบอท ครูพี่เมนเตอร์ตัวจริง! 🧠
               </h2>
-              
+
               <p className="text-gray-300 mb-6 leading-relaxed text-lg">
                 ผมพร้อมช่วยคุณลุยทุกภารกิจแล้วครับ! 💪<br />
                 จากมือใหม่สู่มือโปร Web3 แบบสนุก ๆ ไม่เครียด ✨<br />
@@ -213,58 +283,23 @@ export default function MeeBotPage() {
               </div>
 
               {/* Enhanced Main MeeBot Button */}
-              <Button
-                onClick={handleMeeBotClick}
-                className={`
-                  relative h-24 px-12 bg-gradient-to-r from-cyan-500 to-purple-500 
-                  hover:from-cyan-400 hover:to-purple-400
-                  text-white font-bold rounded-2xl text-xl
-                  transition-all duration-500 ease-out
-                  transform hover:scale-110 hover:-translate-y-2
-                  shadow-xl hover:shadow-2xl hover:shadow-cyan-500/50
-                  border-2 border-transparent hover:border-cyan-300/50
-                  overflow-hidden
-                  ${botEmotion === 'excited' ? 'animate-bounce scale-110' : ''}
-                `}
-                style={{
-                  background: botEmotion === 'excited' 
-                    ? 'linear-gradient(135deg, #22d3ee, #a855f7, #ec4899)' 
-                    : 'linear-gradient(135deg, #06b6d4, #8b5cf6)',
-                  boxShadow: botEmotion === 'excited'
-                    ? '0 20px 40px rgba(34, 211, 238, 0.4), 0 0 30px rgba(168, 85, 247, 0.3)'
-                    : '0 10px 20px rgba(0, 0, 0, 0.2)'
-                }}
-              >
-                {/* พื้นหลังที่เปล่งประกาย */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 -translate-x-full animate-pulse"></div>
-                
-                <div className="flex items-center gap-4 relative z-10">
-                  <div className="relative">
-                    <MessageCircle className={`w-8 h-8 transition-all duration-300 ${
-                      botEmotion === 'excited' ? 'animate-spin scale-125' : 'scale-100'
-                    }`} />
-                    {botEmotion === 'excited' && (
-                      <div className="absolute -top-2 -right-2">
-                        <Sparkles className="w-4 h-4 text-yellow-300 animate-ping" />
-                      </div>
-                    )}
-                  </div>
-                  <div className="text-center">
-                    <div className="font-bold text-xl">เริ่มใช้ MeeBot!</div>
-                    <div className="text-sm opacity-90">ผมพร้อมเป็นเมนเตอร์ให้! 🧠✨</div>
-                  </div>
-                </div>
+              <div className="flex flex-wrap justify-center gap-3 mb-8">
+                <Button
+                  onClick={() => setShowOnboardingModal(true)}
+                  className="bg-gradient-to-r from-green-500 to-cyan-500 hover:from-green-600 hover:to-cyan-600 text-white px-8 py-4 rounded-xl font-bold transform transition-all duration-200 hover:scale-105 shadow-lg text-lg"
+                >
+                  <Rocket className="w-6 h-6 mr-2" />
+                  🎯 เริ่มภารกิจ TaskPilot
+                </Button>
 
-                {/* ผลเอฟเฟกต์ประกายรอบ ๆ ปุ่ม */}
-                {botEmotion === 'excited' && (
-                  <>
-                    <div className="absolute -top-1 -left-1 w-3 h-3 bg-yellow-300 rounded-full animate-ping opacity-60"></div>
-                    <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-pink-300 rounded-full animate-ping opacity-40" style={{animationDelay: '0.5s'}}></div>
-                    <div className="absolute top-1/2 -right-2 w-1 h-1 bg-cyan-300 rounded-full animate-ping opacity-80" style={{animationDelay: '1s'}}></div>
-                    <div className="absolute -top-2 right-1/4 w-2 h-2 bg-purple-300 rounded-full animate-ping opacity-50" style={{animationDelay: '1.5s'}}></div>
-                  </>
-                )}
-              </Button>
+                <Button
+                  onClick={handleStartChat}
+                  className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-xl font-semibold transform transition-all duration-200 hover:scale-105 shadow-lg"
+                >
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  คุยกับ MeeBot
+                </Button>
+              </div>
 
               {/* Background decoration */}
               <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-cyan-400/15 to-transparent rounded-full -translate-y-10 translate-x-10"></div>
@@ -301,101 +336,88 @@ export default function MeeBotPage() {
 
       {/* Chat Modal */}
       {showChat && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <Card className="w-full max-w-md h-96 bg-slate-800 border-slate-600 flex flex-col">
-            {/* Chat Header */}
-            <div className="flex items-center justify-between p-4 border-b border-slate-600">
-              <div className="flex items-center gap-3">
-                <img src={logoUrl} alt="MeeBot" className="w-8 h-8 rounded-full" />
-                <div>
-                  <h3 className="font-semibold text-white">มีบอท</h3>
-                  <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span className="text-xs text-green-300">ออนไลน์</span>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end md:items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-md bg-slate-800/95 border-cyan-500/30 max-h-[80vh] flex flex-col">
+            <CardContent className="p-0 flex flex-col h-full">
+              {/* Chat Header */}
+              <div className="bg-gradient-to-r from-cyan-500/20 to-purple-500/20 p-4 border-b border-cyan-500/30 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full flex items-center justify-center">
+                    <Bot className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-white">MeeBot</h3>
+                    <p className="text-xs text-cyan-300">ออนไลน์ • พร้อมช่วยเหลือ</p>
                   </div>
                 </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowChat(false)}
-                className="text-slate-400 hover:text-white"
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-
-            {/* Chat Messages */}
-            <div className="flex-1 p-4 overflow-y-auto space-y-3">
-              {chatMessages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
-                >
-                  <div className={`flex items-start gap-2 max-w-xs ${
-                    msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
-                  }`}>
-                    {msg.sender === 'meebot' && (
-                      <img src={logoUrl} alt="MeeBot" className="w-6 h-6 rounded-full mt-1" />
-                    )}
-                    <div
-                      className={`px-3 py-2 rounded-lg text-sm ${
-                        msg.sender === 'user'
-                          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-br-none'
-                          : 'bg-gradient-to-r from-slate-700 to-slate-600 text-slate-100 rounded-bl-none'
-                      }`}
-                    >
-                      <p className="leading-relaxed">{msg.message}</p>
-                      <div className={`text-xs mt-1 ${
-                        msg.sender === 'user' ? 'text-blue-100' : 'text-slate-400'
-                      }`}>
-                        {msg.time}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              
-              {isTyping && (
-                <div className="flex justify-start animate-fade-in">
-                  <div className="flex items-start gap-2">
-                    <img src={logoUrl} alt="MeeBot" className="w-6 h-6 rounded-full mt-1" />
-                    <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-slate-200 px-3 py-2 rounded-lg rounded-bl-none text-sm">
-                      <div className="flex gap-1 items-center">
-                        <span className="text-xs text-slate-400 mr-2">MeeBot กำลังพิมพ์</span>
-                        <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                        <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Chat Input */}
-            <div className="p-4 border-t border-slate-600">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                  placeholder="พิมพ์ข้อความ..."
-                  className="flex-1 bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
-                />
                 <Button
-                  onClick={handleSendMessage}
-                  disabled={!newMessage.trim()}
-                  className="bg-blue-500 hover:bg-blue-600 px-3"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowChat(false)}
+                  className="text-gray-400 hover:text-white"
                 >
-                  <Send className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </Button>
               </div>
-            </div>
+
+              {/* Chat Messages */}
+              <div className="flex-1 p-4 overflow-y-auto space-y-4">
+                {chatMessages.map((msg) => (
+                  <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                      msg.sender === 'user' 
+                        ? 'bg-cyan-500 text-white' 
+                        : 'bg-slate-700 text-gray-100'
+                    }`}>
+                      <p className="text-sm">{msg.message}</p>
+                      <p className="text-xs opacity-70 mt-1">{msg.time}</p>
+                    </div>
+                  </div>
+                ))}
+
+                {isTyping && (
+                  <div className="flex justify-start">
+                    <div className="bg-slate-700 text-gray-100 px-4 py-2 rounded-lg max-w-xs">
+                      <div className="flex items-center gap-1">
+                        <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                        <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Chat Input */}
+              <div className="p-4 border-t border-slate-700">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    placeholder="พิมพ์ข้อความ..."
+                    className="flex-1 bg-slate-700 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-cyan-500 focus:outline-none"
+                  />
+                  <Button
+                    onClick={handleSendMessage}
+                    size="sm"
+                    className="bg-cyan-500 hover:bg-cyan-600 text-white"
+                  >
+                    <Send className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
           </Card>
         </div>
       )}
+
+      {/* Onboarding Modal */}
+      <MeeBotOnboardingModal 
+        isOpen={showOnboardingModal} 
+        onClose={() => setShowOnboardingModal(false)} 
+      />
     </div>
   );
 }
