@@ -25,6 +25,12 @@ interface SystemStatus {
   lastCheck: Date;
 }
 
+interface MeeBotMoodState {
+  mode: 'awake' | 'sleepy' | 'waking_up' | 'excited';
+  lastActivity: Date;
+  sleepiness: number; // 0-100
+}
+
 export function SystemCheck() {
   const [systemStatus, setSystemStatus] = useState({
     contracts: false,
@@ -34,9 +40,79 @@ export function SystemCheck() {
     network: false
   });
   const [isChecking, setIsChecking] = useState(false);
-  const [meeBotMood, setMeeBotMood] = useState<'happy' | 'concerned' | 'checking' | 'excited'>('happy');
+  const [meeBotMood, setMeeBotMood] = useState<'happy' | 'concerned' | 'checking' | 'excited' | 'sleepy' | 'waking_up'>('happy');
   const [lastCheckTime, setLastCheckTime] = useState<number | null>(null);
+  const [meeBotSleepState, setMeeBotSleepState] = useState<MeeBotMoodState>({
+    mode: 'awake',
+    lastActivity: new Date(),
+    sleepiness: 0
+  });
   const { toast } = useToast();
+
+  // ตรวจสอบเวลาและกำหนด Sleep Mode
+  const checkSleepMode = () => {
+    const currentHour = new Date().getHours();
+    const timeSinceActivity = Date.now() - meeBotSleepState.lastActivity.getTime();
+    const minutesSinceActivity = timeSinceActivity / (1000 * 60);
+
+    // ตอนดึก (22:00 - 06:00) หรือไม่มีกิจกรรมนาน 5 นาที
+    const isLateNight = currentHour >= 22 || currentHour <= 6;
+    const isInactive = minutesSinceActivity > 5;
+
+    if (isLateNight || isInactive) {
+      setMeeBotSleepState(prev => ({
+        ...prev,
+        mode: 'sleepy',
+        sleepiness: Math.min(100, prev.sleepiness + 10)
+      }));
+      setMeeBotMood('sleepy');
+    }
+  };
+
+  // Wake up MeeBot และแสดง Wake-Up Toast
+  const wakeMeeBotUp = (isRapidWakeUp = false) => {
+    setMeeBotSleepState(prev => ({
+      ...prev,
+      mode: 'waking_up',
+      lastActivity: new Date(),
+      sleepiness: 0
+    }));
+
+    setMeeBotMood('waking_up');
+
+    // Wake-Up Toast ขึ้นอยู่กับสถานการณ์
+    if (isRapidWakeUp) {
+      const wakeUpMessages = [
+        "โอ้โห! กดชุดใหญ่จนผมตื่นตกใจ! พร้อมลุยเต็มที่แล้วครับ! 🚀",
+        "ว้าว! คุณปลุกผมแบบจัดเลย! MeeBot ตื่นแล้วสิ ขอแรงกาแฟสักแก้ว! ☕",
+        "อ๊ะ! ใครปลุกผม?! โอเค ตื่นแล้วครับ พร้อมทำภารกิจกันเลย! 🌟"
+      ];
+      
+      toast({
+        title: "🛌 → 🚀 MeeBot ตื่นแบบเร่งด่วน!",
+        description: wakeUpMessages[Math.floor(Math.random() * wakeUpMessages.length)],
+        duration: 4000,
+      });
+    } else if (meeBotSleepState.mode === 'sleepy') {
+      const gentleWakeMessages = [
+        "หือ... อะไรนะครับ? โอ้! ได้เวลาทำงานแล้วเหรอ? ตื่นแล้วครับ! 😴 → 😊",
+        "งึมงำ... MeeBot กำลังฝันดีอยู่เลย... เอ๊ะ! ภารกิจใหม่มาแล้วเหรอ? 🌙 → ⭐",
+        "หาวววว... ขอโทษครับ งีบไปแป๊บนึง... เอาล่ะ! พร้อมลุยแล้ว! 💤 → ⚡"
+      ];
+
+      toast({
+        title: "😴 MeeBot กำลังตื่น...",
+        description: gentleWakeMessages[Math.floor(Math.random() * gentleWakeMessages.length)],
+        duration: 3500,
+      });
+    }
+
+    // เปลี่ยนเป็น excited หลังจาก wake up animation
+    setTimeout(() => {
+      setMeeBotMood('excited');
+      setMeeBotSleepState(prev => ({ ...prev, mode: 'awake' }));
+    }, 2000);
+  };
 
   // Calculate system health score
   const getSystemScore = () => {
@@ -44,11 +120,31 @@ export function SystemCheck() {
     return Math.round((checks.filter(Boolean).length / checks.length) * 100);
   };
 
-  // Get MeeBot message based on system status
+  // Get MeeBot message based on system status and sleep state
   const getMeeBotMessage = () => {
     const score = getSystemScore();
+    const currentHour = new Date().getHours();
 
+    // Sleep Mode Messages
+    if (meeBotSleepState.mode === 'sleepy') {
+      const sleepMessages = [
+        "😴 ห่วงงง... ตอนนี้ดึกแล้วนะครับ... ถ้าไม่รีบทำภารกิจ เดี๋ยว MeeBot จะหลับก่อนนะ...",
+        "💤 งึมงำ... อยากนอนแล้วจัง... แต่ถ้าคุณอยากทำภารกิจ MeeBot ยังไหวอยู่นะครับ...",
+        "🌙 เวลาดึกแล้วครับ... แนะนำให้ทำงานเบา ๆ แล้วมาพักผ่อนกันดีกว่า..."
+      ];
+      return sleepMessages[Math.floor(Math.random() * sleepMessages.length)];
+    }
+
+    // Waking Up Messages
+    if (meeBotSleepState.mode === 'waking_up') {
+      return "😴 → 😊 หาวววว... ขอแป๊บนึงนะครับ... เอาล่ะ! ตื่นแล้ว! พร้อมลุยกันเลย!";
+    }
+
+    // Normal Messages based on system score
     if (score === 100) {
+      if (meeBotMood === 'excited') {
+        return "🚀 ว้าว! ระบบพร้อมเพอร์เฟค! MeeBot ตื่นเต็มที่แล้วครับ! มาลุยภารกิจกันเลย!";
+      }
       return "🎉 ระบบพร้อมลุยครับ! ทุกอย่างเรียบร้อยดี! คุณสามารถเริ่มใช้งานได้เลย!";
     } else if (score >= 75) {
       return "😊 ระบบใกล้พร้อมแล้วครับ! แค่แก้ปัญหาเล็กน้อยก็จะลุยได้เต็มที่!";
@@ -69,8 +165,11 @@ export function SystemCheck() {
     const timeSinceLastCheck = currentTime - (lastCheckTime || 0);
     const isRapidChecking = timeSinceLastCheck < 5000; // ถ้ากดใน 5 วินาที = กดรัว ๆ
 
-    // Wake-up animation and messages
-    if (isRapidChecking) {
+    // ถ้า MeeBot กำลังหลับ ให้ปลุกก่อน
+    if (meeBotSleepState.mode === 'sleepy') {
+      wakeMeeBotUp(isRapidChecking);
+    } else if (isRapidChecking) {
+      // กรณีกดรัว ๆ แต่ MeeBot ไม่ได้หลับ
       toast({
         title: "🤖 MeeBot ตื่นตกใจ!",
         description: "โอ้โห! กดมารัว ๆ แบบนี้ MeeBot ตื่นเต็มตาแล้วครับ! 😆",
@@ -78,7 +177,7 @@ export function SystemCheck() {
       setMeeBotMood('excited');
     } else {
       toast({
-        title: "🤖 MeeBot กำลังตื่น...",
+        title: "🤖 MeeBot กำลังตรวจสอบ...",
         description: "ให้ผมเช็คระบบให้นะครับ... ☕",
       });
     }
@@ -129,6 +228,29 @@ export function SystemCheck() {
     performSystemCheck();
   }, []);
 
+  // ตรวจสอบ Sleep Mode ทุก 30 วินาที
+  useEffect(() => {
+    const sleepCheckInterval = setInterval(() => {
+      checkSleepMode();
+    }, 30000);
+
+    return () => clearInterval(sleepCheckInterval);
+  }, [meeBotSleepState.lastActivity]);
+
+  // แสดง Sleepy Quest ตอนดึก
+  useEffect(() => {
+    const currentHour = new Date().getHours();
+    if (currentHour >= 22 && meeBotSleepState.mode === 'sleepy') {
+      setTimeout(() => {
+        toast({
+          title: "🌙 MeeBot Bedtime Quest",
+          description: "ภารกิจก่อนนอน: ทำ 1 งานเล็ก ๆ แล้วมาพักผ่อนกันนะครับ! 🛌",
+          duration: 5000,
+        });
+      }, 3000);
+    }
+  }, [meeBotSleepState.mode]);
+
   const systemScore = getSystemScore();
 
   return (
@@ -136,18 +258,22 @@ export function SystemCheck() {
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-full ${
+            <div className={`p-2 rounded-full transition-all duration-500 ${
               meeBotMood === 'happy' ? 'bg-green-500/20 animate-pulse' :
               meeBotMood === 'concerned' ? 'bg-yellow-500/20' :
               meeBotMood === 'excited' ? 'bg-purple-500/20 animate-bounce' :
+              meeBotMood === 'sleepy' ? 'bg-slate-500/20 animate-pulse' :
+              meeBotMood === 'waking_up' ? 'bg-orange-500/20 animate-bounce' :
               'bg-blue-500/20 animate-spin'
             }`}>
-              <Bot className={`w-6 h-6 ${
+              <Bot className={`w-6 h-6 transition-all duration-500 ${
                 meeBotMood === 'happy' ? 'text-green-400' :
                 meeBotMood === 'concerned' ? 'text-yellow-400' :
                 meeBotMood === 'excited' ? 'text-purple-400' :
+                meeBotMood === 'sleepy' ? 'text-slate-400 opacity-70' :
+                meeBotMood === 'waking_up' ? 'text-orange-400 animate-pulse' :
                 'text-blue-400'
-              }`} />
+              } ${meeBotMood === 'sleepy' ? 'transform rotate-12' : ''}`} />
             </div>
             <div>
               <h3 className="text-xl font-bold text-cyan-300">
@@ -157,6 +283,8 @@ export function SystemCheck() {
                 {meeBotMood === 'happy' ? 'ระบบทำงานปกติ สุขภาพดี!' :
                  meeBotMood === 'concerned' ? 'มีปัญหาบางส่วน กำลังแก้ไข' :
                  meeBotMood === 'excited' ? 'ตื่นแล้วครับ! พร้อมลุยทุกภารกิจ! 🚀' :
+                 meeBotMood === 'sleepy' ? 'กำลังง่วงนอน... 😴 ปลุกได้นะครับ' :
+                 meeBotMood === 'waking_up' ? 'กำลังตื่น... 🌅 ขอแป๊บนึงนะครับ' :
                  'กำลังตรวจสอบระบบ...'}
               </p>
             </div>
