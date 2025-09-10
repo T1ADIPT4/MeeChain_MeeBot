@@ -36,6 +36,7 @@ import { useQuery } from '@tanstack/react-query';
 import { truncateAddress } from '@/lib/web3-utils';
 import { QRCodeGenerator } from '@/components/web3/qr-code-generator';
 import logoUrl from '@assets/branding/logo.png';
+import { MeeBotSecretsAlert } from '@/components/meebot/secrets-alert';
 
 export default function Dashboard() {
   const [location, navigate] = useLocation(); // navigate is used instead of useLocation() directly
@@ -198,6 +199,9 @@ export default function Dashboard() {
       </nav>
 
       <div className="px-6 pb-6 space-y-6">
+        {/* MeeBot Secrets Health Check */}
+        <MeeBotSecretsAlert />
+
         {/* Main MeeChain Card with Breathing Logo */}
         <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm mt-6">
           <CardContent className="p-8 text-center">

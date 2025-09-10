@@ -11,6 +11,7 @@ import { Request, Response } from 'express';
 import { requestFaucet, getFaucetStatus } from './api/faucet';
 import { getEarningsSummary, getEarningsHistory, transferEarnings } from './api/earnings';
 import { getUserTierStatus, getTierBenefits, updateUserTier } from './api/user-tier';
+import { getSecretsHealth, getDetailedSecretsReport } from './api/secrets-health';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth endpoints
@@ -576,6 +577,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/user-tier/status', getUserTierStatus);
   app.get('/user-tier/benefits', getTierBenefits);
   app.post('/user-tier/update', updateUserTier);
+
+  // Secrets health endpoints
+  app.get('/api/secrets/health', getSecretsHealth);
+  app.get('/api/secrets/report', getDetailedSecretsReport);
 
   // CORS preflight for all API routes
   app.options('*', (req: Request, res: Response) => {

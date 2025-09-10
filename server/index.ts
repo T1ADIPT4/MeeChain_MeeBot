@@ -36,6 +36,31 @@ app.use((req, res, next) => {
   next();
 });
 
+// Health check endpoint with secrets validation
+app.get('/health', (req, res) => {
+  try {
+    const { checkSecrets } = require('./utils/secrets-checker');
+    const secretsCheck = checkSecrets();
+
+    res.json({ 
+      status: secretsCheck.ok ? 'healthy' : 'warning',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      secrets: {
+        status: secretsCheck.status,
+        missing: secretsCheck.missing.length,
+        warnings: secretsCheck.warnings.length
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      timestamp: new Date().toISOString(),
+      error: 'Health check failed'
+    });
+  }
+});
+
 (async () => {
   const server = await registerRoutes(app);
 
