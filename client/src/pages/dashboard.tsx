@@ -19,7 +19,8 @@ import {
   Square,
   Menu,
   User,
-  ArrowRightLeft
+  ArrowRightLeft,
+  GitBranch
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
@@ -379,7 +380,7 @@ export default function Dashboard() {
             className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 h-16"
           >
             <div className="text-center">
-              <ArrowRightLeft className="w-6 h-6 mx-auto mb-1" />
+              <GitBranch className="w-6 h-6 mx-auto mb-1" />
               <span className="text-sm">Swap/Bridge</span>
             </div>
           </Button>

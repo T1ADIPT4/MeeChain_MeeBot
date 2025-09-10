@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, ArrowRightLeft, Bridge, Repeat, TrendingUp } from 'lucide-react';
+import { ArrowLeft, ArrowRightLeft, GitBranch, Repeat, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import { TOKEN_ADDRESSES, CHAIN_OPTIONS, swapOrBridgeToken, getSwapQuote } from '@/lib/swap-bridge';
@@ -154,7 +154,7 @@ export default function SwapBridge() {
             onClick={() => setMode('bridge')}
             className="flex items-center gap-2"
           >
-            <Bridge className="w-4 h-4" />
+            <GitBranch className="w-4 h-4" />
             Bridge
           </Button>
         </div>
@@ -170,7 +170,7 @@ export default function SwapBridge() {
                 </>
               ) : (
                 <>
-                  <Bridge className="w-5 h-5" />
+                  <GitBranch className="w-5 h-5" />
                   Bridge โทเค็น
                 </>
               )}
