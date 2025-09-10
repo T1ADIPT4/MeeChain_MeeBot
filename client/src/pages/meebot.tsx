@@ -34,6 +34,8 @@ import { MeeBotInsight } from '@/components/meebot/meebot-insight';
 import { WeeklyQuest } from '@/components/meebot/weekly-quest';
 import { MeeBotChat } from '@/components/meebot/meebot-chat';
 import { CustomerContacts } from '@/components/meebot/customer-contacts';
+import ContractConnectionCheck from '@/components/meebot/contract-connection-check';
+
 
 // Placeholder for the new SystemCheck component
 const SystemCheck = () => {
@@ -376,6 +378,9 @@ export default function MeeBotPage() {
 
           {/* System Check */}
           <SystemCheck />
+
+          {/* Contract Connection Check */}
+          <ContractConnectionCheck />
 
           {/* Additional MeeBot Features Placeholder */}
           <Card className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-purple-500/30">
