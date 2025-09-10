@@ -27,6 +27,7 @@ import { Link } from 'wouter';
 import { AcademyWelcome } from '@/components/academy/academy-welcome';
 import { WalletSetup } from '@/components/academy/wallet-setup';
 import { TokenBasics } from '@/components/academy/token-basics';
+import { SwapBridge } from '@/components/academy/swap-bridge';
 
 interface Quest {
   id: string;
@@ -267,6 +268,16 @@ export default function Academy() {
       <TokenBasics 
         onNext={() => setCurrentAcademyStep(4)}
         onPrev={() => setCurrentAcademyStep(2)}
+      />
+    );
+  }
+
+  // Show Swap & Bridge step
+  if (currentAcademyStep === 4) {
+    return (
+      <SwapBridge 
+        onNext={() => setCurrentAcademyStep(5)}
+        onPrev={() => setCurrentAcademyStep(3)}
       />
     );
   }

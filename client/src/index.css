@@ -147,6 +147,49 @@ body {
 }
 
 /* Animation classes */
+
+/* Swap & Bridge Animations */
+@keyframes coin-spin {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+
+@keyframes badge-pop {
+  0% { 
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% { 
+    transform: scale(1.2) rotate(-90deg);
+    opacity: 0.8;
+  }
+  100% { 
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes ninja-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.8);
+  }
+}
+
+.coin-spin {
+  animation: coin-spin 1s linear infinite;
+}
+
+.badge-pop {
+  animation: badge-pop 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.ninja-glow {
+  animation: ninja-glow 2s ease-in-out infinite;
+}
+
 @keyframes slideIn {
   from {
     opacity: 0;
