@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,10 +13,12 @@ import {
   MessageCircle,
   TrendingUp
 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export function MeeBotTips() {
   const [currentTip, setCurrentTip] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const { toast } = useToast();
 
   // MeeBot tips แบบขำ ๆ และเป็นประโยชน์
   const tips = [
@@ -112,6 +113,14 @@ export function MeeBotTips() {
     }, 300);
   };
 
+  const handleCheckPoints = () => {
+    toast({
+      title: "เช็คพอยท์สำเร็จ!",
+      description: "คุณได้รับ 10 XP สำหรับการเช็คพอยท์ในครั้งนี้",
+      variant: "success"
+    });
+  };
+
   return (
     <Card className={`bg-gradient-to-r ${getPriorityColor(tip.priority)} transition-all duration-500 ${
       isAnimating ? 'scale-95 opacity-70' : 'scale-100 opacity-100'
@@ -176,7 +185,7 @@ export function MeeBotTips() {
             <Target className="w-4 h-4 mr-2" />
             {tip.action}
           </Button>
-          
+
           <Button 
             variant="outline" 
             size="sm"
@@ -184,7 +193,7 @@ export function MeeBotTips() {
           >
             <MessageCircle className="w-4 h-4" />
           </Button>
-          
+
           <Button 
             variant="outline" 
             size="sm"
