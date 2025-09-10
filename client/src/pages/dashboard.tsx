@@ -20,7 +20,8 @@ import {
   Menu,
   User,
   ArrowRightLeft,
-  GitBranch
+  GitBranch,
+  Coins
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
@@ -375,13 +376,24 @@ export default function Dashboard() {
               <span className="text-sm">ส่งโทเค็น</span>
             </div>
           </Button>
+
           <Button
             onClick={() => navigate('/swap-bridge')}
-            className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 h-16"
+            className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 h-16"
           >
             <div className="text-center">
               <GitBranch className="w-6 h-6 mx-auto mb-1" />
               <span className="text-sm">Swap/Bridge</span>
+            </div>
+          </Button>
+
+          <Button
+            onClick={() => navigate('/token-actions')}
+            className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 h-16"
+          >
+            <div className="text-center">
+              <Coins className="w-6 h-6 mx-auto mb-1" />
+              <span className="text-sm">Token Actions</span>
             </div>
           </Button>
         </div>

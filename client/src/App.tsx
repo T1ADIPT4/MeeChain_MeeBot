@@ -27,6 +27,7 @@ function Router() {
       <Route path="/history" component={TransactionHistory} />
       <Route path="/scheduled-tasks" component={ScheduledTasks} />
       <Route path="/swap-bridge" component={SwapBridge} />
+      <Route path="/token-actions" component={lazy(() => import("@/pages/token-actions"))} />
       <Route component={NotFound} />
     </Switch>
   );
