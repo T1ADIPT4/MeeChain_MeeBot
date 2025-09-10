@@ -17,6 +17,8 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import logoUrl from '@assets/branding/logo.png';
+import { DailyQuests } from '@/components/meebot/daily-quests';
+import { LevelUpNotification } from '@/components/meebot/level-up-notification';
 
 // Placeholder for MeeBotOnboardingModal component
 const MeeBotOnboardingModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
@@ -87,6 +89,8 @@ export default function MeeBotPage() {
   const [, navigate] = useLocation();
   const [showChat, setShowChat] = useState(false);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false); // State for onboarding modal
+  const [showLevelUpNotification, setShowLevelUpNotification] = useState(false);
+  const [currentLevel, setCurrentLevel] = useState(1);
   const [chatMessages, setChatMessages] = useState<Array<{id: number, sender: 'user' | 'meebot', message: string, time: string}>>([
     {
       id: 1,
@@ -203,6 +207,22 @@ export default function MeeBotPage() {
     setBotEmotion('happy'); // Reset emotion when chat starts
   };
 
+  const handleLevelUp = (newLevel: number) => {
+    setCurrentLevel(newLevel);
+    setShowLevelUpNotification(true);
+    
+    // เล่นเสียงพิเศษสำหรับ level up
+    playMeeBotSound();
+    
+    // การสั่นพิเศษสำหรับ level up
+    if ('vibrate' in navigator) {
+      navigator.vibrate([200, 100, 200, 100, 400]);
+    }
+
+    setBotEmotion('excited');
+    setTimeout(() => setBotEmotion('happy'), 3000);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       {/* Header */}
@@ -306,6 +326,9 @@ export default function MeeBotPage() {
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-purple-400/15 to-transparent rounded-full translate-y-6 -translate-x-6"></div>
             </CardContent>
           </Card>
+
+          {/* Daily Quests Section */}
+          <DailyQuests onLevelUp={handleLevelUp} />
 
           {/* Quick Actions */}
           <div className="grid grid-cols-2 gap-4">
@@ -417,6 +440,13 @@ export default function MeeBotPage() {
       <MeeBotOnboardingModal 
         isOpen={showOnboardingModal} 
         onClose={() => setShowOnboardingModal(false)} 
+      />
+
+      {/* Level Up Notification */}
+      <LevelUpNotification
+        newLevel={currentLevel}
+        isVisible={showLevelUpNotification}
+        onClose={() => setShowLevelUpNotification(false)}
       />
     </div>
   );
