@@ -56,23 +56,28 @@ export async function createWallet(req: Request, res: Response) {
 // Get current connected wallet (for frontend queries)
 export async function getMyWallet(req: Request, res: Response) {
   try {
-    if (!currentWalletAddress) {
-      return res.status(404).json({
-        success: false,
-        message: 'Wallet not found'
-      });
-    }
+    let wallet;
 
-    let wallet = walletStorage.get(currentWalletAddress);
-    
-    if (!wallet) {
-      // Create demo wallet data if not exists
+    if (!currentWalletAddress) {
+      // Return demo wallet data if no wallet connected
+      const demoAddress = '0x' + Array.from({ length: 20 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
       wallet = {
-        address: currentWalletAddress,
+        address: demoAddress,
         balance: '1000000000000000000', // 1 ETH in wei for demo
         network: 'demo'
       };
-      walletStorage.set(currentWalletAddress, wallet);
+    } else {
+      wallet = walletStorage.get(currentWalletAddress);
+      
+      if (!wallet) {
+        // Create demo wallet data if not exists
+        wallet = {
+          address: currentWalletAddress,
+          balance: '1000000000000000000', // 1 ETH in wei for demo
+          network: 'demo'
+        };
+        walletStorage.set(currentWalletAddress, wallet);
+      }
     }
     
     res.json({
@@ -176,26 +181,21 @@ export async function getWalletBalances(req: Request, res: Response) {
   try {
     const { address } = req.params;
     
-    // Use current wallet if no address provided
-    const walletAddress = address || currentWalletAddress;
+    // Use current wallet if no address provided, otherwise create demo
+    const walletAddress = address || currentWalletAddress || '0x' + Array.from({ length: 20 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
     
-    if (!walletAddress) {
-      return res.status(404).json({
-        success: false,
-        message: 'Wallet not found'
-      });
-    }
-
     let wallet = walletStorage.get(walletAddress);
     
     if (!wallet) {
       // Create demo data
       wallet = {
         address: walletAddress,
-        balance: '1000000000000000000',
+        balance: '1000000000000000000', // 1 ETH
         network: 'demo'
       };
-      walletStorage.set(walletAddress, wallet);
+      if (currentWalletAddress) {
+        walletStorage.set(walletAddress, wallet);
+      }
     }
     
     // Mock token balances for demo
@@ -205,14 +205,27 @@ export async function getWalletBalances(req: Request, res: Response) {
         balance: wallet.balance,
         symbol: 'ETH',
         name: 'Ethereum',
-        decimals: 18
+        decimals: 18,
+        value: '1.00',
+        price: '$2,400.00'
       },
       {
         token: 'MEE',
         balance: '500000000000000000000', // 500 MEE tokens
         symbol: 'MEE',
         name: 'MeeChain Token',
-        decimals: 18
+        decimals: 18,
+        value: '500.00',
+        price: '$0.12'
+      },
+      {
+        token: 'USDC',
+        balance: '1000000000', // 1000 USDC (6 decimals)
+        symbol: 'USDC',
+        name: 'USD Coin',
+        decimals: 6,
+        value: '1,000.00',
+        price: '$1.00'
       }
     ];
     

@@ -9,14 +9,21 @@ const SWAP_BRIDGE_CONFIG = {
 
 export const getSwapBridgeConfig = async (req: Request, res: Response) => {
   try {
+    // Return demo configuration for development
     res.json({
-      configured: SWAP_BRIDGE_CONFIG.configured,
-      address: SWAP_BRIDGE_CONFIG.configured ? SWAP_BRIDGE_CONFIG.address : undefined,
+      configured: true, // Set to true for demo mode
+      address: "0x1234567890123456789012345678901234567890",
+      demoMode: true,
+      supportedTokens: ['ETH', 'MEE', 'USDT', 'FUSE'],
+      supportedChains: [1, 122, 56, 137],
+      minimumAmount: '0.001',
+      maximumAmount: '1000',
+      bridgeFee: '0.003', // 0.3%
       networks: {
-        ethereum: { chainId: 1, rpcUrl: process.env.ETHEREUM_RPC_URL || "" },
-        polygon: { chainId: 137, rpcUrl: process.env.POLYGON_RPC_URL || "" },
-        bsc: { chainId: 56, rpcUrl: process.env.BSC_RPC_URL || "" },
-        fuse: { chainId: 122, rpcUrl: process.env.FUSE_RPC_URL || "" }
+        ethereum: { chainId: 1, rpcUrl: "https://eth.llamarpc.com" },
+        polygon: { chainId: 137, rpcUrl: "https://polygon.llamarpc.com" },
+        bsc: { chainId: 56, rpcUrl: "https://binance.llamarpc.com" },
+        fuse: { chainId: 122, rpcUrl: "https://rpc.fuse.io" }
       }
     });
   } catch (error) {

@@ -132,7 +132,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/wallet/:userId", async (req, res) => {
+  app.get("/api/wallet/by-user/:userId", async (req, res) => {
     try {
       const { userId } = req.params;
       const wallet = await storage.getWalletByUserId(userId);
@@ -590,16 +590,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/secrets/health', getSecretsHealth);
   app.get('/api/secrets/report', getDetailedSecretsReport);
 
-  // Wallet endpoints
-  app.post('/api/wallet/create', createWallet);
+  // Wallet endpoints (specific routes first, then dynamic routes)
   app.get('/api/wallet/me', getMyWallet);
-  app.get('/api/wallet/:address', getWallet);
-  app.get('/api/wallet/balances', (req, res) => {
-    req.params.address = '';  // Use current wallet address from getWalletBalances
-    getWalletBalances(req, res);
-  });
-  app.get('/api/wallet/:address/balances', getWalletBalances);
+  app.get('/api/wallet/balances', getWalletBalances);
   app.post('/api/wallet/connect', connectWallet);
+  app.post('/api/wallet/create', createWallet);
+  app.get('/api/wallet/:address', getWallet);
+  app.get('/api/wallet/:address/balances', getWalletBalances);
 
   // CORS preflight for all API routes
   app.options('*', (req: Request, res: Response) => {
