@@ -1,0 +1,115 @@
+นี่คือ **Starter Component** สำหรับ fallback UI ของ WalletConnect ที่ใช้ **MeeBot** ในโหมด “ขำๆ หรือจริงจังแต่ใจดี” เพื่อแนะนำผู้ใช้ให้เปลี่ยนเครือข่ายด้วยตัวเองอย่างอบอุ่นและไม่เครียด 😄
+
+---
+
+## 🧠 Zustand Store: `useMeeBotStatus.js`
+```js
+import { create } from 'zustand';
+
+export const useMeeBotStatus = create((set) => ({
+  status: 'idle', // 'idle' | 'waiting' | 'success' | 'error'
+  message: '',
+  setStatus: (status) => set({ status }),
+  setMessage: (message) => set({ message }),
+}));
+```
+
+---
+
+## 🤖 MeeBotFallbackCard.jsx
+```jsx
+import React from 'react';
+import { useMeeBotStatus } from './useMeeBotStatus';
+
+const MeeBotFallbackCard = () => {
+  const { status, message } = useMeeBotStatus();
+
+  const getEmotion = () => {
+    switch (status) {
+      case 'waiting':
+        return '😅';
+      case 'success':
+        return '🎉';
+      case 'error':
+        return '🤨';
+      default:
+        return '🙂';
+    }
+  };
+
+  return (
+    <div className="meebot-card">
+      <h3>{getEmotion()} MeeBot บอกว่า:</h3>
+      <p>{message}</p>
+    </div>
+  );
+};
+
+export default MeeBotFallbackCard;
+```
+
+----
+
+## 🧪 ManualNetworkCheck.jsx
+```jsx
+import React from 'react';
+import { useMeeBotStatus } from './useMeeBotStatus';
+
+const ManualNetworkCheck = ({ targetChainId }) => {
+  const { setStatus, setMessage } = useMeeBotStatus();
+
+  const checkNetwork = async () => {
+    try {
+      const currentChainId = await window.ethereum.request({ method: 'eth_chainId' });
+      if (currentChainId === targetChainId) {
+        setStatus('success');
+        setMessage('เยี่ยมเลย! เปลี่ยนเครือข่ายสำเร็จแล้วครับ พร้อมลุยภารกิจต่อไปกันเลย 🎯');
+      } else {
+        setStatus('error');
+        setMessage('อ๊ะ... ยังไม่ตรงนะครับ ลองตรวจสอบอีกครั้งได้เลย ผมอยู่ตรงนี้ ไม่ไปไหน 💪');
+      }
+    } catch (err) {
+      setStatus('error');
+      setMessage('อุ๊ย... MeeBot งงกับเครือข่ายนี้ ลองใหม่อีกทีนะครับ 😵');
+    }
+  };
+
+  return (
+    <div className="manual-check">
+      <button onClick={checkNetwork}>✅ เปลี่ยนแล้วครับ! ตรวจสอบอีกครั้ง</button>
+    </div>
+  );
+};
+
+export default ManualNetworkCheck;
+```
+
+---
+
+## 🧩 การใช้งานในหน้า Fallback UI
+```jsx
+import React from 'react';
+import MeeBotFallbackCard from './MeeBotFallbackCard';
+import ManualNetworkCheck from './ManualNetworkCheck';
+
+const WalletConnectFallback = () => {
+  return (
+    <div className="walletconnect-fallback">
+      <MeeBotFallbackCard />
+      <ManualNetworkCheck targetChainId="0x1" />
+    </div>
+  );
+};
+
+export default WalletConnectFallback;
+```
+
+---
+
+## 🎨 เสริมความขำๆ หรือใจดี
+- MeeBot อาจพูดว่า:
+  - “เครือข่ายนี้ไม่คุ้นเลยครับ... เหมือนผมหลงทางใน blockchain 😅”
+  - “ถ้าเปลี่ยนเครือข่ายแล้ว กดตรวจสอบได้เลยครับ ผมจะดีใจมาก!”
+  - “ยังไม่ตรงนะครับ แต่ไม่เป็นไร เราแก้ไปด้วยกันได้ 💪”
+
+- เพิ่ม MeeBot animation เช่น “ยกนิ้ว”, “ขยับหัว”, หรือ “กระโดดดีใจ” เมื่อสำเร็จ
