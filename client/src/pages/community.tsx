@@ -480,7 +480,7 @@ export default function CommunityPage() {
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-4">
             {/* MeeBot Recommendations */}
-            <Card className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border-cyan-500/30">
+            <UICard className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 border-cyan-500/30">
               <CardHeader className="pb-3">
                 <CardTitle className="text-cyan-300 flex items-center gap-2">
                   <Bot className="w-5 h-5" />
@@ -507,10 +507,10 @@ export default function CommunityPage() {
                   </div>
                 </div>
               </CardContent>
-            </Card>
+            </UICard>
 
             {/* Trending Topics */}
-            <Card className="bg-black/50 border-purple-500/30">
+            <UICard className="bg-black/50 border-purple-500/30">
               <CardHeader className="pb-3">
                 <CardTitle className="text-purple-300 flex items-center gap-2">
                   <TrendingUp className="w-5 h-5" />
@@ -534,10 +534,10 @@ export default function CommunityPage() {
                   </div>
                 ))}
               </CardContent>
-            </Card>
+            </UICard>
 
             {/* Community Stats */}
-            <Card className="bg-black/50 border-orange-500/30">
+            <UICard className="bg-black/50 border-orange-500/30">
               <CardHeader className="pb-3">
                 <CardTitle className="text-orange-300 flex items-center gap-2">
                   <Users className="w-5 h-5" />
@@ -558,7 +558,7 @@ export default function CommunityPage() {
                   <p className="text-sm text-gray-300">Badge แจกไปแล้ว</p>
                 </div>
               </CardContent>
-            </Card>
+            </UICard>
           </div>
 
           {/* Main Feed */}
@@ -590,7 +590,7 @@ export default function CommunityPage() {
             {/* Posts Feed */}
             <div className="space-y-4">
               {getFilteredPosts().map((post) => (
-                <Card key={post.id} className="bg-black/50 border-slate-600 hover:border-purple-500/50 transition-colors">
+                <UICard key={post.id} className="bg-black/50 border-slate-600 hover:border-purple-500/50 transition-colors">
                   <CardHeader className="pb-3">
                     <div className="flex items-start gap-3">
                       <Avatar className="w-10 h-10">
@@ -786,7 +786,7 @@ export default function CommunityPage() {
                       </div>
                     )}
                   </CardContent>
-                </Card>
+                </UICard>
               ))}
             </div>
           </div>
