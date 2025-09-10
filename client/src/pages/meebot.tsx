@@ -306,7 +306,7 @@ export default function MeeBotPage() {
                 <Menu className="w-5 h-5" />
               </Button>
 
-              <Link to="/">
+              <Link to="/dashboard">
                 <Button
                   variant="ghost" 
                   size="sm"
@@ -322,11 +322,18 @@ export default function MeeBotPage() {
               <div className="bg-slate-800/70 backdrop-blur-sm border border-slate-700 rounded-full px-4 py-2">
                 <span className="text-yellow-400 font-semibold">⭐ Level {userStats.level}</span>
               </div>
-              <Link to="/">
-                <Button variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800/50">
-                  หน้าหลัก
-                </Button>
-              </Link>
+              <div className="flex gap-2">
+                <Link to="/dashboard">
+                  <Button variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800/50">
+                    หน้าหลัก
+                  </Button>
+                </Link>
+                <Link to="/missions">
+                  <Button variant="outline" className="border-purple-500 text-purple-300 hover:bg-purple-800/50">
+                    ถัดไป: ภารกิจ
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
 
