@@ -1,16 +1,15 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { 
-  Bot, 
-  Shield, 
-  Link2, 
-  Server, 
-  CheckCircle, 
-  AlertTriangle, 
+import {
+  Bot,
+  Shield,
+  Link2,
+  Server,
+  CheckCircle,
+  AlertTriangle,
   RefreshCw,
   Zap,
   Settings,
@@ -27,15 +26,16 @@ interface SystemStatus {
 }
 
 export function SystemCheck() {
-  const [status, setStatus] = useState<SystemStatus>({
-    secretsOk: false,
-    contractsConnected: false,
-    apiResponsive: false,
-    walletConnected: false,
-    lastCheck: new Date()
+  const [systemStatus, setSystemStatus] = useState({
+    contracts: false,
+    api: false,
+    frontend: false,
+    secrets: false,
+    network: false
   });
   const [isChecking, setIsChecking] = useState(false);
-  const [meeBotMood, setMeeBotMood] = useState<'happy' | 'concerned' | 'thinking'>('thinking');
+  const [meeBotMood, setMeeBotMood] = useState<'happy' | 'concerned' | 'checking' | 'excited'>('happy');
+  const [lastCheckTime, setLastCheckTime] = useState<number | null>(null);
   const { toast } = useToast();
 
   // Calculate system health score
@@ -47,7 +47,7 @@ export function SystemCheck() {
   // Get MeeBot message based on system status
   const getMeeBotMessage = () => {
     const score = getSystemScore();
-    
+
     if (score === 100) {
       return "🎉 ระบบพร้อมลุยครับ! ทุกอย่างเรียบร้อยดี! คุณสามารถเริ่มใช้งานได้เลย!";
     } else if (score >= 75) {
@@ -62,31 +62,66 @@ export function SystemCheck() {
   // Mock system check function
   const performSystemCheck = async () => {
     setIsChecking(true);
-    setMeeBotMood('thinking');
+    setMeeBotMood('checking');
 
-    // Simulate checking different components
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock results - you can replace with real checks
-    const newStatus: SystemStatus = {
-      secretsOk: Math.random() > 0.3,
-      contractsConnected: Math.random() > 0.4,
-      apiResponsive: Math.random() > 0.2,
-      walletConnected: Math.random() > 0.5,
-      lastCheck: new Date()
-    };
+    // MeeBot wake-up detection
+    const currentTime = Date.now();
+    const timeSinceLastCheck = currentTime - (lastCheckTime || 0);
+    const isRapidChecking = timeSinceLastCheck < 5000; // ถ้ากดใน 5 วินาที = กดรัว ๆ
 
-    setStatus(newStatus);
-    
-    const score = (Object.values(newStatus).filter((v, i) => i < 4 && v).length / 4) * 100;
-    setMeeBotMood(score >= 75 ? 'happy' : 'concerned');
-    
-    setIsChecking(false);
+    // Wake-up animation and messages
+    if (isRapidChecking) {
+      toast({
+        title: "🤖 MeeBot ตื่นตกใจ!",
+        description: "โอ้โห! กดมารัว ๆ แบบนี้ MeeBot ตื่นเต็มตาแล้วครับ! 😆",
+      });
+      setMeeBotMood('excited');
+    } else {
+      toast({
+        title: "🤖 MeeBot กำลังตื่น...",
+        description: "ให้ผมเช็คระบบให้นะครับ... ☕",
+      });
+    }
 
-    toast({
-      title: "🤖 MeeBot System Check",
-      description: `ตรวจสอบระบบเสร็จแล้วครับ! คะแนน: ${Math.round(score)}%`,
-    });
+    setLastCheckTime(currentTime);
+
+    // Simulate checking different systems
+    const newStatus = { ...systemStatus };
+
+    // Check each system with delay
+    setTimeout(() => setSystemStatus(prev => ({ ...prev, contracts: true })), 500);
+    setTimeout(() => setSystemStatus(prev => ({ ...prev, api: true })), 1000);
+    setTimeout(() => setSystemStatus(prev => ({ ...prev, frontend: true })), 1500);
+    setTimeout(() => setSystemStatus(prev => ({ ...prev, secrets: true })), 2000);
+    setTimeout(() => setSystemStatus(prev => ({ ...prev, network: true })), 2500);
+
+    setTimeout(() => {
+      setSystemStatus({
+        contracts: true,
+        api: true,
+        frontend: true,
+        secrets: true,
+        network: true
+      });
+
+      const score = 100; // All systems ready
+      setMeeBotMood('happy');
+
+      // Wake-up completion message
+      if (isRapidChecking) {
+        toast({
+          title: "🚀 MeeBot พร้อมลุยแล้ว!",
+          description: "ระบบพร้อมทำงานเต็มสูบครับ! ขอบคุณที่ปลุกผมนะฮะ! ✨",
+        });
+      } else {
+        toast({
+          title: "✅ MeeBot System Ready",
+          description: `ระบบพร้อมใช้งานแล้วครับ! คะแนน: ${Math.round(score)}%`,
+        });
+      }
+
+      setIsChecking(false);
+    }, 3000);
   };
 
   // Auto-check on component mount
@@ -104,11 +139,13 @@ export function SystemCheck() {
             <div className={`p-2 rounded-full ${
               meeBotMood === 'happy' ? 'bg-green-500/20 animate-pulse' :
               meeBotMood === 'concerned' ? 'bg-yellow-500/20' :
+              meeBotMood === 'excited' ? 'bg-purple-500/20 animate-bounce' :
               'bg-blue-500/20 animate-spin'
             }`}>
               <Bot className={`w-6 h-6 ${
                 meeBotMood === 'happy' ? 'text-green-400' :
                 meeBotMood === 'concerned' ? 'text-yellow-400' :
+                meeBotMood === 'excited' ? 'text-purple-400' :
                 'text-blue-400'
               }`} />
             </div>
@@ -117,11 +154,14 @@ export function SystemCheck() {
                 🧪 MeeBot ตรวจสอบระบบ
               </h3>
               <p className="text-sm text-gray-400">
-                อัปเดตล่าสุด: {status.lastCheck.toLocaleTimeString()}
+                {meeBotMood === 'happy' ? 'ระบบทำงานปกติ สุขภาพดี!' :
+                 meeBotMood === 'concerned' ? 'มีปัญหาบางส่วน กำลังแก้ไข' :
+                 meeBotMood === 'excited' ? 'ตื่นแล้วครับ! พร้อมลุยทุกภารกิจ! 🚀' :
+                 'กำลังตรวจสอบระบบ...'}
               </p>
             </div>
           </div>
-          
+
           <Button
             onClick={performSystemCheck}
             disabled={isChecking}
@@ -147,13 +187,13 @@ export function SystemCheck() {
               {systemScore}%
             </Badge>
           </div>
-          <Progress 
-            value={systemScore} 
+          <Progress
+            value={systemScore}
             className={`h-3 ${
               systemScore >= 75 ? 'bg-green-900' :
               systemScore >= 50 ? 'bg-yellow-900' :
               'bg-red-900'
-            }`} 
+            }`}
           />
         </div>
 
@@ -170,8 +210,8 @@ export function SystemCheck() {
         {/* System Components Status */}
         <div className="grid grid-cols-2 gap-4">
           <div className={`p-4 rounded-lg border ${
-            status.secretsOk 
-              ? 'bg-green-500/10 border-green-500/30' 
+            status.secretsOk
+              ? 'bg-green-500/10 border-green-500/30'
               : 'bg-red-500/10 border-red-500/30'
           }`}>
             <div className="flex items-center gap-2 mb-2">
@@ -191,8 +231,8 @@ export function SystemCheck() {
           </div>
 
           <div className={`p-4 rounded-lg border ${
-            status.contractsConnected 
-              ? 'bg-green-500/10 border-green-500/30' 
+            status.contractsConnected
+              ? 'bg-green-500/10 border-green-500/30'
               : 'bg-red-500/10 border-red-500/30'
           }`}>
             <div className="flex items-center gap-2 mb-2">
@@ -212,8 +252,8 @@ export function SystemCheck() {
           </div>
 
           <div className={`p-4 rounded-lg border ${
-            status.apiResponsive 
-              ? 'bg-green-500/10 border-green-500/30' 
+            status.apiResponsive
+              ? 'bg-green-500/10 border-green-500/30'
               : 'bg-red-500/10 border-red-500/30'
           }`}>
             <div className="flex items-center gap-2 mb-2">
@@ -233,8 +273,8 @@ export function SystemCheck() {
           </div>
 
           <div className={`p-4 rounded-lg border ${
-            status.walletConnected 
-              ? 'bg-green-500/10 border-green-500/30' 
+            status.walletConnected
+              ? 'bg-green-500/10 border-green-500/30'
               : 'bg-red-500/10 border-red-500/30'
           }`}>
             <div className="flex items-center gap-2 mb-2">
@@ -256,16 +296,16 @@ export function SystemCheck() {
 
         {/* Action Buttons */}
         <div className="flex gap-3">
-          <Button 
+          <Button
             className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
             disabled={systemScore < 100}
           >
             <Zap className="w-4 h-4 mr-2" />
             เริ่มใช้งาน
           </Button>
-          
-          <Button 
-            variant="outline" 
+
+          <Button
+            variant="outline"
             className="border-cyan-500 text-cyan-300 hover:bg-cyan-800/50"
           >
             <Settings className="w-4 h-4 mr-2" />
