@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
+import {
   Bot,
   Lightbulb,
   RefreshCw,
@@ -12,7 +12,8 @@ import {
   Clock,
   MessageCircle,
   TrendingUp,
-  CheckCircle
+  CheckCircle,
+  Star
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -122,6 +123,14 @@ export function MeeBotTips() {
     });
   };
 
+  const handleCompleteAllTips = () => {
+    toast({
+      title: "🎉 ยอดเยี่ยม!",
+      description: "คุณอ่าน MeeBot Tips ครบถ้วนแล้ว",
+      variant: "success"
+    });
+  };
+
   return (
     <Card className={`bg-gradient-to-r ${getPriorityColor(tip.priority)} transition-all duration-500 ${
       isAnimating ? 'scale-95 opacity-70' : 'scale-100 opacity-100'
@@ -179,7 +188,7 @@ export function MeeBotTips() {
         </div>
 
         <div className="flex gap-2">
-          <Button 
+          <Button
             size="sm"
             className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
           >
@@ -187,8 +196,8 @@ export function MeeBotTips() {
             {tip.action}
           </Button>
 
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             onClick={handleCheckPoints}
             className="border-emerald-500 text-emerald-300 hover:bg-emerald-800/50"
@@ -197,16 +206,16 @@ export function MeeBotTips() {
             <CheckCircle className="w-4 h-4" />
           </Button>
 
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             className="border-cyan-500 text-cyan-300 hover:bg-cyan-800/50"
           >
             <MessageCircle className="w-4 h-4" />
           </Button>
 
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             className="border-green-500 text-green-300 hover:bg-green-800/50"
           >
