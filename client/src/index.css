@@ -3,6 +3,32 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Ensure proper scrolling behavior */
+html, body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+body {
+  min-height: 100vh;
+}
+
+/* Fix for modal/overlay scrolling issues */
+.modal-open {
+  overflow: hidden;
+}
+
+/* Ensure content behind modals can still be interacted with scrolling */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 :root {
   --background: hsl(0, 0%, 7.06%);
   --foreground: hsl(0, 0%, 8.24%);

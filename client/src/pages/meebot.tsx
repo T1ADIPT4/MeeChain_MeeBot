@@ -205,7 +205,7 @@ export default function MeeBotPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-y-auto">
       {/* Header */}
       <nav className="flex items-center justify-between bg-slate-800/80 backdrop-blur-sm border-b border-slate-600/50 p-4">
         <Button 
@@ -223,9 +223,9 @@ export default function MeeBotPage() {
         </div>
       </nav>
 
-      <div className="px-6 py-8">
+      <div className="px-6 py-8 min-h-0 flex-1">
         {/* Main Container */}
-        <div className="max-w-2xl mx-auto space-y-6">
+        <div className="max-w-2xl mx-auto space-y-6 min-h-0">
 
           {/* MeeBot Intro Card */}
           <Card className="bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border-cyan-300/30 overflow-hidden relative">
@@ -340,7 +340,7 @@ export default function MeeBotPage() {
 
       {/* Chat Modal */}
       {showChat && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end md:items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end md:items-center justify-center z-50 p-4 overflow-y-auto">
           <Card className="w-full max-w-md bg-slate-800/95 border-cyan-500/30 max-h-[80vh] flex flex-col">
             <CardContent className="p-0 flex flex-col h-full">
               {/* Chat Header */}
