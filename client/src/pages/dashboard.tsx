@@ -158,8 +158,8 @@ export default function Dashboard() {
     setBotEmotion('excited');
 
     toast({
-      title: "🎉 มีบอทพร้อมช่วยแล้ว!",
-      description: "ไปหน้าแชทกับมีบอทกันเลย!",
+      title: "🎉 เฮ้ย! พร้อมลุยแล้ว!",
+      description: "มาเริ่มภารกิจใหม่ไปด้วยกัน! ผมจะเป็นเมนเตอร์ให้เลย! 🧠💪",
     });
 
     // รีเซ็ต emotion หลัง 2 วินาที
@@ -171,9 +171,9 @@ export default function Dashboard() {
 
   const getBotMessage = () => {
     if (isHovering) {
-      return "คลิกเพื่อเริ่มภารกิจกับมีบอท! ✨";
+      return "พร้อมลุยภารกิจใหม่กันมั้ย? ผมเตรียมพลังไว้ให้แล้ว! ⚡✨";
     }
-    return "มีบอทกำลังรอคำสั่งอยู่! 🤖";
+    return "สวัสดีครับ! วันนี้มีภารกิจอะไรให้ลุยบ้างนะ? 🤖💪";
   };
 
   if (isLoading) {
@@ -535,6 +535,9 @@ export default function Dashboard() {
                   <p className="text-sm text-gray-300 mb-3 leading-relaxed">
                     {getBotMessage()}
                   </p>
+                  <div className="text-xs text-cyan-400 font-medium mb-2">
+                    💡 คำคมประจำวัน: "เริ่มต้นวันใหม่ด้วยการลงมือทำสิ่งเล็ก ๆ วันนี้!"
+                  </div>
                 </div>
 
                 <Button
@@ -572,8 +575,8 @@ export default function Dashboard() {
                       isHovering ? 'animate-bounce scale-125' : 'scale-100'
                     }`} />
                     <div className="text-center">
-                      <div className="font-bold">เรียกมีบอท!</div>
-                      <div className="text-xs opacity-90">คลิกเลย</div>
+                      <div className="font-bold">เรียกครูพี่!</div>
+                      <div className="text-xs opacity-90">มาลุยกัน!</div>
                     </div>
                   </div>
 

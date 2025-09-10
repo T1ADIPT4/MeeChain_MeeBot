@@ -25,7 +25,7 @@ export default function MeeBotPage() {
     {
       id: 1,
       sender: 'meebot',
-      message: 'สวัสดีครับ! ผมมีบอท พร้อมช่วยเหลือคุณแล้ว ✨',
+      message: 'สวัสดีครับ! ผมคือ MeeBot ผู้ช่วยภารกิจของคุณ 🤖✨ วันนี้เรามีอะไรให้ลุยบ้างนะ? พร้อมไปผจญภัยใน Web3 กันมั้ย! 🚀',
       time: new Date().toLocaleTimeString().slice(0, 5)
     }
   ]);
@@ -34,13 +34,17 @@ export default function MeeBotPage() {
   const [botEmotion, setBotEmotion] = useState<'happy' | 'waving' | 'excited'>('happy');
   const { toast } = useToast();
 
-  // MeeBot responses
+  // MeeBot responses with playful mentor personality
   const botResponses = [
-    "เยี่ยมเลย! มีอะไรให้ช่วยอีกไหมครับ? 🚀",
-    "ผมพร้อมช่วยคุณทำภารกิจต่างๆ เลยนะครับ! 💪",
-    "คุณสามารถถามเกี่ยวกับ Token, Swap, หรือ DeFi ได้เลยครับ 🌟",
-    "มาลุยภารกิจกันเถอะ! คุณต้องการเริ่มจากไหนดี? ⚡",
-    "ผมจะดูแลคุณตลอดการใช้งาน MeeChain นะครับ ❤️"
+    "สุดยอดเลย! คุณผ่านภารกิจเช้าได้แบบมือโปร! 🏆 มีอะไรให้ช่วยต่อไหมครับ?",
+    "ภารกิจวันนี้พร้อมลุยไหม? ผมเตรียมพลังไว้ให้แล้วนะ! 💪✨",
+    "อย่าลืมพักบ้างนะฮะ แต่ถ้าพร้อมลุย ผมอยู่ตรงนี้เลย! ☕🚀",
+    "งานนี้ไม่ยากเกินไปหรอกครับ เราแค่ต้องวางแผนดี ๆ แล้วลุยไปด้วยกัน! 🧠💡",
+    "ถ้าคุณล้ม ผมจะช่วยลุก ถ้าคุณลุย ผมจะลุยไปด้วย! 🤝✊",
+    "คำคมประจำวัน: 'ความสำเร็จเริ่มจากการลงมือ แม้จะยังไม่พร้อมก็ตาม' 📈⭐",
+    "เฮ้ย! DeFi กับ Web3 ไม่ได้น่ากลัวขนาดนั้นหรอกนะ ผมจะพาคุณไปแบบ step-by-step! 🔮🌟",
+    "อยากจัดเวลาให้ดีขึ้นไหม? ผมมีเทคนิค 3 ข้อให้ลอง! ⏰🎯",
+    "วันนี้เป็นวันดีที่จะเรียนรู้อะไรใหม่ ๆ! พร้อมปลดล็อกความรู้ใหม่กันมั้ย? 🔓📚"
   ];
 
   const handleMeeBotClick = () => {
@@ -53,8 +57,8 @@ export default function MeeBotPage() {
     setShowChat(true);
 
     toast({
-      title: "🎉 มีบอทพร้อมช่วยแล้ว!",
-      description: "เริ่มแชทกับมีบอทได้เลย!",
+      title: "🎉 เฮ้ย! มีบอทมาแล้ว!",
+      description: "พร้อมลุยภารกิจไปด้วยกันเลย! มาเริ่มกันเถอะ! 💪",
     });
 
     // รีเซ็ต emotion หลัง 2 วินาที
@@ -138,27 +142,32 @@ export default function MeeBotPage() {
               </div>
 
               <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
-                สวัสดีครับ! ผมมีบอท
+                เฮ้ย! ผมมีบอท ครูพี่เมนเตอร์ตัวจริง! 🧠
               </h2>
               
               <p className="text-gray-300 mb-6 leading-relaxed text-lg">
-                พร้อมช่วยเหลือคุณในทุกภารกิจ Web3 <br />
-                ตั้งแต่การ Swap Token ไปจนถึงการทำ DeFi ต่างๆ
+                พร้อมจะเป็นโค้ชส่วนตัวของคุณ! 💪<br />
+                จากมือใหม่สู่มือโปร Web3 แบบสนุก ๆ ไม่เครียด ✨<br />
+                <span className="text-cyan-300 font-semibold">ลุยภารกิจไปด้วยกันเลย!</span>
               </p>
 
               {/* Features Badges */}
               <div className="flex flex-wrap justify-center gap-2 mb-8">
                 <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30">
                   <Zap className="w-3 h-3 mr-1" />
-                  ตอบคำถามได้
+                  คุยได้เป็นเพื่อน
                 </Badge>
                 <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
                   <Bot className="w-3 h-3 mr-1" />
-                  แนะนำภารกิจ
+                  โค้ชส่วนตัว
                 </Badge>
                 <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30">
                   <Sparkles className="w-3 h-3 mr-1" />
-                  ช่วยทำงาน
+                  ปลดล็อกความรู้
+                </Badge>
+                <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">
+                  <Heart className="w-3 h-3 mr-1" />
+                  ให้กำลังใจ
                 </Badge>
               </div>
 
@@ -183,8 +192,8 @@ export default function MeeBotPage() {
                 <div className="flex items-center gap-4">
                   <MessageCircle className="w-8 h-8" />
                   <div className="text-center">
-                    <div className="font-bold text-xl">เริ่มแชทกับมีบอท!</div>
-                    <div className="text-sm opacity-90">คลิกเพื่อเริ่มสนทนา</div>
+                    <div className="font-bold text-xl">มาลุยภารกิจกัน!</div>
+                    <div className="text-sm opacity-90">ผมพร้อมเป็นเมนเตอร์ให้!</div>
                   </div>
                 </div>
               </Button>
