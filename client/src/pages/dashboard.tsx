@@ -158,14 +158,14 @@ export default function Dashboard() {
 
     toast({
       title: "🎉 มีบอทพร้อมช่วยแล้ว!",
-      description: "ภารกิจเริ่มต้นแล้ว! มีบอทอยู่ข้างๆคุณนะ",
+      description: "ไปหน้าแชทกับมีบอทกันเลย!",
     });
 
     // รีเซ็ต emotion หลัง 2 วินาที
     setTimeout(() => setBotEmotion('happy'), 2000);
 
-    // นำทางไปยังหน้า onboarding หรือ missions
-    navigate('/missions');
+    // นำทางไปยังหน้า MeeBot
+    navigate('/meebot');
   };
 
   const getBotMessage = () => {

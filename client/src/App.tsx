@@ -5,15 +5,16 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { OnboardingProvider } from "@/hooks/use-onboarding";
-import NotFound from "@/pages/not-found";
+import NotFound from '@/pages/not-found';
 import Home from "@/pages/home";
 import Missions from "@/pages/missions";
 import Dashboard from "@/pages/dashboard";
-import TransactionHistory from "@/pages/transaction-history";
-import ReceiveTokens from "@/pages/receive-tokens";
-import SendTokens from "@/pages/send-tokens";
-import ScheduledTasks from "@/pages/scheduled-tasks";
+import TransactionHistory from '@/pages/transaction-history';
+import ReceiveTokens from '@/pages/receive-tokens';
+import SendTokens from '@/pages/send-tokens';
+import ScheduledTasks from '@/pages/scheduled-tasks';
 import SwapBridge from './pages/swap-bridge';
+import MeeBotPage from '@/pages/meebot';
 
 function Router() {
   return (
@@ -28,6 +29,7 @@ function Router() {
       <Route path="/scheduled-tasks" component={ScheduledTasks} />
       <Route path="/swap-bridge" component={SwapBridge} />
       <Route path="/token-actions" component={lazy(() => import("@/pages/token-actions"))} />
+      <Route path="/meebot" component={MeeBotPage} />
       <Route component={NotFound} />
     </Switch>
   );
