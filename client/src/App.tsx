@@ -41,10 +41,8 @@ function Router() {
         <Route path="/receive" component={ReceiveTokens} />
         <Route path="/history" component={TransactionHistory} />
         <Route path="/scheduled-tasks" component={ScheduledTasks} />
-        <Route path="/swap-bridge" component={SwapBridge} />
-        <Route path="/token-actions" component={TokenActions} />
-        <Route path="/meebot" component={MeeBotPage} />
-        <Route path="/academy" component={Academy} />
+        <Route path="/team-dashboard" component={TeamDashboard} />
+        <Route path="/mission-test-mode" component={lazy(() => import('@/pages/mission-test-mode'))} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

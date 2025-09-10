@@ -5,8 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle, Clock, Gift, Coins } from "lucide-react";
-import { Link } from "wouter";
+import { CheckCircle, Clock, Gift, Coins, TestTube, ArrowLeft } from "lucide-react";
+import { Link, navigate } from "wouter";
 
 interface Mission {
   missionId: string;
@@ -180,16 +180,28 @@ export default function Missions() {
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">ภารกิจ & รางวัล</h1>
-            <p className="text-purple-200">ทำภารกิจเพื่อรับรางวัลและเหรียญฟรี</p>
-          </div>
-          <Link to="/">
-            <Button variant="outline" className="border-purple-500/50 text-purple-200 hover:bg-purple-500/20">
-              กลับหน้าหลัก
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/dashboard')}
+              className="text-slate-400 hover:text-white"
+            >
+              <ArrowLeft className="w-4 h-4" />
             </Button>
-          </Link>
+            <h1 className="text-2xl font-bold text-blue-300">ภารกิจ MeeChain</h1>
+          </div>
+
+          <Button
+            onClick={() => navigate('/mission-test-mode')}
+            variant="outline"
+            size="sm"
+            className="border-purple-500/50 text-purple-300 hover:bg-purple-600/20"
+          >
+            <TestTube className="w-4 h-4 mr-2" />
+            Test Mode
+          </Button>
         </div>
 
         {/* Progress Overview */}
