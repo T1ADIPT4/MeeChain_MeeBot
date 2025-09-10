@@ -151,10 +151,38 @@ export const MEMBERSHIP_NFT_ABI = [
   "event NFTRewardMinted(address indexed, uint8, uint256)"
 ];
 
+// MeeBadgeNFT Contract ABI
+export const BADGE_NFT_ABI = [
+  // ERC-721 Standard
+  "function name() view returns (string)",
+  "function symbol() view returns (string)",
+  "function tokenURI(uint256) view returns (string)",
+  "function balanceOf(address) view returns (uint256)",
+  "function ownerOf(uint256) view returns (address)",
+  
+  // Badge NFT Specific
+  "function mintBadge(address, string, string, string, uint256, uint8, uint8, string, bool, string) returns (uint256)",
+  "function upgradeBadge(uint256)",
+  "function activatePower(uint256)",
+  "function getUserBadgesWithPowers(address) view returns (tuple(uint256, string, string, string, uint256, uint256, uint8, uint8, uint256, address, bool, string, uint256, bool)[])",
+  "function getQuestSetProgress(address, string) view returns (uint256, uint256, bool, string)",
+  "function createQuestSet(string, string, string, string[], string, string, string, uint256, uint8, uint8, string, string, uint256, uint256)",
+  "function authorizeMinter(address)",
+  "function userXP(address) view returns (uint256)",
+  "function userLevel(address) view returns (uint256)",
+  
+  // Events
+  "event BadgeMinted(address indexed, uint256 indexed, string, string, uint256, uint8)",
+  "event BadgeUpgraded(uint256 indexed, uint256, string)",
+  "event QuestSetCompleted(address indexed, string, uint256, string)",
+  "event PowerActivated(address indexed, uint256, string, uint256)"
+];
+
 // Contract addresses (ใส่ address จริงตอน deploy)
 export const CONTRACT_ADDRESSES = {
   MEE_TOKEN: import.meta.env.VITE_TOKEN_CONTRACT_ADDRESS || "0x0000000000000000000000000000000000000000",
   MEMBERSHIP_NFT: import.meta.env.VITE_NFT_CONTRACT_ADDRESS || "0x0000000000000000000000000000000000000000",
+  BADGE_NFT: import.meta.env.VITE_BADGE_NFT_CONTRACT_ADDRESS || "0x0000000000000000000000000000000000000000",
   FUSE_RPC: import.meta.env.VITE_FUSE_RPC_URL || "https://rpc.fuse.io",
   CHAIN_ID: parseInt(import.meta.env.VITE_CHAIN_ID || "122"),
 };
@@ -206,7 +234,13 @@ export const getContractInstances = (signer?: ethers.Signer) => {
     signerOrProvider
   );
   
-  return { meeToken, membershipNFT, provider };
+  const badgeNFT = new ethers.Contract(
+    CONTRACT_ADDRESSES.BADGE_NFT,
+    BADGE_NFT_ABI,
+    signerOrProvider
+  );
+  
+  return { meeToken, membershipNFT, badgeNFT };bershipNFT, provider };
 };
 
 // Check if user has contracts interaction capability

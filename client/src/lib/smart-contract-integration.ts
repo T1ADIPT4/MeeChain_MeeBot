@@ -1,0 +1,260 @@
+
+import { ethers } from 'ethers';
+import { getContractInstances, CONTRACT_ADDRESSES } from './contract-abi-checker';
+
+interface BadgeData {
+  tokenId: number;
+  name: string;
+  description: string;
+  power: string;
+  level: number;
+  maxLevel: number;
+  rarity: number;
+  category: number;
+  mintedAt: number;
+  originalOwner: string;
+  isQuestReward: boolean;
+  questId: string;
+  powerBoost: number;
+  isUpgradeable: boolean;
+}
+
+interface QuestProgress {
+  completed: number;
+  total: number;
+  isCompleted: boolean;
+  meeBotQuote: string;
+}
+
+export class SmartContractService {
+  private provider: ethers.JsonRpcProvider;
+  private signer?: ethers.Signer;
+
+  constructor(signer?: ethers.Signer) {
+    this.provider = new ethers.JsonRpcProvider(CONTRACT_ADDRESSES.FUSE_RPC);
+    this.signer = signer;
+  }
+
+  /**
+   * Get contract instances
+   */
+  getContracts() {
+    return getContractInstances(this.signer);
+  }
+
+  /**
+   * Check if user has specific badge
+   */
+  async userHasBadge(userAddress: string, badgeName: string): Promise<boolean> {
+    try {
+      const { badgeNFT } = this.getContracts();
+      return await badgeNFT.userHasBadge(userAddress, badgeName);
+    } catch (error) {
+      console.error('Error checking badge:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Get user's badges with power information
+   */
+  async getUserBadges(userAddress: string): Promise<BadgeData[]> {
+    try {
+      const { badgeNFT } = this.getContracts();
+      const badges = await badgeNFT.getUserBadgesWithPowers(userAddress);
+      return badges.map((badge: any) => ({
+        tokenId: Number(badge.tokenId),
+        name: badge.name,
+        description: badge.description,
+        power: badge.power,
+        level: Number(badge.level),
+        maxLevel: Number(badge.maxLevel),
+        rarity: Number(badge.rarity),
+        category: Number(badge.category),
+        mintedAt: Number(badge.mintedAt),
+        originalOwner: badge.originalOwner,
+        isQuestReward: badge.isQuestReward,
+        questId: badge.questId,
+        powerBoost: Number(badge.powerBoost),
+        isUpgradeable: badge.isUpgradeable
+      }));
+    } catch (error) {
+      console.error('Error getting user badges:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Get quest set progress
+   */
+  async getQuestProgress(userAddress: string, questId: string): Promise<QuestProgress> {
+    try {
+      const { badgeNFT } = this.getContracts();
+      const progress = await badgeNFT.getQuestSetProgress(userAddress, questId);
+      return {
+        completed: Number(progress.completed),
+        total: Number(progress.total),
+        isCompleted: progress.isCompleted,
+        meeBotQuote: progress.meeBotQuote
+      };
+    } catch (error) {
+      console.error('Error getting quest progress:', error);
+      return { completed: 0, total: 0, isCompleted: false, meeBotQuote: '' };
+    }
+  }
+
+  /**
+   * Get user XP and level
+   */
+  async getUserStats(userAddress: string): Promise<{ xp: number; level: number }> {
+    try {
+      const { badgeNFT } = this.getContracts();
+      const [xp, level] = await Promise.all([
+        badgeNFT.userXP(userAddress),
+        badgeNFT.userLevel(userAddress)
+      ]);
+      return {
+        xp: Number(xp),
+        level: Number(level)
+      };
+    } catch (error) {
+      console.error('Error getting user stats:', error);
+      return { xp: 0, level: 0 };
+    }
+  }
+
+  /**
+   * Mint badge (owner only)
+   */
+  async mintBadge(
+    to: string,
+    name: string,
+    description: string,
+    power: string,
+    powerBoost: number,
+    rarity: number,
+    category: number,
+    tokenURI: string,
+    isQuestReward: boolean = false,
+    questId: string = ""
+  ): Promise<string | null> {
+    try {
+      if (!this.signer) throw new Error('Signer required for minting');
+      
+      const { badgeNFT } = this.getContracts();
+      const tx = await badgeNFT.mintBadge(
+        to, name, description, power, powerBoost, 
+        rarity, category, tokenURI, isQuestReward, questId
+      );
+      
+      await tx.wait();
+      return tx.hash;
+    } catch (error) {
+      console.error('Error minting badge:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Upgrade badge
+   */
+  async upgradeBadge(tokenId: number): Promise<string | null> {
+    try {
+      if (!this.signer) throw new Error('Signer required for upgrading');
+      
+      const { badgeNFT } = this.getContracts();
+      const tx = await badgeNFT.upgradeBadge(tokenId);
+      
+      await tx.wait();
+      return tx.hash;
+    } catch (error) {
+      console.error('Error upgrading badge:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Activate badge power
+   */
+  async activateBadgePower(tokenId: number): Promise<string | null> {
+    try {
+      if (!this.signer) throw new Error('Signer required for power activation');
+      
+      const { badgeNFT } = this.getContracts();
+      const tx = await badgeNFT.activatePower(tokenId);
+      
+      await tx.wait();
+      return tx.hash;
+    } catch (error) {
+      console.error('Error activating power:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get MEE token balance
+   */
+  async getMEEBalance(userAddress: string): Promise<string> {
+    try {
+      const { meeToken } = this.getContracts();
+      const balance = await meeToken.balanceOf(userAddress);
+      return ethers.formatEther(balance);
+    } catch (error) {
+      console.error('Error getting MEE balance:', error);
+      return '0';
+    }
+  }
+
+  /**
+   * Get user tier from MEE token
+   */
+  async getUserTier(userAddress: string): Promise<number> {
+    try {
+      const { meeToken } = this.getContracts();
+      const tier = await meeToken.getUserTier(userAddress);
+      return Number(tier);
+    } catch (error) {
+      console.error('Error getting user tier:', error);
+      return 0;
+    }
+  }
+
+  /**
+   * Check if contracts are deployed and accessible
+   */
+  async validateContracts(): Promise<{
+    tokenContract: boolean;
+    membershipNFT: boolean;
+    badgeNFT: boolean;
+    rpcConnected: boolean;
+  }> {
+    try {
+      // Test RPC connection
+      await this.provider.getBlockNumber();
+      
+      // Test contract code existence
+      const [tokenCode, membershipCode, badgeCode] = await Promise.all([
+        this.provider.getCode(CONTRACT_ADDRESSES.MEE_TOKEN),
+        this.provider.getCode(CONTRACT_ADDRESSES.MEMBERSHIP_NFT),
+        this.provider.getCode(CONTRACT_ADDRESSES.BADGE_NFT)
+      ]);
+      
+      return {
+        tokenContract: tokenCode !== "0x",
+        membershipNFT: membershipCode !== "0x",
+        badgeNFT: badgeCode !== "0x",
+        rpcConnected: true
+      };
+    } catch (error) {
+      console.error('Contract validation failed:', error);
+      return {
+        tokenContract: false,
+        membershipNFT: false,
+        badgeNFT: false,
+        rpcConnected: false
+      };
+    }
+  }
+}
+
+export default SmartContractService;
