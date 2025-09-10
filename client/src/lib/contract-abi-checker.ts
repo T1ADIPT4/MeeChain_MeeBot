@@ -240,7 +240,7 @@ export const getContractInstances = (signer?: ethers.Signer) => {
     signerOrProvider
   );
   
-  return { meeToken, membershipNFT, badgeNFT };bershipNFT, provider };
+  return { meeToken, membershipNFT, badgeNFT, provider };
 };
 
 // Check if user has contracts interaction capability
