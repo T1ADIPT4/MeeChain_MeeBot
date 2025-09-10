@@ -1,26 +1,32 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation, Link } from 'wouter';
+import { useLocation, useNavigate } from 'wouter'; // Corrected import for useNavigate
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
   Wallet, 
   Send, 
-  Download, 
-  History, 
   QrCode, 
+  History, 
+  TrendingUp, 
+  GitBranch,
+  Calendar,
   Settings,
+  Plus,
+  ArrowUpRight,
+  ArrowDownLeft,
+  DollarSign,
+  Bot,
+  Sparkles,
+  Heart,
+  Menu,
+  User,
   Eye,
   EyeOff,
   Copy,
-  Plus,
   Play,
   Pause,
   Square,
-  Menu,
-  User,
-  ArrowRightLeft,
-  GitBranch,
   Coins
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -30,7 +36,7 @@ import { QRCodeGenerator } from '@/components/web3/qr-code-generator';
 import logoUrl from '@assets/branding/logo.png';
 
 export default function Dashboard() {
-  const [location, navigate] = useLocation();
+  const [location, navigate] = useLocation(); // navigate is used instead of useLocation() directly
   const [showBalance, setShowBalance] = useState(true);
   const [showQR, setShowQR] = useState(false);
   const [isTaskRunning, setIsTaskRunning] = useState(false);
@@ -38,6 +44,12 @@ export default function Dashboard() {
   const [chartLabels, setChartLabels] = useState(['08:00', '08:10', '08:20', '08:30', '08:40', '08:50', '09:00']);
   const { toast } = useToast();
   const logoRef = useRef<HTMLDivElement>(null);
+
+  // State สำหรับปุ่ม มีบอท
+  const [isBotReady, setIsBotReady] = useState(true);
+  const [isHovering, setIsHovering] = useState(false);
+  const [botEmotion, setBotEmotion] = useState<'happy' | 'waving' | 'excited'>('happy');
+
 
   // Breathing animation for logo
   useEffect(() => {
@@ -132,6 +144,34 @@ export default function Dashboard() {
     } catch (error) {
       showToast("ไม่สามารถคัดลอกที่อยู่ได้", 'error');
     }
+  };
+
+  // Function สำหรับปุ่ม มีบอท
+  const handleBotClick = () => {
+    // เล่นเสียงเอฟเฟกต์ (หากเบราว์เซอร์รองรับ)
+    if ('vibrate' in navigator) {
+      navigator.vibrate([50, 100, 50]);
+    }
+
+    setBotEmotion('excited');
+
+    toast({
+      title: "🎉 มีบอทพร้อมช่วยแล้ว!",
+      description: "ภารกิจเริ่มต้นแล้ว! มีบอทอยู่ข้างๆคุณนะ",
+    });
+
+    // รีเซ็ต emotion หลัง 2 วินาที
+    setTimeout(() => setBotEmotion('happy'), 2000);
+
+    // นำทางไปยังหน้า onboarding หรือ missions
+    navigate('/missions');
+  };
+
+  const getBotMessage = () => {
+    if (isHovering) {
+      return "คลิกเพื่อเริ่มภารกิจกับมีบอท! ✨";
+    }
+    return "มีบอทกำลังรอคำสั่งอยู่! 🤖";
   };
 
   if (isLoading) {
@@ -437,6 +477,108 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <Button
+            onClick={() => navigate('/send-tokens')}
+            className="h-20 bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-90 flex-col gap-2"
+          >
+            <Send className="w-6 h-6" />
+            <span>ส่งโทเค็น</span>
+          </Button>
+
+          <Button
+            onClick={() => navigate('/receive-tokens')}
+            className="h-20 bg-gradient-to-r from-green-600 to-teal-600 hover:opacity-90 flex-col gap-2"
+          >
+            <QrCode className="w-6 h-6" />
+            <span>รับโทเค็น</span>
+          </Button>
+
+          <Button
+            onClick={() => navigate('/swap-bridge')}
+            className="h-20 bg-gradient-to-r from-orange-600 to-red-600 hover:opacity-90 flex-col gap-2"
+          >
+            <GitBranch className="w-6 h-6" />
+            <span>Swap/Bridge</span>
+          </Button>
+
+          <Button
+            onClick={() => navigate('/scheduled-tasks')}
+            className="h-20 bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 flex-col gap-2"
+          >
+            <Calendar className="w-6 h-6" />
+            <span>Scheduled</span>
+          </Button>
+        </div>
+
+        {/* ปุ่ม มีบอท - MeeBot Assistant */}
+        <div className="mb-8">
+          <Card className="bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border-cyan-300/30 overflow-hidden relative">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="relative">
+                      <img 
+                        src={logoUrl} 
+                        alt="MeeBot" 
+                        className={`w-8 h-8 rounded-full transition-transform duration-300 ${
+                          botEmotion === 'excited' ? 'scale-110 animate-bounce' :
+                          botEmotion === 'waving' ? 'animate-pulse' : 
+                          'scale-100'
+                        }`}
+                      />
+                      {botEmotion === 'excited' && (
+                        <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-yellow-400 animate-spin" />
+                      )}
+                      {botEmotion === 'happy' && (
+                        <Heart className="absolute -top-1 -right-1 w-3 h-3 text-red-400 animate-pulse" />
+                      )}
+                    </div>
+                    <h3 className="text-lg font-bold text-cyan-300">มีบอท</h3>
+                    {isBotReady && (
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-300 mb-3">
+                    {getBotMessage()}
+                  </p>
+                </div>
+
+                <Button
+                  onClick={handleBotClick}
+                  onMouseEnter={() => {
+                    setIsHovering(true);
+                    setBotEmotion('waving');
+                  }}
+                  onMouseLeave={() => {
+                    setIsHovering(false);
+                    setBotEmotion('happy');
+                  }}
+                  className={`
+                    h-16 px-6 bg-gradient-to-r from-cyan-500 to-purple-500 
+                    hover:from-purple-500 hover:to-pink-500 
+                    text-white font-semibold rounded-xl
+                    transition-all duration-300 transform hover:scale-105
+                    shadow-lg hover:shadow-cyan-500/25
+                    ${botEmotion === 'excited' ? 'animate-pulse' : ''}
+                  `}
+                >
+                  <div className="flex items-center gap-2">
+                    <Bot className={`w-5 h-5 ${isHovering ? 'animate-bounce' : ''}`} />
+                    <span>เริ่มภารกิจ!</span>
+                  </div>
+                </Button>
+              </div>
+
+              {/* Background decoration */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-cyan-400/10 to-transparent rounded-full -translate-y-8 translate-x-8"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-purple-400/10 to-transparent rounded-full translate-y-4 -translate-x-4"></div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* Bottom Navigation */}
