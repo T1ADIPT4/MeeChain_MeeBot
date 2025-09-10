@@ -30,10 +30,13 @@ export class SmartContractService {
   private provider: ethers.JsonRpcProvider;
   private signer?: ethers.Signer;
 
-  constructor(signer?: ethers.Signer) {
-    this.provider = new ethers.JsonRpcProvider(CONTRACT_ADDRESSES.FUSE_RPC);
-    this.signer = signer;
+  constructor(signer?: ethers.Signer | null) {
+    this.signer = signer || undefined;
+    this.provider = signer ? signer.provider : new ethers.JsonRpcProvider(CONTRACT_ADDRESSES.FUSE_RPC);
+    this.isDemoMode = !signer;
   }
+
+  private isDemoMode: boolean = false;
 
   /**
    * Get contract instances
