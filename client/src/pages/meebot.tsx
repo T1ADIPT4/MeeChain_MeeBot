@@ -18,14 +18,15 @@ import {
   RefreshCw,
   CheckCircle,
   Clock,
-  Trophy
+  Trophy,
+  Menu
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import logoUrl from '@assets/branding/logo.png';
 import { DailyQuests } from '@/components/meebot/daily-quests';
 import { LevelUpNotification } from '@/components/meebot/level-up-notification';
 import { MeeBotOnboardingModal } from '@/components/meebot/meebot-onboarding-modal';
-
+import { Link } from 'wouter';
 
 
 export default function MeeBotPage() {
@@ -191,6 +192,12 @@ export default function MeeBotPage() {
     playMeeBotSound();
   };
 
+  // Dummy state for sidebar and user stats, assuming they are defined elsewhere or managed globally
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [userStats, setUserStats] = useState({ questsCompleted: 0, expGained: 0, level: 1 });
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+
   useEffect(() => {
     // Simulate fetching initial data for level and stats
     setCurrentLevel(3);
@@ -202,232 +209,128 @@ export default function MeeBotPage() {
       streak: 10,
       achievements: 5,
     });
+    // Set dummy initial stats for sidebar
+    setUserStats({ questsCompleted: 2, expGained: 150, level: 2 });
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white overflow-y-auto">
-      {/* Header */}
-      <nav className="flex items-center justify-between bg-slate-800/80 backdrop-blur-sm border-b border-slate-600/50 p-4">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="text-blue-300"
-          onClick={() => navigate('/dashboard')}
-        >
-          <ArrowLeft className="w-5 h-5 mr-2" />
-          กลับ
-        </Button>
-        <h1 className="text-xl font-bold text-blue-300">🤖 MeeBot</h1>
-        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-          <User className="w-5 h-5 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      </div>
+
+      {/* Sidebar */}
+      <div className={`fixed top-0 left-0 h-full bg-slate-800/95 backdrop-blur-sm border-r border-slate-700 transition-transform duration-300 z-50 ${
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      } w-80`}>
+        <div className="p-6 border-b border-slate-700">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold text-white">TaskPilot Assistant</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsSidebarOpen(false)}
+              className="text-gray-400 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
         </div>
-      </nav>
 
-      <div className="px-4 py-4 min-h-0 flex-1 overflow-y-auto">
-        {/* Main Container */}
-        <div className="max-w-md mx-auto space-y-4 min-h-0">
-
-          {/* MeeBot Intro Card */}
-          <Card className="bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border-cyan-300/30 overflow-hidden relative">
-            <CardContent className="p-4 text-center">
-              {/* MeeBot Avatar */}
-              <div className="relative mb-4">
-                <img 
-                  src={logoUrl} 
-                  alt="MeeBot" 
-                  className={`w-16 h-16 mx-auto rounded-full transition-all duration-500 ${
-                    botEmotion === 'excited' ? 'scale-125 animate-bounce' :
-                    botEmotion === 'waving' ? 'animate-pulse scale-110' : 
-                    'scale-100'
-                  }`}
-                  style={{
-                    filter: botEmotion === 'excited' ? 'brightness(1.2) saturate(1.3)' : 'brightness(1)',
-                  }}
-                />
-                {botEmotion === 'excited' && (
-                  <div className="absolute -top-1 -right-1">
-                    <Sparkles className="w-4 h-4 text-yellow-400 animate-spin" />
-                  </div>
-                )}
-                <Heart className="absolute -top-1 -right-1 w-3 h-3 text-red-400 animate-pulse" />
+        <div className="p-6 space-y-4 h-full overflow-y-auto pb-20">
+          <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
+            <h3 className="font-semibold text-cyan-300 mb-2">📊 สถิติวันนี้</h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-300">เควสสำเร็จ:</span>
+                <span className="text-green-400 font-semibold">{userStats.questsCompleted}/3</span>
               </div>
-
-              <h2 className="text-xl font-bold mb-3 bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
-                เฮ้ย! ผมมีบอท ครูพี่เมนเตอร์ตัวจริง! 🧠
-              </h2>
-
-              <p className="text-gray-300 mb-4 leading-relaxed text-sm">
-                ผมพร้อมช่วยคุณลุยทุกภารกิจแล้วครับ! 💪<br />
-                จากมือใหม่สู่มือโปร Web3 แบบสนุก ๆ ไม่เครียด ✨<br />
-                <span className="text-cyan-300 font-semibold">อย่าห่วงเลย ถ้าคุณล้ม ผมจะช่วยลุก!</span><br />
-                <span className="text-purple-300 font-medium italic">ภารกิจวันนี้: ทำให้เทคโนโลยีเป็นเพื่อนคุณ! 🎯</span>
-              </p>
-
-              {/* Features Badges */}
-              <div className="flex flex-wrap justify-center gap-1 mb-4">
-                <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 text-xs">
-                  <Zap className="w-2 h-2 mr-1" />
-                  คุยได้เป็นเพื่อน
-                </Badge>
-                <Badge className="bg-green-500/20 text-green-300 border-green-500/30 text-xs">
-                  <Bot className="w-2 h-2 mr-1" />
-                  โค้ชส่วนตัว
-                </Badge>
-                <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30 text-xs">
-                  <Sparkles className="w-2 h-2 mr-1" />
-                  ปลดล็อกความรู้
-                </Badge>
-                <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30 text-xs">
-                  <Heart className="w-2 h-2 mr-1" />
-                  ให้กำลังใจ
-                </Badge>
+              <div className="flex justify-between">
+                <span className="text-gray-300">EXP ได้รับ:</span>
+                <span className="text-yellow-400 font-semibold">+{userStats.expGained}</span>
               </div>
-
-              {/* Enhanced Main MeeBot Button */}
-              <div className="flex flex-col gap-2 mb-4">
-                <Button
-                  onClick={() => setShowOnboardingModal(true)}
-                  className="bg-gradient-to-r from-green-500 to-cyan-500 hover:from-green-600 hover:to-cyan-600 text-white px-4 py-3 rounded-lg font-bold transform transition-all duration-200 hover:scale-105 shadow-lg text-sm w-full"
-                >
-                  <Rocket className="w-4 h-4 mr-2" />
-                  🎯 เริ่มภารกิจ TaskPilot
-                </Button>
-
-                <Button
-                  onClick={handleStartChat}
-                  className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg font-semibold transform transition-all duration-200 hover:scale-105 shadow-lg text-sm w-full"
-                >
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  คุยกับ MeeBot
-                </Button>
+              <div className="flex justify-between">
+                <span className="text-gray-300">เลเวล:</span>
+                <span className="text-purple-400 font-semibold">{userStats.level}</span>
               </div>
+            </div>
+          </div>
 
-              {/* Background decoration */}
-              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-cyan-400/15 to-transparent rounded-full -translate-y-10 translate-x-10"></div>
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-purple-400/15 to-transparent rounded-full translate-y-6 -translate-x-6"></div>
-            </CardContent>
-          </Card>
-
-          {/* Daily Quests Section */}
-          <DailyQuests onLevelUp={handleLevelUp} />
-
-          {/* Quick Actions */}
-          <div className="grid grid-cols-2 gap-3">
-            <Button
-              variant="outline"
-              className="border-slate-600 bg-slate-800/50 hover:bg-slate-700 h-16 text-slate-300"
-              onClick={() => navigate('/missions')}
-            >
-              <div className="text-center">
-                <Sparkles className="w-5 h-5 mx-auto mb-1" />
-                <span className="text-xs">ดูภารกิจ</span>
+          <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
+            <h3 className="font-semibold text-cyan-300 mb-2">🎯 เควสด่วน</h3>
+            <div className="space-y-2">
+              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded p-3">
+                <p className="text-yellow-300 text-sm font-medium">📝 สร้าง Task ใหม่</p>
+                <p className="text-gray-300 text-xs mt-1">รางวัล: +50 EXP</p>
               </div>
-            </Button>
-
-            <Button
-              variant="outline"
-              className="border-slate-600 bg-slate-800/50 hover:bg-slate-700 h-16 text-slate-300"
-              onClick={() => navigate('/dashboard')}
-            >
-              <div className="text-center">
-                <Bot className="w-5 h-5 mx-auto mb-1" />
-                <span className="text-xs">Dashboard</span>
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded p-3">
+                <p className="text-blue-300 text-sm font-medium">✅ ทำ Task ให้เสร็จ 3 รายการ</p>
+                <p className="text-gray-300 text-xs mt-1">รางวัล: +100 EXP</p>
               </div>
-            </Button>
+            </div>
+          </div>
+
+          <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
+            <h3 className="font-semibold text-cyan-300 mb-2">🏆 Achievement ล่าสุด</h3>
+            <div className="bg-purple-500/10 border border-purple-500/30 rounded p-3">
+              <p className="text-purple-300 text-sm font-medium">First Flight</p>
+              <p className="text-gray-300 text-xs mt-1">ครั้งแรกที่ใช้งาน TaskPilot</p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Chat Modal */}
-      {showChat && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-end md:items-center justify-center z-50 p-4 overflow-y-auto">
-          <Card className="w-full max-w-md bg-slate-800/95 border-cyan-500/30 max-h-[80vh] flex flex-col">
-            <CardContent className="p-0 flex flex-col h-full">
-              {/* Chat Header */}
-              <div className="bg-gradient-to-r from-cyan-500/20 to-purple-500/20 p-4 border-b border-cyan-500/30 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full flex items-center justify-center">
-                    <Bot className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-white">MeeBot</h3>
-                    <p className="text-xs text-cyan-300">ออนไลน์ • พร้อมช่วยเหลือ</p>
-                  </div>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowChat(false)}
-                  className="text-gray-400 hover:text-white"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
-              </div>
-
-              {/* Chat Messages */}
-              <div className="flex-1 p-4 overflow-y-auto space-y-4">
-                {chatMessages.map((msg) => (
-                  <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                      msg.sender === 'user' 
-                        ? 'bg-cyan-500 text-white' 
-                        : 'bg-slate-700 text-gray-100'
-                    }`}>
-                      <p className="text-sm">{msg.message}</p>
-                      <p className="text-xs opacity-70 mt-1">{msg.time}</p>
-                    </div>
-                  </div>
-                ))}
-
-                {isTyping && (
-                  <div className="flex justify-start">
-                    <div className="bg-slate-700 text-gray-100 px-4 py-2 rounded-lg max-w-xs">
-                      <div className="flex items-center gap-1">
-                        <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                        <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Chat Input */}
-              <div className="p-4 border-t border-slate-700">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                    placeholder="พิมพ์ข้อความ..."
-                    className="flex-1 bg-slate-700 text-white px-3 py-2 rounded-lg border border-slate-600 focus:border-cyan-500 focus:outline-none"
-                  />
-                  <Button
-                    onClick={handleSendMessage}
-                    size="sm"
-                    className="bg-cyan-500 hover:bg-cyan-600 text-white"
-                  >
-                    <Send className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+      {/* Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+          onClick={() => setIsSidebarOpen(false)}
+        />
       )}
 
-      {/* Onboarding Modal */}
-      <MeeBotOnboardingModal 
-        isOpen={showOnboardingModal} 
-        onClose={() => setShowOnboardingModal(false)} 
-      />
+      {/* Main Content - Scrollable */}
+      <div className="relative z-10 min-h-screen overflow-y-auto">
+        {/* Header */}
+        <div className="relative p-6 pb-8">
+          <div className="flex items-center justify-between mb-6">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsSidebarOpen(true)}
+              className="text-gray-400 hover:text-white bg-slate-800/50 backdrop-blur-sm border border-slate-700"
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
 
-      {/* Level Up Notification */}
-      <LevelUpNotification
-        newLevel={currentLevel}
-        isVisible={showLevelUpNotification}
-        onClose={() => setShowLevelUpNotification(false)}
+            <div className="flex items-center gap-4">
+              <div className="bg-slate-800/70 backdrop-blur-sm border border-slate-700 rounded-full px-4 py-2">
+                <span className="text-yellow-400 font-semibold">⭐ Level {userStats.level}</span>
+              </div>
+              <Link to="/">
+                <Button variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800/50">
+                  หน้าหลัก
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+        {/* Main Content Container */}
+        <div className="max-w-6xl mx-auto px-6 pb-8 space-y-8">
+          {/* Daily Quests */}
+          <DailyQuests />
+
+          {/* Level Up Notification */}
+          <LevelUpNotification />
+        </div>
+      </div>
+
+      {/* MeeBot Onboarding Modal */}
+      <MeeBotOnboardingModal 
+        isOpen={showOnboarding} 
+        onClose={() => setShowOnboarding(false)} 
       />
     </div>
   );
