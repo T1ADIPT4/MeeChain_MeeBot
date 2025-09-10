@@ -28,7 +28,8 @@ import {
   Pause,
   Square,
   Coins,
-  Download
+  Download,
+  MessageCircle // Added MessageCircle icon
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
@@ -479,7 +480,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        
+
 
         {/* ปุ่ม มีบอท - MeeBot Assistant */}
         <div className="mb-8">
@@ -575,7 +576,7 @@ export default function Dashboard() {
                       <div className="text-xs opacity-90">คลิกเลย</div>
                     </div>
                   </div>
-                  
+
                   {/* Floating particles effect */}
                   {isHovering && (
                     <>
@@ -590,7 +591,7 @@ export default function Dashboard() {
               {/* Enhanced Background decoration */}
               <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-cyan-400/15 to-transparent rounded-full -translate-y-10 translate-x-10"></div>
               <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-purple-400/15 to-transparent rounded-full translate-y-6 -translate-x-6"></div>
-              
+
               {/* Animated sparkles */}
               {botEmotion === 'excited' && (
                 <>
@@ -642,7 +643,7 @@ export default function Dashboard() {
             onClick={handleBotClick}
             data-testid="nav-meebot"
           >
-            <Bot className="w-5 h-5" />
+            <MessageCircle className="w-5 h-5" /> {/* Using the new MessageCircle icon */}
             <span className="text-xs">MeeBot</span>
           </Button>
         </div>
