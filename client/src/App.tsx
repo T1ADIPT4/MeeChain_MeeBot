@@ -1,5 +1,5 @@
 import { Switch, Route } from "wouter";
-import { lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -17,23 +17,37 @@ import SwapBridge from './pages/swap-bridge';
 import MeeBotPage from '@/pages/meebot';
 import Academy from './pages/academy';
 
+// Lazy load components
+const Earnings = lazy(() => import('./pages/earnings'));
+const TokenActions = lazy(() => import("@/pages/token-actions"));
+
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/missions" component={Missions} />
-      <Route path="/dashboard" component={Dashboard} />
-      <Route path="/earnings" component={lazy(() => import('./pages/earnings'))} />
-      <Route path="/send" component={SendTokens} />
-      <Route path="/receive" component={ReceiveTokens} />
-      <Route path="/history" component={TransactionHistory} />
-      <Route path="/scheduled-tasks" component={ScheduledTasks} />
-      <Route path="/swap-bridge" component={SwapBridge} />
-      <Route path="/token-actions" component={lazy(() => import("@/pages/token-actions"))} />
-      <Route path="/meebot" component={MeeBotPage} />
-      <Route path="/academy" component={Academy} />
-      <Route path="*" component={NotFound} />
-    </Switch>
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-slate-900">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-cyan-500/30 border-t-cyan-500 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-400">กำลังโหลด...</p>
+        </div>
+      </div>
+    }>
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/home" component={Home} />
+        <Route path="/missions" component={Missions} />
+        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/earnings" component={Earnings} />
+        <Route path="/send" component={SendTokens} />
+        <Route path="/receive" component={ReceiveTokens} />
+        <Route path="/history" component={TransactionHistory} />
+        <Route path="/scheduled-tasks" component={ScheduledTasks} />
+        <Route path="/swap-bridge" component={SwapBridge} />
+        <Route path="/token-actions" component={TokenActions} />
+        <Route path="/meebot" component={MeeBotPage} />
+        <Route path="/academy" component={Academy} />
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 
