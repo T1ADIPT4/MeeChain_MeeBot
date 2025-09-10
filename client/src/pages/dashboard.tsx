@@ -31,7 +31,8 @@ import {
   Download,
   MessageCircle, // Added MessageCircle icon
   BookOpen, // Added BookOpen icon
-  ArrowRightLeft // Added ArrowRightLeft icon
+  ArrowRightLeft, // Added ArrowRightLeft icon
+  Target // Added Target icon
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
@@ -661,6 +662,58 @@ export default function Dashboard() {
             </Button>
           </div>
         </div>
+
+        {/* NFT Quest Progress */}
+        <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center justify-between text-white">
+              <div className="flex items-center gap-2">
+                <Target className="w-5 h-5 text-purple-400" />
+                <span>NFT Quest Progress</span>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate('/nft-collection?tab=quests')}
+                className="border-purple-500 text-purple-300 hover:bg-purple-800/50"
+              >
+                <Eye className="w-4 h-4 mr-2" />
+                ดูทั้งหมด
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-slate-700/30 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                    <Trophy className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <span className="font-semibold text-white">Productivity Master</span>
+                    <p className="text-xs text-slate-400">2/3 badges สะสมแล้ว</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-sm font-semibold text-purple-300">67%</div>
+                  <div className="w-16 h-2 bg-slate-600 rounded-full overflow-hidden">
+                    <div className="w-2/3 h-full bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-3">
+                <div className="flex items-center gap-2">
+                  <Bot className="w-4 h-4 text-cyan-400" />
+                  <span className="text-sm font-semibold text-cyan-300">MeeBot บอก:</span>
+                </div>
+                <p className="text-sm text-gray-300 mt-1">
+                  เหลืออีก 1 badge เท่านั้น! ลุย Focus Master แล้วจะได้ LEGENDARY NFT ครับ! 🏆✨
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* MeeBot Assistant Banner - แยกจากฟังก์ชันหลัก */}
         <Card className="bg-gradient-to-r from-cyan-500/10 via-purple-500/10 to-pink-500/10 border-cyan-300/30 overflow-hidden relative mb-8">

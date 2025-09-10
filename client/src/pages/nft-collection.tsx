@@ -12,10 +12,12 @@ import {
   Bot,
   Wallet,
   Eye,
-  Share2
+  Share2,
+  Target
 } from 'lucide-react';
 import { CollectiblesViewer } from '@/components/nft/collectibles-viewer';
 import { NFTMarketplace } from '@/components/nft/marketplace';
+import { NFTQuestSystem } from '@/components/nft/quest-system';
 import { useToast } from '@/hooks/use-toast';
 
 export default function NFTCollectionPage() {
@@ -113,13 +115,20 @@ export default function NFTCollectionPage() {
 
         {/* Main Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-slate-800/50 border border-slate-600/50">
+          <TabsList className="grid w-full grid-cols-3 bg-slate-800/50 border border-slate-600/50">
             <TabsTrigger 
               value="collection" 
               className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300"
             >
               <Sparkles className="w-4 h-4 mr-2" />
               My Collection
+            </TabsTrigger>
+            <TabsTrigger 
+              value="quests" 
+              className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-300"
+            >
+              <Target className="w-4 h-4 mr-2" />
+              NFT Quests
             </TabsTrigger>
             <TabsTrigger 
               value="marketplace" 
@@ -133,6 +142,11 @@ export default function NFTCollectionPage() {
           {/* Collection Tab */}
           <TabsContent value="collection" className="space-y-6">
             <CollectiblesViewer userAddress="0x123...abc" />
+          </TabsContent>
+
+          {/* Quest System Tab */}
+          <TabsContent value="quests" className="space-y-6">
+            <NFTQuestSystem />
           </TabsContent>
 
           {/* Marketplace Tab */}

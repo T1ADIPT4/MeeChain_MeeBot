@@ -55,6 +55,22 @@ export function NFTMarketplace() {
   // Mock marketplace data
   const mockMarketplaceNFTs: MarketplaceNFT[] = [
     {
+      tokenId: 100,
+      name: "Legendary Zen Pilot",
+      description: "Badge หายาก! ปลดล็อกจากการทำสมาธิ 100 ครั้ง",
+      imageUrl: "/api/placeholder/200/200",
+      rarity: 'LEGENDARY',
+      type: 'BADGE',
+      price: 150,
+      seller: '0xbadge...',
+      sellerName: 'ZenMaster',
+      isOnSale: true,
+      viewCount: 89,
+      favoriteCount: 18,
+      lastSalePrice: 120,
+      listingTime: new Date().toISOString()
+    },
+    {
       tokenId: 101,
       name: "Crypto Pilot Badge",
       description: "Badge สำหรับนักบินที่เก่งเรื่อง cryptocurrency",
