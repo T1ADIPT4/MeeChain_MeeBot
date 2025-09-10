@@ -33,25 +33,64 @@ export function useSmartContracts() {
 
   const connectWallet = async (showToast = true) => {
     try {
-      if (!window.ethereum) {
-        throw new Error('MetaMask not found');
-      }
-
       setState(prev => ({
         ...prev,
-        meeBotMessage: 'กำลังเชื่อม MetaMask... 🦊',
+        meeBotMessage: 'กำลังเตรียมการเชื่อมต่อ... 🔄',
         isLoading: true
       }));
 
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      await provider.send("eth_requestAccounts", []);
-      const signer = await provider.getSigner();
-      const address = await signer.getAddress();
+      let provider: any;
+      let address: string;
+      let isDemoMode = false;
 
-      const service = new SmartContractService(signer);
+      // Try MetaMask/Ethereum wallet first
+      if (window.ethereum) {
+        setState(prev => ({
+          ...prev,
+          meeBotMessage: 'กำลังเชื่อม MetaMask... 🦊'
+        }));
+        
+        provider = new ethers.BrowserProvider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = await provider.getSigner();
+        address = await signer.getAddress();
+      } else {
+        // Fallback to demo mode
+        setState(prev => ({
+          ...prev,
+          meeBotMessage: 'เข้าสู่โหมดทดลองใช้... 🎮'
+        }));
+        
+        isDemoMode = true;
+        // Create a mock wallet for demo
+        const mockWallet = ethers.Wallet.createRandom();
+        address = mockWallet.address;
+        provider = null;
+        
+        if (showToast) {
+          toast({
+            title: "🎮 โหมดทดลองใช้",
+            description: "เข้าสู่โหมดทดลองสำหรับ Development - ข้อมูลเป็น Mock Data",
+            variant: "default",
+          });
+        }
+      }
+
+      const service = new SmartContractService(provider);
       
       // ตรวจสอบสุขภาพของ contracts
-      const health = await service.validateContracts();
+      let health;
+      try {
+        health = await service.validateContracts();
+      } catch (error) {
+        // Mock health data for demo mode
+        health = {
+          tokenContract: isDemoMode,
+          membershipNFT: isDemoMode,
+          badgeNFT: isDemoMode,
+          rpcConnected: isDemoMode
+        };
+      }
       
       setState(prev => ({
         ...prev,
@@ -61,12 +100,14 @@ export function useSmartContracts() {
         isLoading: false,
         error: null,
         contractsHealth: health,
-        meeBotMessage: health.rpcConnected ? 
-          'เชื่อมต่อสำเร็จแล้วครับ! พร้อมลุยได้เลย! 🚀' : 
-          'เชื่อม wallet สำเร็จ แต่มีปัญหากับ contracts ครับ 🤔'
+        meeBotMessage: isDemoMode ? 
+          'เข้าสู่โหมดทดลองใช้สำเร็จ! 🎮 ข้อมูลทั้งหมดเป็น Mock Data ครับ' :
+          health.rpcConnected ? 
+            'เชื่อมต่อสำเร็จแล้วครับ! พร้อมลุยได้เลย! 🚀' : 
+            'เชื่อม wallet สำเร็จ แต่มีปัญหากับ contracts ครับ 🤔'
       }));
 
-      if (showToast) {
+      if (showToast && !isDemoMode) {
         if (health.rpcConnected && health.badgeNFT) {
           toast({
             title: "🤖 MeeBot บอกว่า",
@@ -134,12 +175,18 @@ export function useSmartContracts() {
   };
 
   const autoConnectWallet = async () => {
-    if (!window.ethereum) return;
-
     try {
-      const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-      if (accounts.length > 0) {
-        await connectWallet(false); // ไม่แสดง toast สำหรับ auto connect
+      if (window.ethereum) {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+        if (accounts.length > 0) {
+          await connectWallet(false); // ไม่แสดง toast สำหรับ auto connect
+        }
+      } else {
+        // Auto connect to demo mode if no wallet
+        setState(prev => ({
+          ...prev,
+          meeBotMessage: 'พร้อมใช้งานในโหมดทดลอง! กดปุ่ม Connect เพื่อเริ่มต้น 🎮'
+        }));
       }
     } catch (error) {
       console.error('Auto connect failed:', error);
@@ -152,7 +199,9 @@ export function useSmartContracts() {
       isConnected: false,
       userAddress: null,
       isLoading: false,
-      error: null
+      error: null,
+      contractsHealth: null,
+      meeBotMessage: 'ระบบพร้อมแล้วครับ! กดเชื่อม wallet ได้เลย 😊'
     });
   };
 
