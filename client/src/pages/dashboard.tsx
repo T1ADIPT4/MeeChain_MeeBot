@@ -29,7 +29,8 @@ import {
   Square,
   Coins,
   Download,
-  MessageCircle // Added MessageCircle icon
+  MessageCircle, // Added MessageCircle icon
+  BookOpen // Added BookOpen icon
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
@@ -37,6 +38,7 @@ import { truncateAddress } from '@/lib/web3-utils';
 import { QRCodeGenerator } from '@/components/web3/qr-code-generator';
 import logoUrl from '@assets/branding/logo.png';
 import { MeeBotSecretsAlert } from '@/components/meebot/secrets-alert';
+import { Link } from 'wouter'; // Assuming Link is needed for navigation
 
 export default function Dashboard() {
   const [location, navigate] = useLocation(); // navigate is used instead of useLocation() directly
@@ -200,109 +202,106 @@ export default function Dashboard() {
 
       <div className="px-6 pb-6 space-y-6">
         {/* === ส่วนที่ 1: หน้าจอหลัก (MeeBot Monitoring) === */}
-        
+
         {/* MeeBot Secrets Health Check - แถบแจ้งเตือนด้านบน */}
         <MeeBotSecretsAlert />
 
         {/* Main MeeBot Card with Control Buttons */}
         <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm mt-6">
           <CardContent className="p-6">
-            {/* MeeBot Status & Logo Section */}
-            <div className="text-center mb-6">
-              {/* MeeBot Logo - ลดขนาดลงเล็กน้อย */}
-              <div 
-                ref={logoRef}
-                className="w-24 h-24 mx-auto mb-3 bg-slate-700/50 rounded-full flex items-center justify-center shadow-2xl"
-                style={{ 
-                  boxShadow: '0 8px 32px rgba(59, 130, 246, 0.3)',
-                  background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
-                }}
-              >
-                <img 
-                  src={logoUrl} 
-                  alt="MeeBot Logo" 
-                  className="w-16 h-16 object-contain"
-                />
-              </div>
-
-              <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                MeeBot
-              </h2>
-
-              {/* สถานะ MeeBot พร้อม log ล่าสุด */}
-              {isTaskRunning ? (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-center gap-2 text-green-300">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
-                    <span className="font-medium">กำลังทำงาน</span>
-                  </div>
-                  <p className="text-xs text-slate-400">Log ล่าสุด: Task completed successfully at {new Date().toLocaleTimeString()}</p>
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <p className="text-slate-400">พร้อมเริ่มทำงาน</p>
-                  <p className="text-xs text-slate-500">กดปุ่ม Start เพื่อเริ่มการติดตาม</p>
-                </div>
-              )}
+            {/* MeeBot Logo - ลดขนาดลงเล็กน้อย */}
+            <div 
+              ref={logoRef}
+              className="w-24 h-24 mx-auto mb-3 bg-slate-700/50 rounded-full flex items-center justify-center shadow-2xl"
+              style={{ 
+                boxShadow: '0 8px 32px rgba(59, 130, 246, 0.3)',
+                background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
+              }}
+            >
+              <img 
+                src={logoUrl} 
+                alt="MeeBot Logo" 
+                className="w-16 h-16 object-contain"
+              />
             </div>
 
-            {/* MeeBot Control Panel - จัดกลุ่มในกรอบ */}
-            <Card className="bg-slate-900/50 border-slate-600/30">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm text-blue-300 flex items-center gap-2">
-                  <Bot className="w-4 h-4" />
-                  MeeBot Control Panel
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    onClick={() => handleTaskControl('start')}
-                    disabled={isTaskRunning}
-                    className="bg-green-600 hover:bg-green-700 text-white py-3 font-semibold"
-                    data-testid="button-start-task"
-                  >
-                    <Play className="w-4 h-4 mr-2" />
-                    Start
-                  </Button>
+            <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              MeeBot
+            </h2>
 
-                  <Button
-                    onClick={() => handleTaskControl('pause')}
-                    disabled={!isTaskRunning}
-                    className="bg-yellow-600 hover:bg-yellow-700 text-white py-3 font-semibold"
-                    data-testid="button-pause-task"
-                  >
-                    <Pause className="w-4 h-4 mr-2" />
-                    Pause
-                  </Button>
-
-                  <Button
-                    onClick={() => handleTaskControl('stop')}
-                    disabled={!isTaskRunning}
-                    className="bg-red-600 hover:bg-red-700 text-white py-3 font-semibold"
-                    data-testid="button-stop-task"
-                  >
-                    <Square className="w-4 h-4 mr-2" />
-                    Stop
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    className="border-slate-500 text-slate-300 hover:bg-slate-700 py-3 font-semibold"
-                    onClick={() => navigate('/settings')}
-                    data-testid="button-task-settings"
-                  >
-                    <Settings className="w-4 h-4 mr-2" />
-                    Settings
-                  </Button>
+            {/* สถานะ MeeBot พร้อม log ล่าสุด */}
+            {isTaskRunning ? (
+              <div className="space-y-2">
+                <div className="flex items-center justify-center gap-2 text-green-300">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+                  <span className="font-medium">กำลังทำงาน</span>
                 </div>
-              </CardContent>
-            </Card>
+                <p className="text-xs text-slate-400">Log ล่าสุด: Task completed successfully at {new Date().toLocaleTimeString()}</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <p className="text-slate-400">พร้อมเริ่มทำงาน</p>
+                <p className="text-xs text-slate-500">กดปุ่ม Start เพื่อเริ่มการติดตาม</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* MeeBot Control Panel - จัดกลุ่มในกรอบ */}
+        <Card className="bg-slate-900/50 border-slate-600/30">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm text-blue-300 flex items-center gap-2">
+              <Bot className="w-4 h-4" />
+              MeeBot Control Panel
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                onClick={() => handleTaskControl('start')}
+                disabled={isTaskRunning}
+                className="bg-green-600 hover:bg-green-700 text-white py-3 font-semibold"
+                data-testid="button-start-task"
+              >
+                <Play className="w-4 h-4 mr-2" />
+                Start
+              </Button>
+
+              <Button
+                onClick={() => handleTaskControl('pause')}
+                disabled={!isTaskRunning}
+                className="bg-yellow-600 hover:bg-yellow-700 text-white py-3 font-semibold"
+                data-testid="button-pause-task"
+              >
+                <Pause className="w-4 h-4 mr-2" />
+                Pause
+              </Button>
+
+              <Button
+                onClick={() => handleTaskControl('stop')}
+                disabled={!isTaskRunning}
+                className="bg-red-600 hover:bg-red-700 text-white py-3 font-semibold"
+                data-testid="button-stop-task"
+              >
+                <Square className="w-4 h-4 mr-2" />
+                Stop
+              </Button>
+
+              <Button
+                variant="outline"
+                className="border-slate-500 text-slate-300 hover:bg-slate-700 py-3 font-semibold"
+                onClick={() => navigate('/settings')}
+                data-testid="button-task-settings"
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Settings
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
         {/* === ส่วนที่ 2: ส่วนกลาง (Task Progress & Wallet) === */}
-        
+
         {/* Task Progress Chart */}
         <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm">
           <CardHeader className="pb-3">
@@ -337,14 +336,14 @@ export default function Dashboard() {
                   </div>
                 ))}
               </div>
-              
+
               {/* Chart Labels */}
               <div className="flex justify-between text-xs text-slate-500">
                 <span>{chartLabels[0]}</span>
                 <span className="text-slate-400">เวลา (ชั่วโมง)</span>
                 <span>{chartLabels[chartLabels.length - 1]}</span>
               </div>
-              
+
               {/* Chart Stats */}
               <div className="flex justify-between mt-3 pt-3 border-t border-slate-600/30">
                 <div className="text-center">
@@ -491,7 +490,7 @@ export default function Dashboard() {
         </Card>
 
         {/* === ส่วนที่ 3: ส่วนท้าย (Token Actions & Network) === */}
-        
+
         {/* Token Actions Section */}
         <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm">
           <CardHeader className="pb-3">
@@ -704,19 +703,26 @@ export default function Dashboard() {
             <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-400 rounded-full"></div>
           </Button>
 
-          <Button
-            variant="ghost"
-            className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-200 p-2 transition-all duration-200 hover:scale-110 relative"
-            onClick={handleBotClick}
-            data-testid="nav-meebot"
-          >
-            <div className="relative">
-              <MessageCircle className="w-5 h-5" />
-              {/* MeeBot online indicator */}
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
-            </div>
-            <span className="text-xs">MeeBot</span>
-          </Button>
+          <Link to="/meebot">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition-all duration-300"
+            >
+              <Bot className="w-4 h-4 mr-2" />
+              MeeBot
+            </Button>
+          </Link>
+          <Link to="/academy">
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/20 transition-all duration-300"
+            >
+              <BookOpen className="w-4 h-4 mr-2" />
+              Academy
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

@@ -15,6 +15,7 @@ import SendTokens from '@/pages/send-tokens';
 import ScheduledTasks from '@/pages/scheduled-tasks';
 import SwapBridge from './pages/swap-bridge';
 import MeeBotPage from '@/pages/meebot';
+import Academy from './pages/academy';
 
 function Router() {
   return (
@@ -30,7 +31,8 @@ function Router() {
       <Route path="/swap-bridge" component={SwapBridge} />
       <Route path="/token-actions" component={lazy(() => import("@/pages/token-actions"))} />
       <Route path="/meebot" component={MeeBotPage} />
-      <Route component={NotFound} />
+      <Route path="/academy" component={Academy} />
+      <Route path="*" component={NotFound} />
     </Switch>
   );
 }
