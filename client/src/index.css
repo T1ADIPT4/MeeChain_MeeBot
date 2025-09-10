@@ -213,12 +213,62 @@
     }
   }
 
+  /* New MeeBot animations */
+  @keyframes fade-in {
+    from { 
+      opacity: 0; 
+      transform: translateY(10px); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+  }
+
+  @keyframes chat-bubble-appear {
+    0% { 
+      opacity: 0; 
+      transform: scale(0.3) translateY(20px); 
+    }
+    50% { 
+      transform: scale(1.05) translateY(-5px); 
+    }
+    100% { 
+      opacity: 1; 
+      transform: scale(1) translateY(0); 
+    }
+  }
+
+  @keyframes meebot-excited {
+    0%, 100% { 
+      transform: scale(1) rotate(0deg); 
+    }
+    25% { 
+      transform: scale(1.1) rotate(2deg); 
+    }
+    75% { 
+      transform: scale(1.05) rotate(-1deg); 
+    }
+  }
+
   .animate-wiggle {
     animation: wiggle 0.5s ease-in-out infinite;
   }
 
   .animate-sparkle-dance {
     animation: sparkle-dance 2s ease-in-out infinite;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-out;
+  }
+
+  .animate-chat-bubble {
+    animation: chat-bubble-appear 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .animate-meebot-excited {
+    animation: meebot-excited 1s ease-in-out infinite;
   }
 
   /* Button hover glow effect */
@@ -248,4 +298,23 @@
   @keyframes gradient-rotate {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+  }
+
+  /* Chat scrollbar styling */
+  .chat-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .chat-scrollbar::-webkit-scrollbar-track {
+    background: #374151;
+    border-radius: 4px;
+  }
+
+  .chat-scrollbar::-webkit-scrollbar-thumb {
+    background: #6b7280;
+    border-radius: 4px;
+  }
+
+  .chat-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
   }

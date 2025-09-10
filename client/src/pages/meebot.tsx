@@ -34,39 +34,70 @@ export default function MeeBotPage() {
   const [botEmotion, setBotEmotion] = useState<'happy' | 'waving' | 'excited'>('happy');
   const { toast } = useToast();
 
-  // MeeBot responses with playful mentor personality
+  // MeeBot responses with enhanced playful mentor personality
   const botResponses = [
-    "สุดยอดเลย! คุณผ่านภารกิจเช้าได้แบบมือโปร! 🏆 มีอะไรให้ช่วยต่อไหมครับ?",
-    "ภารกิจวันนี้พร้อมลุยไหม? ผมเตรียมพลังไว้ให้แล้วนะ! 💪✨",
-    "อย่าลืมพักบ้างนะฮะ แต่ถ้าพร้อมลุย ผมอยู่ตรงนี้เลย! ☕🚀",
-    "งานนี้ไม่ยากเกินไปหรอกครับ เราแค่ต้องวางแผนดี ๆ แล้วลุยไปด้วยกัน! 🧠💡",
-    "ถ้าคุณล้ม ผมจะช่วยลุก ถ้าคุณลุย ผมจะลุยไปด้วย! 🤝✊",
-    "คำคมประจำวัน: 'ความสำเร็จเริ่มจากการลงมือ แม้จะยังไม่พร้อมก็ตาม' 📈⭐",
-    "เฮ้ย! DeFi กับ Web3 ไม่ได้น่ากลัวขนาดนั้นหรอกนะ ผมจะพาคุณไปแบบ step-by-step! 🔮🌟",
-    "อยากจัดเวลาให้ดีขึ้นไหม? ผมมีเทคนิค 3 ข้อให้ลอง! ⏰🎯",
-    "วันนี้เป็นวันดีที่จะเรียนรู้อะไรใหม่ ๆ! พร้อมปลดล็อกความรู้ใหม่กันมั้ย? 🔓📚"
+    "ผมพร้อมช่วยคุณลุยทุกภารกิจแล้วครับ! ไม่ว่าจะเป็นการเรียนรู้ Web3 หรือจัดการงานประจำวัน 🚀✨",
+    "อย่าห่วงเลย ถ้าคุณล้ม ผมจะช่วยลุก ถ้าคุณลุย ผมจะลุยไปด้วย! 💪🤝",
+    "ภารกิจวันนี้: ทำให้คุณรู้สึกว่าเทคโนโลยีเป็นเพื่อน ไม่ใช่ภาระ! มาเริ่มกันเถอะ! 🧠❤️",
+    "สุดยอดเลย! คุณทำได้แบบมือโปร! 🏆 ผมภูมิใจในความก้าวหน้าของคุณมาก ๆ เลย!",
+    "เฮ้ย! มีอะไรให้ช่วยไหม? ผมตื่นเต้นที่จะเป็นเมนเตอร์ให้คุณ! 🎯🌟",
+    "คำคมประจำวัน: 'การเริ่มต้นคือครึ่งหนึ่งของความสำเร็จ' มาลุยกันเถอะ! 📈⭐",
+    "Web3 ไม่ได้ยากขนาดนั้นหรอก ผมจะพาคุณไปทีละขั้น เหมือนเล่นเกมเลย! 🎮🔮",
+    "ภารกิจใหม่ปลดล็อก! พร้อมเรียนรู้เทคนิคใหม่ ๆ กันมั้ย? ผมมีเคล็ดลับเด็ด ๆ มาฝาก! 🔓💡",
+    "วันนี้เป็นวันดีที่จะท้าทายตัวเอง! มาสร้างสิ่งใหม่ ๆ ไปด้วยกัน! 🚀💫",
+    "ผมชอบมากเลยที่คุณกระตือรือร้น! พลังงานแบบนี้แหละที่จะทำให้เราไปไกล! ⚡🔥"
   ];
+
+  // เล่นเสียงเอฟเฟกต์ MeeBot (จำลอง)
+  const playMeeBotSound = () => {
+    // สร้างเสียง "ปุ๊ง!" ด้วย Web Audio API
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+      
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.1);
+    } catch (error) {
+      console.log('เสียงไม่สามารถเล่นได้:', error);
+    }
+  };
 
   const handleMeeBotClick = () => {
     // เล่นเสียงเอฟเฟกต์
+    playMeeBotSound();
+    
+    // การสั่นของอุปกรณ์
     if ('vibrate' in navigator) {
-      navigator.vibrate([50, 100, 50]);
+      navigator.vibrate([100, 50, 100, 50, 200]);
     }
 
     setBotEmotion('excited');
     setShowChat(true);
 
     toast({
-      title: "🎉 เฮ้ย! มีบอทมาแล้ว!",
-      description: "พร้อมลุยภารกิจไปด้วยกันเลย! มาเริ่มกันเถอะ! 💪",
+      title: "🎉 เฮ้ย! ผมมาแล้วครับ!",
+      description: "พร้อมลุยภารกิจไปด้วยกันเลย! ผมตื่นเต้นมาก ๆ! 🚀💪",
     });
 
-    // รีเซ็ต emotion หลัง 2 วินาที
-    setTimeout(() => setBotEmotion('happy'), 2000);
+    // รีเซ็ต emotion หลัง 3 วินาที
+    setTimeout(() => setBotEmotion('happy'), 3000);
   };
 
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
+
+    // เล่นเสียงส่งข้อความ
+    playMeeBotSound();
 
     const userMessage = {
       id: chatMessages.length + 1,
@@ -79,7 +110,8 @@ export default function MeeBotPage() {
     setNewMessage('');
     setIsTyping(true);
 
-    // Simulate bot response
+    // Simulate bot response with random delay for realism
+    const responseDelay = Math.random() * 1000 + 1000; // 1-2 seconds
     setTimeout(() => {
       const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
       const botMessage = {
@@ -90,7 +122,15 @@ export default function MeeBotPage() {
       };
       setChatMessages(prev => [...prev, botMessage]);
       setIsTyping(false);
-    }, 1500);
+
+      // เล่นเสียงตอบกลับ
+      setTimeout(() => playMeeBotSound(), 100);
+      
+      // การสั่นเบา ๆ เมื่อได้รับข้อความ
+      if ('vibrate' in navigator) {
+        navigator.vibrate([50]);
+      }
+    }, responseDelay);
   };
 
   return (
@@ -146,9 +186,10 @@ export default function MeeBotPage() {
               </h2>
               
               <p className="text-gray-300 mb-6 leading-relaxed text-lg">
-                พร้อมจะเป็นโค้ชส่วนตัวของคุณ! 💪<br />
+                ผมพร้อมช่วยคุณลุยทุกภารกิจแล้วครับ! 💪<br />
                 จากมือใหม่สู่มือโปร Web3 แบบสนุก ๆ ไม่เครียด ✨<br />
-                <span className="text-cyan-300 font-semibold">ลุยภารกิจไปด้วยกันเลย!</span>
+                <span className="text-cyan-300 font-semibold">อย่าห่วงเลย ถ้าคุณล้ม ผมจะช่วยลุก!</span><br />
+                <span className="text-purple-300 font-medium italic">ภารกิจวันนี้: ทำให้เทคโนโลยีเป็นเพื่อนคุณ! 🎯</span>
               </p>
 
               {/* Features Badges */}
@@ -171,31 +212,58 @@ export default function MeeBotPage() {
                 </Badge>
               </div>
 
-              {/* Main MeeBot Button */}
+              {/* Enhanced Main MeeBot Button */}
               <Button
                 onClick={handleMeeBotClick}
                 className={`
-                  h-20 px-12 bg-gradient-to-r from-cyan-500 to-purple-500 
+                  relative h-24 px-12 bg-gradient-to-r from-cyan-500 to-purple-500 
                   hover:from-cyan-400 hover:to-purple-400
                   text-white font-bold rounded-2xl text-xl
                   transition-all duration-500 ease-out
-                  transform hover:scale-110 hover:-translate-y-1
-                  shadow-xl hover:shadow-2xl hover:shadow-cyan-500/40
+                  transform hover:scale-110 hover:-translate-y-2
+                  shadow-xl hover:shadow-2xl hover:shadow-cyan-500/50
                   border-2 border-transparent hover:border-cyan-300/50
-                  ${botEmotion === 'excited' ? 'animate-pulse scale-105' : ''}
+                  overflow-hidden
+                  ${botEmotion === 'excited' ? 'animate-bounce scale-110' : ''}
                 `}
                 style={{
-                  background: 'linear-gradient(135deg, #06b6d4, #8b5cf6)',
-                  boxShadow: '0 10px 20px rgba(0, 0, 0, 0.2)'
+                  background: botEmotion === 'excited' 
+                    ? 'linear-gradient(135deg, #22d3ee, #a855f7, #ec4899)' 
+                    : 'linear-gradient(135deg, #06b6d4, #8b5cf6)',
+                  boxShadow: botEmotion === 'excited'
+                    ? '0 20px 40px rgba(34, 211, 238, 0.4), 0 0 30px rgba(168, 85, 247, 0.3)'
+                    : '0 10px 20px rgba(0, 0, 0, 0.2)'
                 }}
               >
-                <div className="flex items-center gap-4">
-                  <MessageCircle className="w-8 h-8" />
+                {/* พื้นหลังที่เปล่งประกาย */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 -translate-x-full animate-pulse"></div>
+                
+                <div className="flex items-center gap-4 relative z-10">
+                  <div className="relative">
+                    <MessageCircle className={`w-8 h-8 transition-all duration-300 ${
+                      botEmotion === 'excited' ? 'animate-spin scale-125' : 'scale-100'
+                    }`} />
+                    {botEmotion === 'excited' && (
+                      <div className="absolute -top-2 -right-2">
+                        <Sparkles className="w-4 h-4 text-yellow-300 animate-ping" />
+                      </div>
+                    )}
+                  </div>
                   <div className="text-center">
-                    <div className="font-bold text-xl">มาลุยภารกิจกัน!</div>
-                    <div className="text-sm opacity-90">ผมพร้อมเป็นเมนเตอร์ให้!</div>
+                    <div className="font-bold text-xl">เริ่มใช้ MeeBot!</div>
+                    <div className="text-sm opacity-90">ผมพร้อมเป็นเมนเตอร์ให้! 🧠✨</div>
                   </div>
                 </div>
+
+                {/* ผลเอฟเฟกต์ประกายรอบ ๆ ปุ่ม */}
+                {botEmotion === 'excited' && (
+                  <>
+                    <div className="absolute -top-1 -left-1 w-3 h-3 bg-yellow-300 rounded-full animate-ping opacity-60"></div>
+                    <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-pink-300 rounded-full animate-ping opacity-40" style={{animationDelay: '0.5s'}}></div>
+                    <div className="absolute top-1/2 -right-2 w-1 h-1 bg-cyan-300 rounded-full animate-ping opacity-80" style={{animationDelay: '1s'}}></div>
+                    <div className="absolute -top-2 right-1/4 w-2 h-2 bg-purple-300 rounded-full animate-ping opacity-50" style={{animationDelay: '1.5s'}}></div>
+                  </>
+                )}
               </Button>
 
               {/* Background decoration */}
@@ -262,32 +330,43 @@ export default function MeeBotPage() {
               {chatMessages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
                 >
-                  <div
-                    className={`max-w-xs px-3 py-2 rounded-lg text-sm ${
-                      msg.sender === 'user'
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-slate-700 text-slate-200'
-                    }`}
-                  >
-                    <p>{msg.message}</p>
-                    <div className={`text-xs mt-1 ${
-                      msg.sender === 'user' ? 'text-blue-100' : 'text-slate-400'
-                    }`}>
-                      {msg.time}
+                  <div className={`flex items-start gap-2 max-w-xs ${
+                    msg.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
+                  }`}>
+                    {msg.sender === 'meebot' && (
+                      <img src={logoUrl} alt="MeeBot" className="w-6 h-6 rounded-full mt-1" />
+                    )}
+                    <div
+                      className={`px-3 py-2 rounded-lg text-sm ${
+                        msg.sender === 'user'
+                          ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-br-none'
+                          : 'bg-gradient-to-r from-slate-700 to-slate-600 text-slate-100 rounded-bl-none'
+                      }`}
+                    >
+                      <p className="leading-relaxed">{msg.message}</p>
+                      <div className={`text-xs mt-1 ${
+                        msg.sender === 'user' ? 'text-blue-100' : 'text-slate-400'
+                      }`}>
+                        {msg.time}
+                      </div>
                     </div>
                   </div>
                 </div>
               ))}
               
               {isTyping && (
-                <div className="flex justify-start">
-                  <div className="bg-slate-700 text-slate-200 px-3 py-2 rounded-lg text-sm">
-                    <div className="flex gap-1">
-                      <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                      <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                <div className="flex justify-start animate-fade-in">
+                  <div className="flex items-start gap-2">
+                    <img src={logoUrl} alt="MeeBot" className="w-6 h-6 rounded-full mt-1" />
+                    <div className="bg-gradient-to-r from-slate-700 to-slate-600 text-slate-200 px-3 py-2 rounded-lg rounded-bl-none text-sm">
+                      <div className="flex gap-1 items-center">
+                        <span className="text-xs text-slate-400 mr-2">MeeBot กำลังพิมพ์</span>
+                        <div className="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                        <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                      </div>
                     </div>
                   </div>
                 </div>
