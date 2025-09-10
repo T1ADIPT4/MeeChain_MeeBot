@@ -54,6 +54,7 @@ export default function Dashboard() {
   const [isBotReady, setIsBotReady] = useState(true);
   const [isHovering, setIsHovering] = useState(false);
   const [botEmotion, setBotEmotion] = useState<'happy' | 'waving' | 'excited'>('happy');
+  const [botStatus, setBotStatus] = useState<'idle' | 'running' | 'paused' | 'stopped'>('idle'); // Added botStatus state
 
 
   // Breathing animation for logo
@@ -177,6 +178,23 @@ export default function Dashboard() {
     return "สวัสดีครับ! วันนี้มีภารกิจอะไรให้ลุยบ้างนะ? 🤖💪";
   };
 
+  const handleTaskControl = (action: 'start' | 'pause' | 'stop') => {
+    if (action === 'start') {
+      startTask();
+    } else if (action === 'pause') {
+      pauseTask();
+    } else if (action === 'stop') {
+      // Ensure confirmation before stopping all tasks
+      if (window.confirm('🤖 MeeBot ถาม: แน่ใจไหมว่าจะหยุดทำงานทั้งหมด?')) {
+        stopTask();
+        toast({
+          title: "🛑 MeeBot หยุดทำงานแล้ว",
+          description: "ได้พักผ่อนหน่อยนะ! เรียกได้เมื่อไหร่ก็ได้ครับ 😴",
+        });
+      }
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
@@ -255,7 +273,7 @@ export default function Dashboard() {
           </CardHeader>
           <CardContent className="space-y-4">
             {/* ปุ่มควบคุมหลัก - จัดแนวตั้งบนมือถือ, แนวนอนบน desktop */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
               <Button
                 size="lg"
                 className={`${
