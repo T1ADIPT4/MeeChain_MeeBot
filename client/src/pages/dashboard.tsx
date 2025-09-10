@@ -242,13 +242,13 @@ export default function Dashboard() {
               />
             </div>
 
-            <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent text-center">
               MeeBot
             </h2>
 
             {/* สถานะ MeeBot พร้อม log ล่าสุด */}
             {isTaskRunning ? (
-              <div className="space-y-2">
+              <div className="space-y-2 text-center">
                 <div className="flex items-center justify-center gap-2 text-green-300">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
                   <span className="font-medium">กำลังทำงาน</span>
@@ -256,7 +256,7 @@ export default function Dashboard() {
                 <p className="text-xs text-slate-400">Log ล่าสุด: Task completed successfully at {new Date().toLocaleTimeString()}</p>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2 text-center">
                 <p className="text-slate-400">พร้อมเริ่มทำงาน</p>
                 <p className="text-xs text-slate-500">กดปุ่ม Start เพื่อเริ่มการติดตาม</p>
               </div>
