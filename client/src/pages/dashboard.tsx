@@ -27,7 +27,8 @@ import {
   Play,
   Pause,
   Square,
-  Coins
+  Coins,
+  Download
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
