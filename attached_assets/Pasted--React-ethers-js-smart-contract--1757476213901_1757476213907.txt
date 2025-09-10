@@ -1,0 +1,144 @@
+แน่นอนครับ!  
+นี่คือตัวอย่างโค้ด React ที่ใช้ **ethers.js** ในการเชื่อมกับ smart contract สำหรับฟังก์ชัน mint และ deposit  
+(สามารถนำไปเชื่อมกับระบบ swap/bridge ได้เช่นกัน โดยเปลี่ยน ABI และ address ของ contract)
+
+---
+
+## 1. ตัวอย่างโค้ดเชื่อมฟังก์ชัน Mint (สำหรับ owner)
+
+```typescript name=src/utils/mintToken.ts
+import { ethers } from "ethers";
+
+// address & ABI ของ contract ตัวอย่าง
+const TOKEN_CONTRACT_ADDRESS = "0xYourTokenContractAddress";
+const TOKEN_CONTRACT_ABI = [
+  {
+    "inputs": [
+      { "internalType": "address", "name": "to", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "mint",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
+
+export async function mintToken(to: string, amount: string) {
+  if (!window.ethereum) throw new Error("Wallet not found");
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+  const contract = new ethers.Contract(TOKEN_CONTRACT_ADDRESS, TOKEN_CONTRACT_ABI, signer);
+  const tx = await contract.mint(to, ethers.parseUnits(amount, 18));
+  return tx.hash;
+}
+```
+
+## 2. ตัวอย่างโค้ดเชื่อมฟังก์ชัน Deposit
+
+```typescript name=src/utils/depositToken.ts
+import { ethers } from "ethers";
+
+// address & ABI ของ contract deposit ตัวอย่าง
+const DEPOSIT_CONTRACT_ADDRESS = "0xYourDepositContractAddress";
+const DEPOSIT_CONTRACT_ABI = [
+  {
+    "inputs": [
+      { "internalType": "address", "name": "token", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "deposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
+
+export async function depositToken(token: string, amount: string) {
+  if (!window.ethereum) throw new Error("Wallet not found");
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+
+  const contract = new ethers.Contract(DEPOSIT_CONTRACT_ADDRESS, DEPOSIT_CONTRACT_ABI, signer);
+  const tx = await contract.deposit(token, ethers.parseUnits(amount, 18));
+  return tx.hash;
+}
+```
+
+## 3. ตัวอย่าง Component React เรียกใช้ Mint/Deposit
+
+```typescript name=src/components/TokenActions.tsx
+import React, { useState } from "react";
+import { mintToken } from "../utils/mintToken";
+import { depositToken } from "../utils/depositToken";
+
+const TOKEN_ADDRESS = "0xYourTokenContractAddress"; // ERC20 address
+
+const TokenActions: React.FC = () => {
+  const [mintAddress, setMintAddress] = useState("");
+  const [mintAmount, setMintAmount] = useState("");
+  const [depositAmount, setDepositAmount] = useState("");
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleMint = async () => {
+    setError(null);
+    try {
+      const hash = await mintToken(mintAddress, mintAmount);
+      setTxHash(hash);
+    } catch (err: any) {
+      setError(err.message || "Mint Error");
+    }
+  };
+
+  const handleDeposit = async () => {
+    setError(null);
+    try {
+      const hash = await depositToken(TOKEN_ADDRESS, depositAmount);
+      setTxHash(hash);
+    } catch (err: any) {
+      setError(err.message || "Deposit Error");
+    }
+  };
+
+  return (
+    <section style={{ background: "#f8fff8", padding: 32, borderRadius: 16 }}>
+      <h2>Mint/Deposit Token Actions</h2>
+      <div>
+        <h3>Mint Token (Owner)</h3>
+        <input placeholder="address" value={mintAddress} onChange={e => setMintAddress(e.target.value)} />
+        <input placeholder="amount" value={mintAmount} onChange={e => setMintAmount(e.target.value)} type="number" />
+        <button onClick={handleMint}>Mint</button>
+      </div>
+      <div style={{ marginTop: 24 }}>
+        <h3>Deposit Token</h3>
+        <input placeholder="amount" value={depositAmount} onChange={e => setDepositAmount(e.target.value)} type="number" />
+        <button onClick={handleDeposit}>Deposit</button>
+      </div>
+      {txHash && (
+        <div style={{ marginTop: 16, color: "green" }}>
+          Tx Hash: <a href={`https://etherscan.io/tx/${txHash}`} target="_blank" rel="noopener noreferrer">{txHash}</a>
+        </div>
+      )}
+      {error && (
+        <div style={{ marginTop: 16, color: "red" }}>
+          {error}
+        </div>
+      )}
+    </section>
+  );
+};
+
+export default TokenActions;
+```
+
+---
+
+## หมายเหตุ
+- ต้องเปลี่ยน address & ABI ให้ตรงกับ contract จริงของคุณ
+- ถ้าจะเชื่อมกับ **swap/bridge** ให้เปลี่ยน ABI/address เป็นของ swap/bridge contract และแก้ logic ในฟังก์ชันให้ตรงกับ method/parameter ที่ contract นั้นใช้
+- ผู้ใช้ต้องเชื่อม Metamask หรือ wallet ที่รองรับ EVM
+
+---
+
+**ถ้าต้องการตัวอย่างสำหรับ swap/bridge contract จริง, หรือมี ABI/address contract แล้ว ส่งมาได้เลยครับ ผมจะช่วยปรับ logic เฉพาะให้เหมาะสม!**
