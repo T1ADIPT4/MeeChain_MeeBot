@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, Link } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,7 +18,8 @@ import {
   Pause,
   Square,
   Menu,
-  User
+  User,
+  ArrowRightLeft
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
@@ -42,7 +42,7 @@ export default function Dashboard() {
     let scale = 1;
     let direction = 1;
     let frame: number;
-    
+
     function animate() {
       if (logoRef.current) {
         scale += direction * 0.005;
@@ -52,7 +52,7 @@ export default function Dashboard() {
       }
       frame = requestAnimationFrame(animate);
     }
-    
+
     animate();
     return () => cancelAnimationFrame(frame);
   }, []);
@@ -90,7 +90,7 @@ export default function Dashboard() {
     if ('vibrate' in navigator) {
       navigator.vibrate([200, 50, 200]);
     }
-    
+
     // Toast notification
     toast({
       title: type === 'success' ? "✅ สำเร็จ" : "❌ ข้อผิดพลาด",
@@ -123,7 +123,7 @@ export default function Dashboard() {
 
   const handleCopyAddress = async () => {
     if (!walletData?.address) return;
-    
+
     try {
       await navigator.clipboard.writeText(walletData.address);
       showToast("ที่อยู่ Wallet ถูกคัดลอกแล้ว");
@@ -168,7 +168,7 @@ export default function Dashboard() {
                 <Play className="w-4 h-4 mr-2" />
                 Start
               </Button>
-              
+
               <Button
                 onClick={() => handleTaskControl('pause')}
                 disabled={!isTaskRunning}
@@ -178,7 +178,7 @@ export default function Dashboard() {
                 <Pause className="w-4 h-4 mr-2" />
                 Pause
               </Button>
-              
+
               <Button
                 onClick={() => handleTaskControl('stop')}
                 disabled={!isTaskRunning}
@@ -188,7 +188,7 @@ export default function Dashboard() {
                 <Square className="w-4 h-4 mr-2" />
                 Stop
               </Button>
-              
+
               <Button
                 variant="outline"
                 className="border-slate-500 text-slate-300 hover:bg-slate-700 px-4 py-2"
@@ -219,7 +219,7 @@ export default function Dashboard() {
             <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               MeeChain
             </h2>
-            
+
             {isTaskRunning ? (
               <div className="flex items-center justify-center gap-2 text-blue-300 mb-4">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
@@ -292,7 +292,7 @@ export default function Dashboard() {
                 <Copy className="w-4 h-4" />
               </Button>
             </div>
-            
+
             {showQR && walletData?.address && (
               <div className="mt-4">
                 <QRCodeGenerator 
@@ -363,15 +363,24 @@ export default function Dashboard() {
               <span className="text-sm">รับโทเค็น</span>
             </div>
           </Button>
-          
+
           <Button
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 h-16"
-            onClick={() => navigate('/send')}
+            className="bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 h-16"
+            onClick={() => navigate('/send-tokens')}
             data-testid="button-send"
           >
             <div className="text-center">
               <Send className="w-6 h-6 mx-auto mb-1" />
               <span className="text-sm">ส่งโทเค็น</span>
+            </div>
+          </Button>
+          <Button
+            onClick={() => navigate('/swap-bridge')}
+            className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 h-16"
+          >
+            <div className="text-center">
+              <ArrowRightLeft className="w-6 h-6 mx-auto mb-1" />
+              <span className="text-sm">Swap/Bridge</span>
             </div>
           </Button>
         </div>
@@ -389,7 +398,7 @@ export default function Dashboard() {
               <span className="text-sm">รายได้</span>
             </div>
           </Button>
-          
+
           <Button
             variant="outline"
             className="border-slate-600 bg-slate-800/50 hover:bg-slate-700 h-16 text-slate-300"
@@ -429,7 +438,7 @@ export default function Dashboard() {
             <Wallet className="w-5 h-5" />
             <span className="text-xs">Home</span>
           </Button>
-          
+
           <Button
             variant="ghost"
             className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-200 p-2"
@@ -439,7 +448,7 @@ export default function Dashboard() {
             <Send className="w-5 h-5" />
             <span className="text-xs">Swap</span>
           </Button>
-          
+
           <Button
             variant="ghost"
             className="flex flex-col items-center gap-1 text-blue-400 hover:text-blue-200 p-2"
@@ -448,7 +457,7 @@ export default function Dashboard() {
             <div className="w-2 h-2 bg-blue-400 rounded-full mb-1"></div>
             <span className="text-xs font-semibold">Dashboard</span>
           </Button>
-          
+
           <Button
             variant="ghost"
             className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-200 p-2"

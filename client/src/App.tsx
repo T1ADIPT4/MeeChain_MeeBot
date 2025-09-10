@@ -13,6 +13,7 @@ import TransactionHistory from "@/pages/transaction-history";
 import ReceiveTokens from "@/pages/receive-tokens";
 import SendTokens from "@/pages/send-tokens";
 import ScheduledTasks from "@/pages/scheduled-tasks";
+import SwapBridge from './pages/swap-bridge';
 
 function Router() {
   return (
@@ -25,6 +26,7 @@ function Router() {
       <Route path="/receive" component={ReceiveTokens} />
       <Route path="/history" component={TransactionHistory} />
       <Route path="/scheduled-tasks" component={ScheduledTasks} />
+      <Route path="/swap-bridge" component={SwapBridge} />
       <Route component={NotFound} />
     </Switch>
   );
