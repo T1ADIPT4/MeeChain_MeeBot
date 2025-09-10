@@ -26,6 +26,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Link } from 'wouter';
 import { AcademyWelcome } from '@/components/academy/academy-welcome';
 import { WalletSetup } from '@/components/academy/wallet-setup';
+import { TokenBasics } from '@/components/academy/token-basics';
 
 interface Quest {
   id: string;
@@ -256,6 +257,16 @@ export default function Academy() {
       <WalletSetup 
         onNext={() => setCurrentAcademyStep(3)}
         onPrev={() => setCurrentAcademyStep(1)}
+      />
+    );
+  }
+
+  // Show Token Basics step
+  if (currentAcademyStep === 3) {
+    return (
+      <TokenBasics 
+        onNext={() => setCurrentAcademyStep(4)}
+        onPrev={() => setCurrentAcademyStep(2)}
       />
     );
   }
