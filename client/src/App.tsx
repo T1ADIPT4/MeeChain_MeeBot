@@ -1,4 +1,5 @@
 import { Switch, Route } from "wouter";
+import { lazy } from 'react';
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -19,10 +20,11 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/missions" component={Missions} />
       <Route path="/dashboard" component={Dashboard} />
-      <Route path="/history" component={TransactionHistory} />
-      <Route path="/receive" component={ReceiveTokens} />
+      <Route path="/earnings" component={lazy(() => import('./pages/earnings'))} />
       <Route path="/send" component={SendTokens} />
-      <Route path="/tasks" component={ScheduledTasks} />
+      <Route path="/receive" component={ReceiveTokens} />
+      <Route path="/history" component={TransactionHistory} />
+      <Route path="/scheduled-tasks" component={ScheduledTasks} />
       <Route component={NotFound} />
     </Switch>
   );

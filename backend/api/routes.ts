@@ -286,11 +286,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Faucet endpoints
   app.post("/api/faucet/request", async (req, res) => {
     try {
-      const { userId, tokenAddress, chainId } = req.body;
+      const { userId, chain, walletAddress, token } = req.body;
       
-      if (!userId || !tokenAddress || !chainId) {
-        return res.status(400).json({ message: "User ID, token address, and chain ID are required" });
+      if (!userId) {
+        return res.status(400).json({ message: "User ID is required" });
       }
+
+      // For backward compatibility, also accept old format
+      const tokenAddress = req.body.tokenAddress;
+      const chainId = req.body.chainId || chain;
 
       // Find token
       const token = await storage.getTokenByAddress(tokenAddress, chainId);
@@ -323,14 +327,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       res.json({ 
-        success: true, 
-        amount: faucetAmount,
+        status: "success",
+        amount: "5",
         token: token.symbol,
-        nextClaim: new Date(now.getTime() + 24 * 60 * 60 * 1000)
+        nextAvailable: new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString()
       });
     } catch (error) {
       console.error("Faucet request error:", error);
       res.status(500).json({ message: "Faucet request failed" });
+    }
+  });
+
+  app.get("/api/faucet/status", async (req, res) => {
+    try {
+      const userId = req.query.userId as string;
+      
+      if (!userId) {
+        return res.status(400).json({ message: "User ID is required" });
+      }
+
+      // Get user's last faucet claim from any token
+      const balances = await storage.getAllUserTokenBalances(userId);
+      let lastRequest = null;
+      let nextAvailable = new Date().toISOString();
+      let eligible = true;
+
+      for (const balance of balances) {
+        if (balance.lastFaucetClaim) {
+          const claimTime = new Date(balance.lastFaucetClaim);
+          const oneDayLater = new Date(claimTime.getTime() + 24 * 60 * 60 * 1000);
+          
+          if (!lastRequest || claimTime > new Date(lastRequest)) {
+            lastRequest = claimTime.toISOString();
+            nextAvailable = oneDayLater.toISOString();
+            eligible = new Date() >= oneDayLater;
+          }
+        }
+      }
+
+      res.json({
+        eligible,
+        lastRequest,
+        nextAvailable
+      });
+    } catch (error) {
+      console.error("Get faucet status error:", error);
+      res.status(500).json({ message: "Failed to get faucet status" });
     }
   });
 
@@ -611,6 +653,202 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Get transactions error:", error);
       res.status(500).json({ message: "Failed to get transactions" });
+    }
+  });
+
+  // Earnings API endpoints
+  app.get("/api/earnings/summary", async (req, res) => {
+    try {
+      const userId = req.session?.userId || req.query.userId as string;
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Get user's total token balances as earnings
+      const balances = await storage.getAllUserTokenBalances(userId);
+      const tokens = await storage.getTokens();
+      
+      const total: Record<string, string> = {};
+      const today: Record<string, string> = {};
+      
+      for (const balance of balances) {
+        const token = tokens.find(t => t.id === balance.tokenId);
+        if (token) {
+          const totalEarned = parseFloat(balance.totalEarned || "0") / Math.pow(10, parseInt(token.decimals));
+          total[token.symbol] = totalEarned.toFixed(4);
+          
+          // Mock today's earnings (20% of total for demo)
+          const todayEarned = totalEarned * 0.2;
+          today[token.symbol] = todayEarned.toFixed(4);
+        }
+      }
+
+      res.json({ total, today });
+    } catch (error) {
+      console.error("Get earnings summary error:", error);
+      res.status(500).json({ message: "Failed to get earnings summary" });
+    }
+  });
+
+  app.get("/api/earnings/history", async (req, res) => {
+    try {
+      const userId = req.session?.userId || req.query.userId as string;
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Get user missions as earning activities
+      const userMissions = await storage.getUserMissions(userId);
+      const missions = await storage.getMissions();
+      const tokens = await storage.getTokens();
+      
+      const history = await Promise.all(
+        userMissions
+          .filter(um => um.status === "completed" || um.status === "claimed")
+          .map(async (userMission) => {
+            const mission = missions.find(m => m.id === userMission.missionId);
+            let token = null;
+            
+            if (mission?.rewardTokenId) {
+              token = tokens.find(t => t.id === mission.rewardTokenId);
+            }
+            
+            return {
+              date: userMission.completedAt?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0],
+              activity: mission?.title || "ภารกิจ",
+              amount: mission?.rewardAmount || "0",
+              token: token?.symbol || "MEE",
+              status: userMission.status
+            };
+          })
+      );
+
+      // Add mock faucet activities
+      const mockFaucetHistory = [
+        {
+          date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          activity: "รับเหรียญจาก Faucet",
+          amount: "5",
+          token: "MEE",
+          status: "completed"
+        }
+      ];
+
+      res.json([...history, ...mockFaucetHistory]);
+    } catch (error) {
+      console.error("Get earnings history error:", error);
+      res.status(500).json({ message: "Failed to get earnings history" });
+    }
+  });
+
+  app.post("/api/earnings/transfer", async (req, res) => {
+    try {
+      const { userId, walletAddress, token, amount } = req.body;
+      
+      if (!userId || !walletAddress || !token || !amount) {
+        return res.status(400).json({ message: "Missing required fields" });
+      }
+
+      // Mock transfer (in real implementation, this would call smart contract)
+      const mockTxHash = `0x${crypto.randomBytes(32).toString('hex')}`;
+
+      res.json({
+        status: "success",
+        txHash: mockTxHash
+      });
+    } catch (error) {
+      console.error("Transfer earnings error:", error);
+      res.status(500).json({ message: "Failed to transfer earnings" });
+    }
+  });
+
+  // User Tier API endpoints
+  app.get("/api/user-tier/status", async (req, res) => {
+    try {
+      const userId = req.session?.userId || req.query.userId as string;
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      // Get user's completed missions to calculate tier
+      const userMissions = await storage.getUserMissions(userId);
+      const completedMissions = userMissions.filter(um => um.status === "completed" || um.status === "claimed").length;
+      
+      let tier = "Beginner";
+      let nextTier = "Explorer";
+      let required = 3;
+      let rewardsUnlocked = ["เหรียญทดลอง", "ภารกิจพื้นฐาน"];
+      
+      if (completedMissions >= 3) {
+        tier = "Explorer";
+        nextTier = "Pro";
+        required = 5;
+        rewardsUnlocked = ["เครดิต gas ฟรี", "Badge NFT"];
+      }
+      
+      if (completedMissions >= 5) {
+        tier = "Pro";
+        nextTier = "Master";
+        required = 10;
+        rewardsUnlocked = ["Swap ข้ามเชนฟรี", "NFT พิเศษ"];
+      }
+
+      res.json({
+        tier,
+        nextTier,
+        progress: {
+          missionsCompleted: completedMissions,
+          required
+        },
+        rewardsUnlocked
+      });
+    } catch (error) {
+      console.error("Get user tier status error:", error);
+      res.status(500).json({ message: "Failed to get user tier status" });
+    }
+  });
+
+  app.get("/api/user-tier/benefits", async (req, res) => {
+    try {
+      const benefits = [
+        { tier: "Beginner", benefits: ["เหรียญทดลอง", "ภารกิจพื้นฐาน"] },
+        { tier: "Explorer", benefits: ["เครดิต gas ฟรี", "Badge NFT"] },
+        { tier: "Pro", benefits: ["Swap ข้ามเชนฟรี", "NFT พิเศษ"] },
+        { tier: "Master", benefits: ["รางวัลพิเศษ", "เข้าถึงฟีเจอร์ VIP"] }
+      ];
+
+      res.json(benefits);
+    } catch (error) {
+      console.error("Get tier benefits error:", error);
+      res.status(500).json({ message: "Failed to get tier benefits" });
+    }
+  });
+
+  app.post("/api/user-tier/update", async (req, res) => {
+    try {
+      const { userId, newTier } = req.body;
+      
+      if (!userId || !newTier) {
+        return res.status(400).json({ message: "User ID and new tier are required" });
+      }
+
+      // Get rewards for the new tier
+      const tierRewards: Record<string, string[]> = {
+        "Explorer": ["เครดิต gas ฟรี", "Badge NFT"],
+        "Pro": ["Swap ข้ามเชนฟรี", "NFT พิเศษ"],
+        "Master": ["รางวัลพิเศษ", "เข้าถึงฟีเจอร์ VIP"]
+      };
+
+      const rewardsGranted = tierRewards[newTier] || [];
+
+      res.json({
+        status: "updated",
+        tier: newTier,
+        rewardsGranted
+      });
+    } catch (error) {
+      console.error("Update user tier error:", error);
+      res.status(500).json({ message: "Failed to update user tier" });
     }
   });
 

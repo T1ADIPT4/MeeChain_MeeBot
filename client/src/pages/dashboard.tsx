@@ -381,12 +381,12 @@ export default function Dashboard() {
           <Button
             variant="outline"
             className="border-slate-600 bg-slate-800/50 hover:bg-slate-700 h-16 text-slate-300"
-            onClick={() => navigate('/history')}
-            data-testid="button-history"
+            onClick={() => navigate('/earnings')}
+            data-testid="button-earnings"
           >
             <div className="text-center">
               <History className="w-6 h-6 mx-auto mb-1" />
-              <span className="text-sm">ประวัติ</span>
+              <span className="text-sm">รายได้</span>
             </div>
           </Button>
           
