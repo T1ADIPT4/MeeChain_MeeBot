@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,12 +20,7 @@ import {
   Eye,
   ChevronRight,
   Plus,
-  Filter,
-  User, // Added for general user icon
-  Bug, // Added for Bug Buster
-  Wrench, // Added for UX Wizard
-  DollarSign, // Added for Swap Ninja
-  BookOpen, // Added for Insight Seeker
+  Filter
 } from 'lucide-react';
 import { Link } from 'wouter';
 
@@ -70,7 +66,7 @@ export default function CommunityPage() {
         userId: 'user1',
         username: 'CryptoPilot99',
         userAvatar: '',
-        userBadges: ['Explorer', 'Security Expert', 'Swap Ninja'],
+        userBadges: ['Explorer', 'Security Expert'],
         content: 'เย้! ผมลองใช้ Swap ครั้งแรกแล้วได้ badge นี้! รู้สึกภูมิใจมาก ❤️ ขอบคุณ MeeBot ที่แนะนำทุกขั้นตอน',
         achievements: [
           {
@@ -106,7 +102,7 @@ export default function CommunityPage() {
         userId: 'user3',
         username: 'TokenHunter',
         userAvatar: '',
-        userBadges: ['Token Collector', 'Insight Seeker'],
+        userBadges: ['Token Collector'],
         content: 'มีใครพอจะรู้วิธีเชื่อมต่อ Wallet กับ Fuse Network บ้างไหม? ลองทำตาม Tutorial แล้วแต่ติดขั้นตอนสุดท้าย 🤔',
         timestamp: '1 วันที่แล้ว',
         likes: 12,
@@ -120,7 +116,7 @@ export default function CommunityPage() {
         userId: 'user4',
         username: 'NFTArtist',
         userAvatar: '',
-        userBadges: ['Creative Mind', 'First Flight', 'UX Wizard'],
+        userBadges: ['Creative Mind', 'First Flight'],
         content: 'สร้าง NFT ใหม่เสร็จแล้ว! ขอบคุณ MeeChain ที่ทำให้การสร้าง NFT ง่ายขึ้นมาก ใครสนใจมาดูผลงานกันนะ ✨',
         achievements: [
           {
@@ -197,29 +193,9 @@ export default function CommunityPage() {
       'Bug Buster': 'bg-red-500/20 text-red-300 border-red-500/30',
       'Token Collector': 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
       'Creative Mind': 'bg-pink-500/20 text-pink-300 border-pink-500/30',
-      'First Flight': 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
-      'Swap Ninja': 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30',
-      'UX Wizard': 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30',
-      'Insight Seeker': 'bg-teal-500/20 text-teal-300 border-teal-500/30'
+      'First Flight': 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30'
     };
     return colors[badge as keyof typeof colors] || 'bg-gray-500/20 text-gray-300 border-gray-500/30';
-  };
-
-  const getBadgeIcon = (badge: string) => {
-    const icons = {
-      'Explorer': <User className="w-3 h-3" />,
-      'Guardian': <Award className="w-3 h-3" />,
-      'Security Expert': <ShieldCheck className="w-3 h-3" />, // Assuming a ShieldCheck icon
-      'Helpful Hero': <Star className="w-3 h-3" />,
-      'Bug Buster': <Bug className="w-3 h-3" />,
-      'Token Collector': <DollarSign className="w-3 h-3" />,
-      'Creative Mind': <Sparkles className="w-3 h-3" />,
-      'First Flight': <TrendingUp className="w-3 h-3" />,
-      'Swap Ninja': <DollarSign className="w-3 h-3" />,
-      'UX Wizard': <Wrench className="w-3 h-3" />,
-      'Insight Seeker': <BookOpen className="w-3 h-3" />
-    };
-    return icons[badge as keyof typeof icons] || null;
   };
 
   return (
@@ -372,8 +348,7 @@ export default function CommunityPage() {
                           <h4 className="font-semibold text-white">{post.username}</h4>
                           <div className="flex items-center gap-1">
                             {post.userBadges.map((badge) => (
-                              <Badge key={badge} className={`text-xs ${getBadgeColor(badge)} flex items-center gap-1`}>
-                                <span>{getBadgeIcon(badge)}</span>
+                              <Badge key={badge} className={`text-xs ${getBadgeColor(badge)}`}>
                                 {badge}
                               </Badge>
                             ))}
