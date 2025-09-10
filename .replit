@@ -81,4 +81,21 @@ args = "npm install"
 task = "shell.exec"
 args = "npm run dev"
 
+[[workflows.workflow]]
+name = "Fix and Run"
+author = 45930370
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install tsx --save-dev"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+
 [agent]
