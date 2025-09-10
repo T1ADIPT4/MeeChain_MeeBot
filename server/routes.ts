@@ -12,6 +12,7 @@ import { requestFaucet, getFaucetStatus } from './api/faucet';
 import { getEarningsSummary, getEarningsHistory, transferEarnings } from './api/earnings';
 import { getUserTierStatus, getTierBenefits, updateUserTier } from './api/user-tier';
 import { getSecretsHealth, getDetailedSecretsReport } from './api/secrets-health';
+import { createWallet, getWallet, getWalletBalances, connectWallet } from './api/wallet';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth endpoints
@@ -581,6 +582,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Secrets health endpoints
   app.get('/api/secrets/health', getSecretsHealth);
   app.get('/api/secrets/report', getDetailedSecretsReport);
+
+  // User tier endpoint
+  app.get('/api/user-tier/:userId', getUserTier);
+
+  // Wallet endpoints
+  app.post('/api/wallet/create', createWallet);
+  app.get('/api/wallet/me', (req, res) => {
+    // Mock current user wallet - ในการใช้งานจริงควรใช้ authentication
+    const mockAddress = '0x742d35Cc6641C02D4C0a6e5C52F6b3d2B8bd2e3c';
+    req.params.address = mockAddress;
+    getWallet(req, res);
+  });
+  app.get('/api/wallet/:address', getWallet);
+  app.get('/api/wallet/balances', (req, res) => {
+    // Mock current user wallet balances
+    const mockAddress = '0x742d35Cc6641C02D4C0a6e5C52F6b3d2B8bd2e3c';
+    req.params.address = mockAddress;
+    getWalletBalances(req, res);
+  });
+  app.get('/api/wallet/:address/balances', getWalletBalances);
+  app.post('/api/wallet/connect', connectWallet);
 
   // CORS preflight for all API routes
   app.options('*', (req: Request, res: Response) => {
