@@ -11,8 +11,7 @@ import {
   Target,
   Clock,
   MessageCircle,
-  TrendingUp,
-  CheckCircle
+  TrendingUp
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -185,16 +184,6 @@ export function MeeBotTips() {
           >
             <Target className="w-4 h-4 mr-2" />
             {tip.action}
-          </Button>
-
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={handleCheckPoints}
-            className="border-emerald-500 text-emerald-300 hover:bg-emerald-800/50"
-            title="เช็คพอยท์ - รับ 10 XP"
-          >
-            <CheckCircle className="w-4 h-4" />
           </Button>
 
           <Button 
