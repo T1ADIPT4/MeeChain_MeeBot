@@ -166,3 +166,86 @@
   border-radius: 2px;
   transition: width 0.5s ease;
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  /* MeeBot Button Animations */
+  @keyframes gentle-float {
+    0%, 100% { 
+      transform: translateY(0px) scale(1); 
+    }
+    50% { 
+      transform: translateY(-5px) scale(1.05); 
+    }
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(1deg); }
+    75% { transform: rotate(-1deg); }
+  }
+
+  @keyframes sparkle-dance {
+    0%, 100% { 
+      transform: scale(1) rotate(0deg);
+      opacity: 0.8;
+    }
+    25% { 
+      transform: scale(1.2) rotate(90deg);
+      opacity: 1;
+    }
+    50% { 
+      transform: scale(0.8) rotate(180deg);
+      opacity: 0.6;
+    }
+    75% { 
+      transform: scale(1.1) rotate(270deg);
+      opacity: 0.9;
+    }
+  }
+
+  .animate-wiggle {
+    animation: wiggle 0.5s ease-in-out infinite;
+  }
+
+  .animate-sparkle-dance {
+    animation: sparkle-dance 2s ease-in-out infinite;
+  }
+
+  /* Button hover glow effect */
+  .meebot-glow {
+    position: relative;
+  }
+
+  .meebot-glow::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #22d3ee, #a855f7, #ec4899, #22d3ee);
+    border-radius: inherit;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+    animation: gradient-rotate 3s linear infinite;
+  }
+
+  .meebot-glow:hover::before {
+    opacity: 0.7;
+  }
+
+  @keyframes gradient-rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

@@ -492,25 +492,46 @@ export default function Dashboard() {
                       <img 
                         src={logoUrl} 
                         alt="MeeBot" 
-                        className={`w-8 h-8 rounded-full transition-transform duration-300 ${
-                          botEmotion === 'excited' ? 'scale-110 animate-bounce' :
-                          botEmotion === 'waving' ? 'animate-pulse' : 
+                        className={`w-10 h-10 rounded-full transition-all duration-500 ${
+                          botEmotion === 'excited' ? 'scale-125 animate-bounce' :
+                          botEmotion === 'waving' ? 'animate-pulse scale-110' : 
                           'scale-100'
                         }`}
+                        style={{
+                          filter: botEmotion === 'excited' ? 'brightness(1.2) saturate(1.3)' : 'brightness(1)',
+                          animation: botEmotion === 'waving' ? 'gentle-float 2s ease-in-out infinite' : 'none'
+                        }}
                       />
                       {botEmotion === 'excited' && (
-                        <Sparkles className="absolute -top-1 -right-1 w-4 h-4 text-yellow-400 animate-spin" />
+                        <div className="absolute -top-2 -right-2">
+                          <Sparkles className="w-5 h-5 text-yellow-400 animate-spin" />
+                          <div className="absolute inset-0 animate-ping">
+                            <Sparkles className="w-5 h-5 text-yellow-300 opacity-75" />
+                          </div>
+                        </div>
+                      )}
+                      {botEmotion === 'waving' && isHovering && (
+                        <div className="absolute -top-1 -right-2 text-xl animate-bounce" style={{animationDelay: '0.2s'}}>
+                          👋
+                        </div>
                       )}
                       {botEmotion === 'happy' && (
-                        <Heart className="absolute -top-1 -right-1 w-3 h-3 text-red-400 animate-pulse" />
+                        <Heart className="absolute -top-1 -right-1 w-4 h-4 text-red-400 animate-pulse" />
                       )}
                     </div>
-                    <h3 className="text-lg font-bold text-cyan-300">มีบอท</h3>
-                    {isBotReady && (
-                      <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
-                    )}
+                    <div>
+                      <h3 className="text-xl font-bold text-cyan-300 mb-1">มีบอท</h3>
+                      <div className="flex items-center gap-2">
+                        {isBotReady && (
+                          <div className="flex items-center gap-1">
+                            <div className="w-2 h-2 bg-green-400 rounded-full animate-ping"></div>
+                            <span className="text-xs text-green-300 font-medium">พร้อมให้บริการ</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-sm text-gray-300 mb-3">
+                  <p className="text-sm text-gray-300 mb-3 leading-relaxed">
                     {getBotMessage()}
                   </p>
                 </div>
@@ -526,24 +547,58 @@ export default function Dashboard() {
                     setBotEmotion('happy');
                   }}
                   className={`
-                    h-16 px-6 bg-gradient-to-r from-cyan-500 to-purple-500 
-                    hover:from-purple-500 hover:to-pink-500 
-                    text-white font-semibold rounded-xl
-                    transition-all duration-300 transform hover:scale-105
-                    shadow-lg hover:shadow-cyan-500/25
-                    ${botEmotion === 'excited' ? 'animate-pulse' : ''}
+                    relative h-20 px-8 bg-gradient-to-r from-cyan-500 to-purple-500 
+                    hover:from-cyan-400 hover:to-purple-400
+                    text-white font-bold rounded-2xl text-lg
+                    transition-all duration-500 ease-out
+                    transform hover:scale-110 hover:-translate-y-1
+                    shadow-xl hover:shadow-2xl hover:shadow-cyan-500/40
+                    border-2 border-transparent hover:border-cyan-300/50
+                    ${botEmotion === 'excited' ? 'animate-pulse scale-105' : ''}
+                    ${isHovering ? 'animate-wiggle' : ''}
                   `}
+                  style={{
+                    background: isHovering 
+                      ? 'linear-gradient(135deg, #22d3ee, #a855f7, #ec4899)' 
+                      : 'linear-gradient(135deg, #06b6d4, #8b5cf6)',
+                    boxShadow: isHovering 
+                      ? '0 20px 40px rgba(34, 211, 238, 0.4), 0 0 20px rgba(168, 85, 247, 0.3)' 
+                      : '0 10px 20px rgba(0, 0, 0, 0.2)'
+                  }}
                 >
-                  <div className="flex items-center gap-2">
-                    <Bot className={`w-5 h-5 ${isHovering ? 'animate-bounce' : ''}`} />
-                    <span>เริ่มภารกิจ!</span>
+                  <div className="flex items-center gap-3">
+                    <Bot className={`w-6 h-6 transition-all duration-300 ${
+                      isHovering ? 'animate-bounce scale-125' : 'scale-100'
+                    }`} />
+                    <div className="text-center">
+                      <div className="font-bold">เรียกมีบอท!</div>
+                      <div className="text-xs opacity-90">คลิกเลย</div>
+                    </div>
                   </div>
+                  
+                  {/* Floating particles effect */}
+                  {isHovering && (
+                    <>
+                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 rounded-full animate-ping opacity-60"></div>
+                      <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-pink-300 rounded-full animate-ping opacity-40" style={{animationDelay: '0.5s'}}></div>
+                      <div className="absolute top-1/2 -right-2 w-1 h-1 bg-cyan-300 rounded-full animate-ping opacity-80" style={{animationDelay: '1s'}}></div>
+                    </>
+                  )}
                 </Button>
               </div>
 
-              {/* Background decoration */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-cyan-400/10 to-transparent rounded-full -translate-y-8 translate-x-8"></div>
-              <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-purple-400/10 to-transparent rounded-full translate-y-4 -translate-x-4"></div>
+              {/* Enhanced Background decoration */}
+              <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-cyan-400/15 to-transparent rounded-full -translate-y-10 translate-x-10"></div>
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-purple-400/15 to-transparent rounded-full translate-y-6 -translate-x-6"></div>
+              
+              {/* Animated sparkles */}
+              {botEmotion === 'excited' && (
+                <>
+                  <div className="absolute top-4 left-1/4 text-yellow-300 animate-bounce opacity-60" style={{animationDelay: '0.2s'}}>✨</div>
+                  <div className="absolute bottom-6 right-1/3 text-pink-300 animate-bounce opacity-50" style={{animationDelay: '0.8s'}}>⭐</div>
+                  <div className="absolute top-1/2 left-1/6 text-cyan-300 animate-bounce opacity-40" style={{animationDelay: '1.2s'}}>💫</div>
+                </>
+              )}
             </CardContent>
           </Card>
         </div>
