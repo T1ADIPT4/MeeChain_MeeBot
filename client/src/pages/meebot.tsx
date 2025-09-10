@@ -296,14 +296,27 @@ export default function MeeBotPage() {
         {/* Header */}
         <div className="relative p-6 pb-8">
           <div className="flex items-center justify-between mb-6">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsSidebarOpen(true)}
-              className="text-gray-400 hover:text-white bg-slate-800/50 backdrop-blur-sm border border-slate-700"
-            >
-              <Menu className="w-5 h-5" />
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsSidebarOpen(true)}
+                className="text-gray-400 hover:text-white bg-slate-800/50 backdrop-blur-sm border border-slate-700"
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+
+              <Link to="/">
+                <Button
+                  variant="ghost" 
+                  size="sm"
+                  className="text-gray-400 hover:text-white bg-slate-800/50 backdrop-blur-sm border border-slate-700 flex items-center gap-2"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span className="hidden sm:inline">ย้อนกลับ</span>
+                </Button>
+              </Link>
+            </div>
 
             <div className="flex items-center gap-4">
               <div className="bg-slate-800/70 backdrop-blur-sm border border-slate-700 rounded-full px-4 py-2">
