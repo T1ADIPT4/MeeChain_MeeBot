@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'wouter';
+import { AcademyWelcome } from '@/components/academy/academy-welcome';
 
 interface Quest {
   id: string;
@@ -52,6 +53,8 @@ interface AcademyLevel {
 export default function Academy() {
   const { toast } = useToast();
   
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [isFirstTime, setIsFirstTime] = useState(true);
   const [currentLevel, setCurrentLevel] = useState(1);
   const [currentExp, setCurrentExp] = useState(0);
   const [selectedQuest, setSelectedQuest] = useState<Quest | null>(null);
@@ -182,6 +185,21 @@ export default function Academy() {
     });
   };
 
+  const handleStartJourney = () => {
+    setShowWelcome(false);
+    setIsFirstTime(false);
+    
+    toast({
+      title: "🎓 ยินดีต้อนรับสู่ Academy!",
+      description: "MeeBot พร้อมแนะนำคุณทุกขั้นตอนแล้ว!",
+    });
+  };
+
+  const handleSkipWelcome = () => {
+    setShowWelcome(false);
+    setIsFirstTime(false);
+  };
+
   const completeQuest = (questId: string) => {
     const quest = questsState.find(q => q.id === questId);
     if (!quest) return;
@@ -218,6 +236,16 @@ export default function Academy() {
       default: return <Pause className="w-5 h-5 text-gray-400" />;
     }
   };
+
+  // Show welcome screen for first-time users
+  if (showWelcome && isFirstTime) {
+    return (
+      <AcademyWelcome 
+        onStartJourney={handleStartJourney}
+        onSkip={handleSkipWelcome}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">

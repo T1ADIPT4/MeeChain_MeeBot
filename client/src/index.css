@@ -206,13 +206,26 @@ body {
 
   /* MeeBot Button Animations */
   @keyframes gentle-float {
-    0%, 100% { 
-      transform: translateY(0px) scale(1); 
-    }
-    50% { 
-      transform: translateY(-5px) scale(1.05); 
-    }
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(1deg); }
   }
+
+@keyframes academy-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(6, 182, 212, 0.6); }
+}
+
+@keyframes meebot-wave {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+
+.academy-welcome-bg {
+  background: radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+              linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+}
 
   @keyframes wiggle {
     0%, 100% { transform: rotate(0deg); }

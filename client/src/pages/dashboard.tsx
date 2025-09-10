@@ -717,10 +717,12 @@ export default function Dashboard() {
             <Button 
               variant="outline" 
               size="sm"
-              className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/20 transition-all duration-300"
+              className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/20 transition-all duration-300 relative overflow-hidden group"
             >
-              <BookOpen className="w-4 h-4 mr-2" />
-              Academy
+              <BookOpen className="w-4 h-4 mr-2 group-hover:animate-bounce" />
+              <span>Academy</span>
+              {/* Sparkle effect */}
+              <div className="absolute top-0 right-0 w-2 h-2 bg-yellow-400 rounded-full animate-pulse opacity-60"></div>
             </Button>
           </Link>
         </div>
