@@ -3,6 +3,7 @@ import { useLocation } from 'wouter';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsTrigger, TabsList } from '@/components/ui/tabs';
 import { 
   Bot, 
   Sparkles, 
@@ -19,7 +20,8 @@ import {
   CheckCircle,
   Clock,
   Trophy,
-  Menu
+  Menu,
+  Users
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import logoUrl from '@assets/branding/logo.png';
@@ -31,6 +33,7 @@ import { MeeBotTips } from '@/components/meebot/meebot-tips';
 import { MeeBotInsight } from '@/components/meebot/meebot-insight';
 import { WeeklyQuest } from '@/components/meebot/weekly-quest';
 import { MeeBotChat } from '@/components/meebot/meebot-chat';
+import { CustomerContacts } from '@/components/meebot/customer-contacts';
 
 // Placeholder for the new SystemCheck component
 const SystemCheck = () => {
@@ -386,6 +389,33 @@ export default function MeeBotPage() {
               </p>
             </CardContent>
           </Card>
+
+          {/* Tabs for MeeBot Features */}
+          <Tabs defaultValue="chat" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger 
+                value="chat" 
+                className="flex items-center gap-2 data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300"
+              >
+                <MessageCircle className="w-4 h-4" />
+                MeeBot Chat
+              </TabsTrigger>
+              <TabsTrigger 
+                value="contacts" 
+                className="flex items-center gap-2 data-[state=active]:bg-green-500/20 data-[state=active]:text-green-300"
+              >
+                <Users className="w-4 h-4" />
+                Customer Contacts
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="chat" className="space-y-6">
+              <MeeBotChat />
+            </TabsContent>
+            <TabsContent value="contacts" className="space-y-6">
+              <CustomerContacts />
+            </TabsContent>
+          </Tabs>
 
         {/* New MeeBot Features Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
