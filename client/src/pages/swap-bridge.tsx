@@ -109,9 +109,38 @@ export default function SwapBridge() {
       return;
     }
 
+    // Check if wallet is connected
+    if (!window.ethereum) {
+      toast({
+        title: "ไม่พบ Wallet",
+        description: "กรุณาติดตั้งและเชื่อมต่อ MetaMask หรือ wallet อื่น ๆ",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
+      // Check if contract is configured
+      if (!contractConfigured) {
+        toast({
+          title: "⚠️ กำลังใช้ Demo Mode",
+          description: "ระบบใช้ contract address เริ่มต้น จึงไม่สามารถทำธุรกรรมจริงได้",
+          variant: "destructive",
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      console.log('Starting swap/bridge:', {
+        fromToken,
+        toToken,
+        amount,
+        mode,
+        targetChain: mode === 'bridge' ? targetChain : undefined
+      });
+
       const txHash = await swapOrBridgeToken(
         TOKEN_ADDRESSES[fromToken as keyof typeof TOKEN_ADDRESSES],
         TOKEN_ADDRESSES[toToken as keyof typeof TOKEN_ADDRESSES],
@@ -131,9 +160,27 @@ export default function SwapBridge() {
       // Navigate back after delay
       setTimeout(() => navigate('/dashboard'), 2000);
     } catch (error: any) {
+      console.error('Swap/Bridge error:', error);
+      
+      let errorMessage = "ไม่สามารถดำเนินการได้ กรุณาลองใหม่อีกครั้ง";
+      
+      if (error.message) {
+        if (error.message.includes('User denied')) {
+          errorMessage = "ผู้ใช้ปฏิเสธการทำธุรกรรม";
+        } else if (error.message.includes('insufficient funds')) {
+          errorMessage = "ยอดเงินไม่เพียงพอ";
+        } else if (error.message.includes('network')) {
+          errorMessage = "เกิดปัญหาเครือข่าย กรุณาตรวจสอบการเชื่อมต่อ";
+        } else if (error.message.includes('Wallet not found')) {
+          errorMessage = "ไม่พบ wallet กรุณาเชื่อมต่อ wallet ก่อน";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
       toast({
         title: "เกิดข้อผิดพลาด",
-        description: error.message || `ไม่สามารถ ${mode} ได้ กรุณาลองใหม่อีกครั้ง`,
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

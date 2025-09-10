@@ -52,14 +52,29 @@ export async function swapOrBridgeToken(
   amount: string,
   targetChainId?: string // ถ้า bridge ใส่ chain id ด้วย
 ) {
-  if (!window.ethereum) throw new Error("Wallet not found");
-  
-  const provider = new ethers.BrowserProvider(window.ethereum);
-  const signer = await provider.getSigner();
+  if (!window.ethereum) {
+    throw new Error("Wallet not found - กรุณาติดตั้ง MetaMask หรือ wallet อื่น ๆ");
+  }
 
-  const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+  // Check if contract address is configured
+  if (CONTRACT_ADDRESS === "0xYourSwapBridgeContractAddress") {
+    throw new Error("Contract not configured - ระบบยังไม่ได้ตั้งค่า contract address");
+  }
   
   try {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+
+    // Check network
+    const network = await provider.getNetwork();
+    console.log('Current network:', network.chainId);
+
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+    
+    // Check if user has enough balance
+    const userAddress = await signer.getAddress();
+    console.log('User address:', userAddress);
+
     const tx = await contract.swapOrBridge(
       tokenFrom,
       tokenTo,
@@ -67,10 +82,20 @@ export async function swapOrBridgeToken(
       targetChainId ? ethers.toBigInt(targetChainId) : 0
     );
     
+    console.log('Transaction sent:', tx.hash);
     return tx.hash;
   } catch (error: any) {
     console.error("Swap/Bridge error:", error);
-    throw new Error(error.message || "Transaction failed");
+    
+    if (error.code === 4001) {
+      throw new Error("User denied transaction - ผู้ใช้ปฏิเสธการทำธุรกรรม");
+    } else if (error.code === -32603) {
+      throw new Error("Insufficient funds - ยอดเงินไม่เพียงพอ");
+    } else if (error.message?.includes('network')) {
+      throw new Error("Network error - เกิดปัญหาเครือข่าย");
+    }
+    
+    throw new Error(error.message || "Transaction failed - การทำธุรกรรมล้มเหลว");
   }
 }
 
