@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card as UICard, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -72,7 +72,7 @@ export function CommunityWidget() {
   };
 
   return (
-    <Card className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-purple-500/30 text-white">
+    <UICard className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-purple-500/30 text-white">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -166,6 +166,6 @@ export function CommunityWidget() {
           </Button>
         </div>
       </CardContent>
-    </Card>
+    </UICard>
   );
 }
