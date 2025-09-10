@@ -1,10 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, ArrowRightLeft, GitBranch, Repeat, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -22,6 +20,32 @@ export default function SwapBridge() {
   const [isLoading, setIsLoading] = useState(false);
   const [quote, setQuote] = useState('0');
   const { toast } = useToast();
+  const [contractConfigured, setContractConfigured] = useState(false);
+
+  // Check contract configuration on mount
+  useEffect(() => {
+    checkContractConfiguration();
+  }, []);
+
+  const checkContractConfiguration = async () => {
+    try {
+      const response = await fetch('/api/swap-bridge/config');
+      if (response.ok) {
+        const config = await response.json();
+        setContractConfigured(config.configured || false);
+      } else {
+        setContractConfigured(false);
+        toast({
+          title: "⚠️ การตั้งค่าไม่สมบูรณ์",
+          description: "กำลังใช้ contract address เริ่มต้น กรุณาตรวจสอบการตั้งค่า",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Contract config check failed:', error);
+      setContractConfigured(false);
+    }
+  };
 
   // Fetch user balances
   const { data: balances } = useQuery({
@@ -101,7 +125,7 @@ export default function SwapBridge() {
       // Reset form
       setAmount('');
       setQuote('0');
-      
+
       // Navigate back after delay
       setTimeout(() => navigate('/dashboard'), 2000);
     } catch (error: any) {
@@ -121,20 +145,39 @@ export default function SwapBridge() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
       {/* Header */}
-      <div className="p-6 flex items-center gap-3">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate('/dashboard')}
-          data-testid="button-back"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
+      <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <img src={logoUrl} alt="MeeChain" className="w-8 h-8" />
-          <h1 className="text-xl font-bold">
-            {mode === 'swap' ? 'Swap โทเค็น' : 'Bridge โทเค็น'}
-          </h1>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/dashboard')}
+            className="text-slate-400 hover:text-white"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <h1 className="text-2xl font-bold text-blue-300">Swap & Bridge</h1>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Badge
+            variant="outline"
+            className={contractConfigured
+              ? "border-green-500/50 text-green-300"
+              : "border-yellow-500/50 text-yellow-300"
+            }
+          >
+            {contractConfigured ? (
+              <>
+                <CheckCircle className="w-3 h-3 mr-1" />
+                Configured
+              </>
+            ) : (
+              <>
+                <AlertTriangle className="w-3 h-3 mr-1" />
+                Default Config
+              </>
+            )}
+          </Badge>
         </div>
       </div>
 

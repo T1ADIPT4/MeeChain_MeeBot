@@ -13,6 +13,7 @@ import { getEarningsSummary, getEarningsHistory, transferEarnings } from './api/
 import { getUserTierStatus, getTierBenefits, updateUserTier } from './api/user-tier';
 import { getSecretsHealth, getDetailedSecretsReport } from './api/secrets-health';
 import { createWallet, getWallet, getWalletBalances, connectWallet } from './api/wallet';
+import { getSwapBridgeConfig, executeSwap, getQuote } from './api/swap-bridge';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth endpoints
@@ -573,6 +574,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/earnings/summary', getEarningsSummary);
   app.get('/earnings/history', getEarningsHistory);
   app.post('/earnings/transfer', transferEarnings);
+  app.get('/api/earnings/me', getEarnings);
+
+  // Swap & Bridge endpoints
+  app.get('/api/swap-bridge/config', getSwapBridgeConfig);
+  app.post('/api/swap-bridge/swap', executeSwap);
+  app.get('/api/swap-bridge/quote', getQuote);
 
   // User Tier API routes
   app.get('/user-tier/status', getUserTierStatus);
