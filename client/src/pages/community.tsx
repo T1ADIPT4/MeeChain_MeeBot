@@ -31,7 +31,7 @@ import {
   Zap,
   Gift,
   Coins,
-  ShieldCheck,
+  Shield,
 } from 'lucide-react';
 import { Link } from 'wouter';
 
@@ -438,7 +438,7 @@ export default function CommunityPage() {
     const icons = {
       'Explorer': <User className="w-3 h-3" />,
       'Guardian': <Award className="w-3 h-3" />,
-      'Security Expert': <ShieldCheck className="w-3 h-3" />, // Assuming a ShieldCheck icon
+      'Security Expert': <Shield className="w-3 h-3" />,
       'Helpful Hero': <Star className="w-3 h-3" />,
       'Bug Buster': <Bug className="w-3 h-3" />,
       'Token Collector': <DollarSign className="w-3 h-3" />,

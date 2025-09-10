@@ -3,17 +3,8 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  Users, 
-  TrendingUp, 
-  Heart, 
-  MessageCircle, 
-  Award,
-  Sparkles,
-  Bot,
-  ChevronRight
-} from 'lucide-react';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Users, Bot, TrendingUp, MessageCircle, Award, BookOpen } from 'lucide-react';
 import { Link } from 'wouter';
 
 interface CommunityActivity {
@@ -101,40 +92,35 @@ export function CommunityWidget() {
           <div className="flex items-start gap-2">
             <Bot className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-cyan-300 font-medium text-sm mb-1">MeeBot แนะนำ</p>
-              <p className="text-cyan-200 text-xs">
-                "วันนี้มีสมาชิกใหม่ 12 คน! หัวข้อ 'Web3 Beginner Tips' กำลังฮิตมาก 🔥"
-              </p>
+              <p className="text-cyan-300 font-medium text-sm">MeeBot Insight</p>
+              <p className="text-cyan-200 text-xs">วันนี้มีคำถามเรื่อง Wallet Security เยอะ! ลองแชร์ประสบการณ์กันนะ</p>
             </div>
           </div>
         </div>
 
         {/* Recent Activities */}
-        <div className="space-y-2">
-          <h4 className="text-sm font-medium text-gray-300 flex items-center gap-2">
-            <TrendingUp className="w-4 h-4" />
+        <div>
+          <h4 className="text-sm font-medium text-gray-300 mb-2 flex items-center gap-1">
+            <TrendingUp className="w-3 h-3" />
             กิจกรรมล่าสุด
           </h4>
-          
-          <div className="space-y-2 max-h-48 overflow-y-auto hide-scrollbar">
+          <div className="space-y-2 max-h-32 overflow-y-auto">
             {activities.map((activity) => (
-              <div 
-                key={activity.id}
-                className="flex items-start gap-3 p-2 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 transition-colors"
-              >
-                <span className="text-lg flex-shrink-0">{activity.icon}</span>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-medium text-white text-sm truncate">
-                      {activity.username}
-                    </span>
-                    <span className={`text-xs ${getActivityColor(activity.type)}`}>
+              <div key={activity.id} className="flex items-start gap-2 p-2 bg-slate-700/30 rounded-lg hover:bg-slate-700/50 transition-colors">
+                <div className="flex-shrink-0">
+                  <div className="w-6 h-6 bg-slate-600 rounded-full flex items-center justify-center text-xs">
+                    <span>
                       {activity.type === 'achievement' && '🏆'}
                       {activity.type === 'helpful_answer' && '💡'}
                       {activity.type === 'new_post' && '📝'}
                       {activity.type === 'trending' && '🔥'}
                     </span>
                   </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className={`text-xs font-medium ${getActivityColor(activity.type)}`}>
+                    {activity.username}
+                  </p>
                   <p className="text-xs text-gray-300 truncate">{activity.content}</p>
                   <p className="text-xs text-gray-500 mt-1">{activity.timestamp}</p>
                 </div>
@@ -168,31 +154,16 @@ export function CommunityWidget() {
             >
               <Users className="w-4 h-4 mr-2" />
               เข้าร่วม Community
-              <ChevronRight className="w-4 h-4 ml-auto" />
             </Button>
           </Link>
-          
           <Button 
-            size="sm" 
             variant="outline" 
-            className="w-full border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20"
+            size="sm" 
+            className="w-full border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10"
           >
-            <Sparkles className="w-4 h-4 mr-2" />
-            แชร์ Achievement
+            <MessageCircle className="w-4 h-4 mr-2" />
+            ถามคำถาม
           </Button>
-        </div>
-
-        {/* Fun Fact */}
-        <div className="bg-gradient-to-r from-orange-500/10 to-yellow-500/10 border border-orange-500/30 rounded-lg p-3">
-          <div className="flex items-center gap-2">
-            <Award className="w-4 h-4 text-orange-400" />
-            <div>
-              <p className="text-orange-300 text-sm font-medium">Fun Fact วันนี้</p>
-              <p className="text-orange-200 text-xs">
-                สมาชิกที่ช่วยเหลือคนอื่นมากที่สุดได้รับ "Community Hero" badge! 🦸‍♂️
-              </p>
-            </div>
-          </div>
         </div>
       </CardContent>
     </Card>
