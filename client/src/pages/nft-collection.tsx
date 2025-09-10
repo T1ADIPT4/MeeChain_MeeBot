@@ -18,6 +18,8 @@ import {
 import { CollectiblesViewer } from '@/components/nft/collectibles-viewer';
 import { NFTMarketplace } from '@/components/nft/marketplace';
 import { NFTQuestSystem } from '@/components/nft/quest-system';
+import { RPGMarketplace } from '@/components/nft/rpg-marketplace';
+import { CollectionQuestSystem } from '@/components/nft/collection-quest-system';
 import { useToast } from '@/hooks/use-toast';
 
 export default function NFTCollectionPage() {
@@ -115,7 +117,7 @@ export default function NFTCollectionPage() {
 
         {/* Main Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-slate-800/50 border border-slate-600/50">
+          <TabsList className="grid w-full grid-cols-5 bg-slate-800/50 border border-slate-600/50">
             <TabsTrigger 
               value="collection" 
               className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300"
@@ -124,11 +126,25 @@ export default function NFTCollectionPage() {
               My Collection
             </TabsTrigger>
             <TabsTrigger 
+              value="collection-quests" 
+              className="data-[state=active]:bg-yellow-500/20 data-[state=active]:text-yellow-300"
+            >
+              <Trophy className="w-4 h-4 mr-2" />
+              Collection Quests
+            </TabsTrigger>
+            <TabsTrigger 
               value="quests" 
               className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-300"
             >
               <Target className="w-4 h-4 mr-2" />
               NFT Quests
+            </TabsTrigger>
+            <TabsTrigger 
+              value="rpg-marketplace" 
+              className="data-[state=active]:bg-pink-500/20 data-[state=active]:text-pink-300"
+            >
+              <Bot className="w-4 h-4 mr-2" />
+              RPG Marketplace
             </TabsTrigger>
             <TabsTrigger 
               value="marketplace" 
@@ -144,9 +160,19 @@ export default function NFTCollectionPage() {
             <CollectiblesViewer userAddress="0x123...abc" />
           </TabsContent>
 
+          {/* Collection Quest System Tab */}
+          <TabsContent value="collection-quests" className="space-y-6">
+            <CollectionQuestSystem />
+          </TabsContent>
+
           {/* Quest System Tab */}
           <TabsContent value="quests" className="space-y-6">
             <NFTQuestSystem />
+          </TabsContent>
+
+          {/* RPG Marketplace Tab */}
+          <TabsContent value="rpg-marketplace" className="space-y-6">
+            <RPGMarketplace />
           </TabsContent>
 
           {/* Marketplace Tab */}
@@ -166,8 +192,8 @@ export default function NFTCollectionPage() {
                 <div className="flex-1">
                   <h3 className="text-xl font-bold text-cyan-300 mb-2">🎨 ยินดีต้อนรับสู่ NFT Universe!</h3>
                   <p className="text-gray-300 leading-relaxed">
-                    ที่นี่คุณสามารถสะสม NFT สุดเท่, ซื้อขายกับเพื่อน ๆ และปลดล็อก collectibles หายากได้! 
-                    MeeBot พร้อมแนะนำทุกขั้นตอนครับ! ✨🚀
+                    ยินดีต้อนรับสู่ NFT Universe แบบ RPG! สะสม Badge พร้อมพลังพิเศษ, อัปเกรดได้แบบเกม, และทำ Collection Quest เพื่อปลดล็อก Badge ตำนาน! 
+                    MeeBot พร้อมเป็น mentor แนะนำทุกขั้นตอนครับ! 🎮⚡👑
                   </p>
                 </div>
               </div>
