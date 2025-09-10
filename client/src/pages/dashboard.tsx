@@ -416,6 +416,50 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-sm border-t border-slate-600/50 px-4 py-2">
+        <div className="flex justify-around items-center max-w-md mx-auto">
+          <Button
+            variant="ghost"
+            className="flex flex-col items-center gap-1 text-blue-300 hover:text-blue-200 p-2"
+            onClick={() => navigate('/')}
+            data-testid="nav-home"
+          >
+            <Wallet className="w-5 h-5" />
+            <span className="text-xs">Home</span>
+          </Button>
+          
+          <Button
+            variant="ghost"
+            className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-200 p-2"
+            onClick={() => navigate('/swap')}
+            data-testid="nav-swap"
+          >
+            <Send className="w-5 h-5" />
+            <span className="text-xs">Swap</span>
+          </Button>
+          
+          <Button
+            variant="ghost"
+            className="flex flex-col items-center gap-1 text-blue-400 hover:text-blue-200 p-2"
+            data-testid="nav-dashboard"
+          >
+            <div className="w-2 h-2 bg-blue-400 rounded-full mb-1"></div>
+            <span className="text-xs font-semibold">Dashboard</span>
+          </Button>
+          
+          <Button
+            variant="ghost"
+            className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-200 p-2"
+            onClick={() => navigate('/missions')}
+            data-testid="nav-meebot"
+          >
+            <User className="w-5 h-5" />
+            <span className="text-xs">MeeBot</span>
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
