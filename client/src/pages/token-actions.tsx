@@ -9,8 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { ArrowLeft, Coins, Vault, Plus, TrendingUp } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
-import { mintToken, depositToken, getTokenBalance } from '@/lib/token-actions';
+import { mintToken, depositToken, getTokenBalance, switchToFuseNetwork } from '@/lib/token-actions';
 import { TOKEN_ADDRESSES } from '@/lib/swap-bridge';
+import FuseNetworkHelper from '@/components/meebot/fuse-network-helper';
+import { MeeBotFallbackCard } from '@/components/meebot/meebot-fallback-card';
 import logoUrl from '@assets/branding/logo.png';
 
 export default function TokenActions() {
@@ -255,6 +257,12 @@ export default function TokenActions() {
             </CardContent>
           </Card>
         )}
+
+        {/* Fuse Network Helper */}
+        <FuseNetworkHelper />
+
+        {/* MeeBot Status */}
+        <MeeBotFallbackCard />
 
         {/* Info Card */}
         <Card className="bg-white/5 border-white/10 backdrop-blur-sm">

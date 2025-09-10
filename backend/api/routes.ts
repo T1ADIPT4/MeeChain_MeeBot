@@ -13,14 +13,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/auth/social", async (req, res) => {
     try {
       const { provider, socialId, email, firstName, lastName, profileImageUrl } = req.body;
-      
+
       if (!provider || !socialId) {
         return res.status(400).json({ message: "Provider and social ID are required" });
       }
 
       // Check if user exists
       let user = await storage.getUserBySocialId(socialId, provider);
-      
+
       if (!user) {
         // Create new user
         const userData = insertUserSchema.parse({
@@ -32,7 +32,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           profileImageUrl,
         });
         user = await storage.createUser(userData);
-        
+
         // Create initial onboarding progress
         await storage.createOnboardingProgress({
           userId: user.id,
@@ -55,7 +55,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { userId } = req.params;
       const progress = await storage.getOnboardingProgress(userId);
-      
+
       if (!progress) {
         return res.status(404).json({ message: "Onboarding progress not found" });
       }
@@ -71,9 +71,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { userId } = req.params;
       const updates = req.body;
-      
+
       const progress = await storage.updateOnboardingProgress(userId, updates);
-      
+
       if (!progress) {
         return res.status(404).json({ message: "Onboarding progress not found" });
       }
@@ -89,7 +89,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/wallet/create", async (req, res) => {
     try {
       const { userId, biometricEnabled, pinHash } = req.body;
-      
+
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
@@ -108,7 +108,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Generate a mock wallet address (in real implementation, this would call smart contract)
       const address = `0x${crypto.randomBytes(20).toString('hex')}`;
-      
+
       const walletData = insertWalletSchema.parse({
         userId,
         address,
@@ -116,7 +116,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         biometricEnabled: biometricEnabled || hasBiometricStep,
         pinHash: pinHash || (hasPinStep ? "temp_pin_hash" : null),
       });
-      
+
       const wallet = await storage.createWallet(walletData);
       res.json({ wallet });
     } catch (error) {
@@ -129,7 +129,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { userId } = req.params;
       const wallet = await storage.getWalletByUserId(userId);
-      
+
       if (!wallet) {
         return res.status(404).json({ message: "Wallet not found" });
       }
@@ -145,14 +145,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/security/pin", async (req, res) => {
     try {
       const { userId, pin } = req.body;
-      
+
       if (!userId || !pin || pin.length !== 6) {
         return res.status(400).json({ message: "User ID and 6-digit PIN are required" });
       }
 
       // Hash the PIN (in real implementation, use proper bcrypt)
       const pinHash = crypto.createHash('sha256').update(pin).digest('hex');
-      
+
       // Try to update existing wallet, or store PIN in onboarding progress
       const wallet = await storage.getWalletByUserId(userId);
       if (wallet) {
@@ -166,7 +166,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         }
       }
-      
+
       res.json({ success: true, pinHash });
     } catch (error) {
       console.error("Set PIN error:", error);
@@ -177,7 +177,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/security/biometric", async (req, res) => {
     try {
       const { userId } = req.body;
-      
+
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
@@ -207,7 +207,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/mission/complete", async (req, res) => {
     try {
       const { userId, missionId = "create_wallet" } = req.body;
-      
+
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
@@ -222,7 +222,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const mission = await storage.getMission("create_wallet");
         if (mission) {
           let userMission = await storage.getUserMission(userId, "create_wallet");
-          
+
           if (!userMission) {
             userMission = await storage.createUserMission({
               userId,
@@ -236,7 +236,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             if (mission.rewardTokenId) {
               const rewardAmount = mission.rewardAmount + "000000000000000000"; // Add 18 decimals
               const currentBalance = await storage.getUserTokenBalance(userId, mission.rewardTokenId);
-              
+
               await storage.updateUserTokenBalance(userId, mission.rewardTokenId, {
                 balance: (BigInt(currentBalance?.balance ?? "0") + BigInt(rewardAmount)).toString(),
                 totalEarned: (BigInt(currentBalance?.totalEarned ?? "0") + BigInt(rewardAmount)).toString(),
@@ -271,11 +271,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { address, chainId } = req.params;
       const token = await storage.getTokenByAddress(address, chainId);
-      
+
       if (!token) {
         return res.status(404).json({ message: "Token not found" });
       }
-      
+
       res.json(token);
     } catch (error) {
       console.error("Get token by address error:", error);
@@ -287,7 +287,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/faucet/request", async (req, res) => {
     try {
       const { userId, chain, walletAddress, token } = req.body;
-      
+
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
@@ -306,7 +306,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userBalance = await storage.getUserTokenBalance(userId, token.id);
       const now = new Date();
       const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-      
+
       if (userBalance?.lastFaucetClaim && new Date(userBalance.lastFaucetClaim) > oneDayAgo) {
         const timeRemaining = new Date(userBalance.lastFaucetClaim).getTime() + 24 * 60 * 60 * 1000 - now.getTime();
         return res.status(429).json({ 
@@ -341,7 +341,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/faucet/status", async (req, res) => {
     try {
       const userId = req.query.userId as string;
-      
+
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
@@ -356,7 +356,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         if (balance.lastFaucetClaim) {
           const claimTime = new Date(balance.lastFaucetClaim);
           const oneDayLater = new Date(claimTime.getTime() + 24 * 60 * 60 * 1000);
-          
+
           if (!lastRequest || claimTime > new Date(lastRequest)) {
             lastRequest = claimTime.toISOString();
             nextAvailable = oneDayLater.toISOString();
@@ -381,7 +381,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { userId } = req.params;
       const balances = await storage.getUserTokenBalances(userId);
-      
+
       // Include token details
       const balancesWithTokens = await Promise.all(
         balances.map(async (balance) => {
@@ -405,25 +405,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/missions/list", async (req, res) => {
     try {
       const { userId } = req.query;
-      
+
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
 
       const missions = await storage.getMissions();
       const userMissions = await storage.getUserMissions(userId as string);
-      
+
       // Combine mission data with user progress
       const missionList = await Promise.all(
         missions.map(async (mission) => {
           const userMission = userMissions.find(um => um.missionId === mission.id);
           let rewardToken = null;
-          
+
           if (mission.rewardTokenId) {
             const tokens = await storage.getTokens();
             rewardToken = tokens.find(t => t.id === mission.rewardTokenId);
           }
-          
+
           return {
             missionId: mission.id,
             title: mission.title,
@@ -450,7 +450,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/missions/complete", async (req, res) => {
     try {
       const { userId, missionId, proof } = req.body;
-      
+
       if (!userId || !missionId) {
         return res.status(400).json({ message: "User ID and mission ID are required" });
       }
@@ -463,7 +463,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Check if user already has this mission
       let userMission = await storage.getUserMission(userId, missionId);
-      
+
       if (!userMission) {
         // Create new user mission
         userMission = await storage.createUserMission({
@@ -487,7 +487,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (mission.rewardType === "token" && mission.rewardTokenId) {
         const rewardAmount = mission.rewardAmount + "000000000000000000"; // Add 18 decimals
         const currentBalance = await storage.getUserTokenBalance(userId, mission.rewardTokenId);
-        
+
         await storage.updateUserTokenBalance(userId, mission.rewardTokenId, {
           balance: (BigInt(currentBalance?.balance ?? "0") + BigInt(rewardAmount)).toString(),
           totalEarned: (BigInt(currentBalance?.totalEarned ?? "0") + BigInt(rewardAmount)).toString(),
@@ -495,7 +495,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         const tokens = await storage.getTokens();
         const rewardToken = tokens.find(t => t.id === mission.rewardTokenId);
-        
+
         rewardGranted = {
           type: mission.rewardType,
           amount: mission.rewardAmount,
@@ -517,7 +517,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/missions/claim", async (req, res) => {
     try {
       const { userId, missionId } = req.body;
-      
+
       if (!userId || !missionId) {
         return res.status(400).json({ message: "User ID and mission ID are required" });
       }
@@ -543,7 +543,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const mission = await storage.getMission(missionId);
       let reward = null;
-      
+
       if (mission?.rewardTokenId) {
         const tokens = await storage.getTokens();
         const rewardToken = tokens.find(t => t.id === mission.rewardTokenId);
@@ -594,7 +594,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Get all user token balances
       const balances = await storage.getAllUserTokenBalances(userId);
-      
+
       // Get token details and combine with balances
       const tokens = await Promise.all(
         balances.map(async (balance) => {
@@ -667,16 +667,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get user's total token balances as earnings
       const balances = await storage.getAllUserTokenBalances(userId);
       const tokens = await storage.getTokens();
-      
+
       const total: Record<string, string> = {};
       const today: Record<string, string> = {};
-      
+
       for (const balance of balances) {
         const token = tokens.find(t => t.id === balance.tokenId);
         if (token) {
           const totalEarned = parseFloat(balance.totalEarned || "0") / Math.pow(10, parseInt(token.decimals));
           total[token.symbol] = totalEarned.toFixed(4);
-          
+
           // Mock today's earnings (20% of total for demo)
           const todayEarned = totalEarned * 0.2;
           today[token.symbol] = todayEarned.toFixed(4);
@@ -701,18 +701,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userMissions = await storage.getUserMissions(userId);
       const missions = await storage.getMissions();
       const tokens = await storage.getTokens();
-      
+
       const history = await Promise.all(
         userMissions
           .filter(um => um.status === "completed" || um.status === "claimed")
           .map(async (userMission) => {
             const mission = missions.find(m => m.id === userMission.missionId);
             let token = null;
-            
+
             if (mission?.rewardTokenId) {
               token = tokens.find(t => t.id === mission.rewardTokenId);
             }
-            
+
             return {
               date: userMission.completedAt?.toISOString().split('T')[0] || new Date().toISOString().split('T')[0],
               activity: mission?.title || "ภารกิจ",
@@ -744,7 +744,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/earnings/transfer", async (req, res) => {
     try {
       const { userId, walletAddress, token, amount } = req.body;
-      
+
       if (!userId || !walletAddress || !token || !amount) {
         return res.status(400).json({ message: "Missing required fields" });
       }
@@ -773,19 +773,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Get user's completed missions to calculate tier
       const userMissions = await storage.getUserMissions(userId);
       const completedMissions = userMissions.filter(um => um.status === "completed" || um.status === "claimed").length;
-      
+
       let tier = "Beginner";
       let nextTier = "Explorer";
       let required = 3;
       let rewardsUnlocked = ["เหรียญทดลอง", "ภารกิจพื้นฐาน"];
-      
+
       if (completedMissions >= 3) {
         tier = "Explorer";
         nextTier = "Pro";
         required = 5;
         rewardsUnlocked = ["เครดิต gas ฟรี", "Badge NFT"];
       }
-      
+
       if (completedMissions >= 5) {
         tier = "Pro";
         nextTier = "Master";
@@ -827,7 +827,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/user-tier/update", async (req, res) => {
     try {
       const { userId, newTier } = req.body;
-      
+
       if (!userId || !newTier) {
         return res.status(400).json({ message: "User ID and new tier are required" });
       }

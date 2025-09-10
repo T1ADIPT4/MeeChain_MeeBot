@@ -3,6 +3,9 @@ import { ethers } from "ethers";
 
 // Token Contract Configuration
 const TOKEN_CONTRACT_ADDRESS = "0xYourTokenContractAddress";
+const FUSE_RPC_URL = "https://rpc.fuse.io";
+const FUSE_CHAIN_ID = 122;
+
 const TOKEN_CONTRACT_ABI = [
   {
     "inputs": [
@@ -96,10 +99,17 @@ export async function depositToken(tokenAddress: string, amount: string): Promis
   }
 }
 
-export async function getTokenBalance(tokenAddress: string, userAddress: string): Promise<string> {
+export async function getTokenBalance(tokenAddress: string, userAddress: string, chainId?: number): Promise<string> {
   if (!window.ethereum) throw new Error("Wallet not found");
   
-  const provider = new ethers.BrowserProvider(window.ethereum);
+  let provider;
+  if (chainId === FUSE_CHAIN_ID) {
+    // Use Fuse RPC for Fuse network
+    provider = new ethers.JsonRpcProvider(FUSE_RPC_URL);
+  } else {
+    provider = new ethers.BrowserProvider(window.ethereum);
+  }
+  
   const contract = new ethers.Contract(tokenAddress, [
     {
       "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
@@ -116,5 +126,43 @@ export async function getTokenBalance(tokenAddress: string, userAddress: string)
   } catch (error: any) {
     console.error("Balance check error:", error);
     return "0";
+  }
+}
+
+export async function switchToFuseNetwork(): Promise<boolean> {
+  if (!window.ethereum) throw new Error("Wallet not found");
+  
+  try {
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0x7A' }], // 122 in hex
+    });
+    return true;
+  } catch (switchError: any) {
+    // Chain not added, try to add it
+    if (switchError.code === 4902) {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [{
+            chainId: '0x7A',
+            chainName: 'Fuse Network',
+            nativeCurrency: {
+              name: 'Fuse',
+              symbol: 'FUSE',
+              decimals: 18,
+            },
+            rpcUrls: [FUSE_RPC_URL],
+            blockExplorerUrls: ['https://explorer.fuse.io/'],
+          }],
+        });
+        return true;
+      } catch (addError) {
+        console.error("Failed to add Fuse network:", addError);
+        return false;
+      }
+    }
+    console.error("Failed to switch to Fuse network:", switchError);
+    return false;
   }
 }

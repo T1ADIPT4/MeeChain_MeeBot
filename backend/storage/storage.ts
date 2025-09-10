@@ -14,32 +14,32 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserBySocialId(socialId: string, provider: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  
+
   // Wallet operations
   getWalletByUserId(userId: string): Promise<Wallet | undefined>;
   createWallet(wallet: InsertWallet): Promise<Wallet>;
   updateWallet(id: string, updates: Partial<InsertWallet>): Promise<Wallet | undefined>;
-  
+
   // Onboarding operations
   getOnboardingProgress(userId: string): Promise<OnboardingProgress | undefined>;
   createOnboardingProgress(progress: InsertOnboardingProgress): Promise<OnboardingProgress>;
   updateOnboardingProgress(userId: string, updates: Partial<InsertOnboardingProgress>): Promise<OnboardingProgress | undefined>;
-  
+
   // Token operations
   getTokens(): Promise<Token[]>;
   getTokenByAddress(address: string, chainId: string): Promise<Token | undefined>;
   createToken(token: InsertToken): Promise<Token>;
-  
+
   // User token balance operations
   getUserTokenBalance(userId: string, tokenId: string): Promise<UserTokenBalance | undefined>;
   getUserTokenBalances(userId: string): Promise<UserTokenBalance[]>;
   updateUserTokenBalance(userId: string, tokenId: string, updates: Partial<InsertUserTokenBalance>): Promise<UserTokenBalance>;
-  
+
   // Mission operations
   getMissions(): Promise<Mission[]>;
   getMission(id: string): Promise<Mission | undefined>;
   createMission(mission: InsertMission): Promise<Mission>;
-  
+
   // User mission operations
   getUserMissions(userId: string): Promise<UserMission[]>;
   getUserMission(userId: string, missionId: string): Promise<UserMission | undefined>;
@@ -64,66 +64,76 @@ export class MemStorage implements IStorage {
     this.userTokenBalances = new Map();
     this.missions = new Map();
     this.userMissions = new Map();
-    
+
     // Initialize with default tokens and missions
     this.initializeDefaultData();
   }
 
   private async initializeDefaultData() {
-    // Add the Fuse Network token
-    const fuseToken = await this.createToken({
-      address: "0xa669b1F45F84368fBe48882bF8d1814aae7a4422",
-      chainId: "122",
-      symbol: "FUSE",
-      name: "Fuse Token",
-      decimals: "18",
-      logoUri: "https://cryptologos.cc/logos/fuse-fuse-logo.png",
-      isTestToken: false,
-      isRewardEligible: true,
-    });
+    // Create default tokens
+    const defaultTokens = [
+      {
+        id: "mee_token",
+        address: "0x0000000000000000000000000000000000000001",
+        chainId: "80002",
+        symbol: "MEE",
+        name: "MeeChain Token",
+        decimals: "18",
+        logoUri: "/assets/branding/logo.png",
+        isTestToken: true,
+        isRewardEligible: true,
+      },
+      {
+        id: "fuse_token",
+        address: "0xa669b1F45F84368fBe48882bF8d1814aae7a4422",
+        chainId: "122",
+        symbol: "FUSE",
+        name: "Fuse Token",
+        decimals: "18",
+        logoUri: "https://raw.githubusercontent.com/fuseio/fuse-studio/master/assets/images/fuse_logo.png",
+        isTestToken: false,
+        isRewardEligible: true,
+      },
+    ];
 
-    // Add demo token for testing
-    const demoToken = await this.createToken({
-      address: "0x0000000000000000000000000000000000000001",
-      chainId: "122",
-      symbol: "MEE",
-      name: "MeeChain Token",
-      decimals: "18",
-      logoUri: null,
-      isTestToken: true,
-      isRewardEligible: true,
-    });
+    for (const tokenData of defaultTokens) {
+      await this.createToken(tokenData);
+    }
 
-    // Initialize missions
-    await this.createMission({
-      id: "create_wallet",
-      title: "สร้าง Smart Wallet",
-      description: "สร้าง Smart Wallet พร้อมใช้งานครั้งแรก",
-      rewardType: "token",
-      rewardAmount: "100",
-      rewardTokenId: demoToken.id,
-      isActive: true,
-    });
+    // Create default missions
+    const defaultMissions = [
+      {
+        id: "create_wallet",
+        title: "สร้าง Smart Wallet",
+        description: "สร้างกระเป๋าเงินดิจิทัลแรกของคุณ",
+        rewardType: "token",
+        rewardAmount: "100",
+        rewardTokenId: "mee_token",
+        isActive: true,
+      },
+      {
+        id: "connect_fuse",
+        title: "เชื่อมต่อ Fuse Network",
+        description: "เปลี่ยนเครือข่ายไป Fuse และรับ FUSE Token ฟรี",
+        rewardType: "token",
+        rewardAmount: "5",
+        rewardTokenId: "fuse_token",
+        isActive: true,
+      },
+      {
+        id: "first_fuse_transaction",
+        title: "ธุรกรรมแรกบน Fuse",
+        description: "ทำธุรกรรมแรกบน Fuse Network",
+        rewardType: "token",
+        rewardAmount: "10",
+        rewardTokenId: "fuse_token",
+        isActive: true,
+      },
+    ];
 
-    await this.createMission({
-      id: "connect_dapp",
-      title: "เชื่อมต่อ DApp ครั้งแรก",
-      description: "เชื่อมต่อกับ DApp ภายนอกผ่าน WalletConnect",
-      rewardType: "token",
-      rewardAmount: "10",
-      rewardTokenId: fuseToken.id,
-      isActive: true,
-    });
-
-    await this.createMission({
-      id: "enable_biometric",
-      title: "เปิดใช้งาน Biometric",
-      description: "เปิดใช้งานการยืนยันตัวตนด้วยลายนิ้วมือ",
-      rewardType: "token",
-      rewardAmount: "50",
-      rewardTokenId: demoToken.id,
-      isActive: true,
-    });
+    for (const missionData of defaultMissions) {
+      await this.createMission(missionData);
+    }
   }
 
   async getUser(id: string): Promise<User | undefined> {
@@ -175,7 +185,7 @@ export class MemStorage implements IStorage {
   async updateWallet(id: string, updates: Partial<InsertWallet>): Promise<Wallet | undefined> {
     const wallet = this.wallets.get(id);
     if (!wallet) return undefined;
-    
+
     const updatedWallet = { ...wallet, ...updates };
     this.wallets.set(id, updatedWallet);
     return updatedWallet;
@@ -206,7 +216,7 @@ export class MemStorage implements IStorage {
   async updateOnboardingProgress(userId: string, updates: Partial<InsertOnboardingProgress>): Promise<OnboardingProgress | undefined> {
     const existing = await this.getOnboardingProgress(userId);
     if (!existing) return undefined;
-    
+
     const updated = { 
       ...existing, 
       ...updates, 
@@ -257,7 +267,7 @@ export class MemStorage implements IStorage {
 
   async updateUserTokenBalance(userId: string, tokenId: string, updates: Partial<InsertUserTokenBalance>): Promise<UserTokenBalance> {
     const existing = await this.getUserTokenBalance(userId, tokenId);
-    
+
     if (existing) {
       const updated = { 
         ...existing, 
@@ -335,7 +345,7 @@ export class MemStorage implements IStorage {
   async updateUserMission(id: string, updates: Partial<InsertUserMission>): Promise<UserMission | undefined> {
     const userMission = this.userMissions.get(id);
     if (!userMission) return undefined;
-    
+
     const updated = { ...userMission, ...updates };
     this.userMissions.set(id, updated);
     return updated;
