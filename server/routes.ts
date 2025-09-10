@@ -9,7 +9,7 @@ import { z } from "zod";
 import crypto from "crypto";
 import { Request, Response } from 'express';
 import { requestFaucet, getFaucetStatus } from './api/faucet';
-import { getEarningsSummary, getEarningsHistory, transferEarnings } from './api/earnings';
+import { getEarningsSummary, getEarningsHistory, transferEarnings, getEarnings } from './api/earnings';
 import { getUserTierStatus, getTierBenefits, updateUserTier } from './api/user-tier';
 import { getSecretsHealth, getDetailedSecretsReport } from './api/secrets-health';
 import { createWallet, getWallet, getWalletBalances, connectWallet } from './api/wallet';

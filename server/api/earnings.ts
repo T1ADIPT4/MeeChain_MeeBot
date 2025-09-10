@@ -224,3 +224,47 @@ export const transferEarnings = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getEarnings = async (req: Request, res: Response) => {
+  try {
+    const userId = req.query.userId as string || 'user_123'; // Mock user ID
+
+    if (!userId) {
+      return res.status(400).json({
+        error: 'MISSING_USER_ID',
+        message: 'userId parameter is required'
+      });
+    }
+
+    const totalEarnings = userEarnings.get(userId) || {};
+    const history = earningsHistory.get(userId) || [];
+    
+    // Calculate today's earnings
+    const today = new Date().toISOString().split('T')[0];
+    const todayEarnings: UserEarnings = {};
+    
+    history
+      .filter(record => record.date === today && record.status === 'completed')
+      .forEach(record => {
+        const current = parseFloat(todayEarnings[record.token] || '0');
+        todayEarnings[record.token] = (current + parseFloat(record.amount)).toString();
+      });
+
+    res.json({
+      total: totalEarnings,
+      today: todayEarnings,
+      history: history.slice(0, 10), // Last 10 activities
+      summary: {
+        totalActivities: history.length,
+        completedToday: history.filter(r => r.date === today && r.status === 'completed').length
+      }
+    });
+
+  } catch (error) {
+    console.error('Get earnings error:', error);
+    res.status(500).json({
+      error: 'INTERNAL_ERROR',
+      message: 'Failed to get earnings'
+    });
+  }
+};
