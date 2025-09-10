@@ -788,6 +788,20 @@ export default function Dashboard() {
               <div className="absolute top-0 right-0 w-2 h-2 bg-yellow-400 rounded-full animate-pulse opacity-60"></div>
             </Button>
           </Link>
+          <Link to="/nft-collection">
+            <Button 
+              variant="ghost"
+              size="icon"
+              className="w-10 h-10 bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/30 text-purple-300 hover:bg-purple-500/20 hover:scale-110 transition-all duration-300 rounded-full relative overflow-hidden group"
+              title="NFT Collection"
+            >
+              <Sparkles className="w-5 h-5 group-hover:animate-spin" />
+              {/* New badge */}
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full border border-slate-900">
+                <div className="w-1 h-1 bg-white rounded-full animate-pulse mx-auto mt-0.5"></div>
+              </div>
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
