@@ -28,6 +28,7 @@ import { AcademyWelcome } from '@/components/academy/academy-welcome';
 import { WalletSetup } from '@/components/academy/wallet-setup';
 import { TokenBasics } from '@/components/academy/token-basics';
 import { SwapBridge } from '@/components/academy/swap-bridge';
+import { SecuritySecrets } from '@/components/academy/security-secrets';
 
 interface Quest {
   id: string;
@@ -278,6 +279,24 @@ export default function Academy() {
       <SwapBridge 
         onNext={() => setCurrentAcademyStep(5)}
         onPrev={() => setCurrentAcademyStep(3)}
+      />
+    );
+  }
+
+  // Show Security & Secrets step
+  if (currentAcademyStep === 5) {
+    return (
+      <SecuritySecrets 
+        onNext={() => {
+          // Complete Academy - return to main academy with celebration
+          setCurrentAcademyStep(0);
+          setShowWelcome(false);
+          toast({
+            title: "🎓 ยินดีด้วย! จบ MeeChain Academy แล้ว!",
+            description: "คุณเป็น MeeChain Graduate แล้ว! +500 EXP Bonus!",
+          });
+        }}
+        onPrev={() => setCurrentAcademyStep(4)}
       />
     );
   }
