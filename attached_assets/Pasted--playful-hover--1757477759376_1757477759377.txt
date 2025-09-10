@@ -1,0 +1,99 @@
+สำหรับปุ่ม “มีบอท” ที่มีความ playful และอบอุ่น พร้อมแอนิเมชันเล็กน้อยเมื่อ hover และคลิก:
+
+---
+
+### 🧩 React + CSS: ปุ่มมีบอทพร้อมแอนิเมชัน
+
+```jsx
+// MeeBotButton.jsx
+import React, { useState } from 'react';
+import './MeeBotButton.css';
+
+const MeeBotButton = ({ onClick }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <button
+      className={`meebot-button ${isHovered ? 'hovered' : ''}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
+    >
+      <span className="meebot-icon">🤖</span>
+      <span className="meebot-text">เรียกมีบอท!</span>
+      {isHovered && <span className="meebot-wave">👋</span>}
+    </button>
+  );
+};
+
+export default MeeBotButton;
+```
+
+```css
+/* MeeBotButton.css */
+.meebot-button {
+  background-color: #4fc3f7;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.meebot-button:hover {
+  background-color: #29b6f6;
+  transform: translateY(-2px);
+}
+
+.meebot-icon {
+  font-size: 24px;
+}
+
+.meebot-text {
+  flex-grow: 1;
+}
+
+.meebot-wave {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  animation: wave 1s infinite;
+}
+
+@keyframes wave {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(20deg); }
+  50% { transform: rotate(-10deg); }
+  75% { transform: rotate(15deg); }
+  100% { transform: rotate(0deg); }
+}
+```
+
+---
+
+### 🧪 วิธีใช้งานในหน้า UI
+
+```jsx
+import MeeBotButton from './MeeBotButton';
+
+function HomePage() {
+  const handleMeeBotClick = () => {
+    // เปิด onboarding flow หรือ modal
+    console.log('MeeBot activated!');
+  };
+
+  return (
+    <div>
+      <MeeBotButton onClick={handleMeeBotClick} />
+    </div>
+  );
+}
+```
