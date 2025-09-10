@@ -37,6 +37,7 @@ function Router() {
         <Route path="/home" component={Home} />
         <Route path="/missions" component={Missions} />
         <Route path="/academy" component={Academy} />
+        <Route path="/swap" component={SwapBridge} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/earnings" component={Earnings} />
         <Route path="/send" component={SendTokens} />
