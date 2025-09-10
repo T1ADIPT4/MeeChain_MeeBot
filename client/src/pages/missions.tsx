@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { CheckCircle, Clock, Gift, Coins, TestTube, ArrowLeft } from "lucide-react";
-import { Link, navigate } from "wouter";
+import { Link, useLocation } from "wouter";
 
 interface Mission {
   missionId: string;
@@ -40,6 +40,7 @@ interface TokenBalance {
 export default function Missions() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, navigate] = useLocation();
 
   // Get user from localStorage (from onboarding)
   const userStr = localStorage.getItem("meechain_user");

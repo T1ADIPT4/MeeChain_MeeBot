@@ -16,6 +16,7 @@ import ScheduledTasks from '@/pages/scheduled-tasks';
 import SwapBridge from './pages/swap-bridge';
 import MeeBotPage from '@/pages/meebot';
 import Academy from './pages/academy';
+import TeamDashboard from './pages/team-dashboard';
 
 // Lazy load components
 const Earnings = lazy(() => import('./pages/earnings'));
