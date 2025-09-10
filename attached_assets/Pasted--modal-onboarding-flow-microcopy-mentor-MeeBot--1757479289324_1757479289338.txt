@@ -1,0 +1,109 @@
+โค้ด modal onboarding, flow ภารกิจแบบเกม, และ microcopy mentor ขี้เล่นที่ MeeBot ใช้พูดกับผู้ใช้ตอนเริ่มใช้งาน TaskPilot 🎮🤖
+
+---
+
+## 🧩 1. โค้ด Modal Onboarding สำหรับ MeeBot
+
+### ✅ MeeBotModal.tsx
+```tsx
+import React from 'react';
+import './MeeBotModal.css';
+
+const MeeBotModal = ({ onClose }) => {
+  return (
+    <div className="meebot-modal-overlay">
+      <div className="meebot-modal">
+        <h2>🚀 ยินดีต้อนรับสู่ TaskPilot</h2>
+        <p>“อย่าห่วงเลย ถ้าคุณล้ม ผมจะช่วยลุก ถ้าคุณลุย ผมจะลุยไปด้วย!”</p>
+        <p>พร้อมเริ่มภารกิจแรกแล้วหรือยัง? เราจะตั้งค่าโปรไฟล์และเชื่อมระบบงานให้คุณลุยได้ทันที!</p>
+        <button onClick={onClose}>เริ่มภารกิจเลย!</button>
+      </div>
+    </div>
+  );
+};
+
+export default MeeBotModal;
+```
+
+### ✅ MeeBotModal.css
+```css
+.meebot-modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.meebot-modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.meebot-modal button {
+  margin-top: 1rem;
+  padding: 10px 20px;
+  background-color: #4fc3f7;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+```
+
+---
+
+## 🧠 2. วิธีเรียกใช้ Modal จากหน้า MeeBotPage
+
+```tsx
+import React, { useState } from 'react';
+import Header from '../components/Header';
+import NavBar from '../components/NavBar';
+import MeeBotButton from '../components/MeeBotButton';
+import MeeBotModal from '../components/MeeBotModal';
+
+const MeeBotPage = () => {
+  const [showModal, setShowModal] = useState(false);
+
+  const handleMeeBotClick = () => {
+    setShowModal(true);
+  };
+
+  return (
+    <div>
+      <Header />
+      <NavBar />
+      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem' }}>
+        <h2>🤖 MeeBot</h2>
+        <div style={{ backgroundColor: '#f5f5f5', padding: '2rem', borderRadius: '8px', textAlign: 'center' }}>
+          <p>พร้อมเริ่มภารกิจกับ MeeBot แล้วหรือยัง?</p>
+          <MeeBotButton onClick={handleMeeBotClick} />
+        </div>
+      </div>
+      {showModal && <MeeBotModal onClose={() => setShowModal(false)} />}
+    </div>
+  );
+};
+
+export default MeeBotPage;
+```
+
+---
+
+## 🎮 3. Flow ภารกิจ TaskPilot แบบเกม
+
+| ขั้นตอน | ภารกิจ | Microcopy MeeBot |
+|---------|--------|------------------|
+| 1 | ตั้งค่าโปรไฟล์ | “ก่อนจะขึ้นยาน เราต้องรู้จักกันก่อน!” |
+| 2 | เชื่อมระบบงาน | “เชื่อม TaskPilot กับภารกิจของคุณ ผมจะจัดการให้ลุยได้แบบไม่สะดุด!” |
+| 3 | เริ่ม task แรก | “ภารกิจแรกมาแล้ว! พร้อมรับ Badge ‘First Flight’ ไหม?” |
+| 4 | สำเร็จ task | “สุดยอดเลย! คุณผ่านภารกิจเช้าได้แบบมือโปร!” |
+| 5 | เคล็ดลับ mentor | “งานเยอะไม่ใช่ปัญหา ถ้าเรามีแผนที่ดีและใจที่พร้อมลุย!” |
