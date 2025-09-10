@@ -452,29 +452,21 @@ export function CollectionQuestSystem() {
 
   return (
     <div className="space-y-6">
-      {/* User Stats Header */}
+      {/* User Stats Header - Compact */}
       <Card className="bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-cyan-500/10 border-purple-300/30">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full flex items-center justify-center">
-                <Trophy className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-white">Level {userStats.level} Collection Master</h3>
-                <div className="flex items-center gap-4 text-sm text-slate-300">
-                  <span>🏆 {userStats.completedQuests} Collections</span>
-                  <span>💎 {userStats.totalBadges} Badges</span>
-                  <span>⚡ {userStats.xp} XP</span>
-                </div>
-                <div className="mt-2">
-                  <Progress 
-                    value={(userStats.xp / userStats.nextLevelXP) * 100}
-                    className="h-2 w-48"
-                  />
-                  <p className="text-xs text-slate-400 mt-1">
-                    {userStats.nextLevelXP - userStats.xp} XP ถึงเลเวลถัดไป
-                  </p>
+        <CardContent className="p-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-white" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-white">Level {userStats.level} Collection Master</h3>
+              <div className="flex items-center gap-3 text-xs text-slate-300">
+                <span>🏆 {userStats.completedQuests}</span>
+                <span>💎 {userStats.totalBadges}</span>
+                <span>⚡ {userStats.xp} XP</span>
+                <div className="flex-1 max-w-24">
+                  <Progress value={(userStats.xp / userStats.nextLevelXP) * 100} className="h-1" />
                 </div>
               </div>
             </div>
@@ -515,150 +507,126 @@ export function CollectionQuestSystem() {
                 </Badge>
               </div>
 
-              <CardHeader className="pb-4 pt-12">
+              <CardHeader className="pb-2 pt-8">
                 <CardTitle className="text-white">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-xl font-bold mb-1">{quest.title}</h3>
-                      <p className="text-sm text-slate-400 font-normal">{quest.description}</p>
-                    </div>
+                  <div>
+                    <h3 className="text-lg font-bold mb-1">{quest.title}</h3>
+                    <p className="text-xs text-slate-400 font-normal">{quest.description}</p>
                   </div>
                 </CardTitle>
               </CardHeader>
 
-              <CardContent className="space-y-6">
-                {/* Progress Overview */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-slate-700/30 rounded-lg p-3 text-center">
-                    <div className="text-2xl font-bold text-white">{progress.toFixed(0)}%</div>
-                    <div className="text-xs text-slate-400">ความคืบหน้า</div>
+              <CardContent className="space-y-3">
+                {/* Progress Overview - Compact */}
+                <div className="flex gap-2 text-xs">
+                  <div className="bg-slate-700/30 rounded px-2 py-1 text-center flex-1">
+                    <div className="font-bold text-white">{progress.toFixed(0)}%</div>
+                    <div className="text-slate-400">Progress</div>
                   </div>
-                  <div className="bg-slate-700/30 rounded-lg p-3 text-center">
-                    <div className="text-2xl font-bold text-cyan-300">+{currentPowerBoost}%</div>
-                    <div className="text-xs text-slate-400">Power Boost ปัจจุบัน</div>
+                  <div className="bg-slate-700/30 rounded px-2 py-1 text-center flex-1">
+                    <div className="font-bold text-cyan-300">+{currentPowerBoost}%</div>
+                    <div className="text-slate-400">Power</div>
                   </div>
-                  <div className="bg-slate-700/30 rounded-lg p-3 text-center">
-                    <div className="text-2xl font-bold text-purple-300">{quest.completions}</div>
-                    <div className="text-xs text-slate-400">คนทำสำเร็จ</div>
+                  <div className="bg-slate-700/30 rounded px-2 py-1 text-center flex-1">
+                    <div className="font-bold text-purple-300">{quest.completions}</div>
+                    <div className="text-slate-400">Done</div>
                   </div>
                 </div>
 
-                {/* Progress Bar */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-300">ความคืบหน้าการสะสม</span>
+                {/* Progress Bar - Compact */}
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-300">ความคืบหน้า</span>
                     <span className="text-purple-300 font-semibold">
                       {quest.requiredBadges.filter(b => b.owned).length} / {quest.requiredBadges.length}
                     </span>
                   </div>
-                  <Progress 
-                    value={progress} 
-                    className="h-3 bg-slate-700"
-                  />
+                  <Progress value={progress} className="h-2 bg-slate-700" />
                 </div>
 
-                {/* Required Badges Grid */}
-                <div className="space-y-3">
-                  <h4 className="text-sm font-semibold text-slate-300 flex items-center gap-2">
-                    <Gem className="w-4 h-4" />
-                    Badge ที่ต้องสะสมครบชุด ({quest.requiredBadges.length} ชิ้น)
+                {/* Required Badges - Compact Grid */}
+                <div className="space-y-2">
+                  <h4 className="text-xs font-semibold text-slate-300 flex items-center gap-1">
+                    <Gem className="w-3 h-3" />
+                    Required Badges ({quest.requiredBadges.length})
                   </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {quest.requiredBadges.map((badge, index) => (
                       <div 
                         key={index}
-                        className={`flex items-center justify-between p-3 rounded-lg border transition-all duration-300 ${
+                        className={`flex items-center gap-2 p-2 rounded-md border text-xs ${
                           badge.owned 
-                            ? 'bg-green-500/10 border-green-500/30 scale-100' 
-                            : 'bg-slate-700/30 border-slate-600/30 hover:border-purple-500/30'
+                            ? 'bg-green-500/10 border-green-500/30' 
+                            : 'bg-slate-700/30 border-slate-600/30'
                         }`}
                       >
-                        <div className="flex items-center gap-3">
-                          {badge.owned ? (
-                            <CheckCircle className="w-5 h-5 text-green-400" />
-                          ) : (
-                            <Lock className="w-5 h-5 text-slate-500" />
-                          )}
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className={`font-medium ${badge.owned ? 'text-green-300' : 'text-slate-300'}`}>
-                                {badge.name}
-                              </span>
-                              {badge.power && (
-                                <Badge className={`bg-gradient-to-r ${getRarityColor(badge.rarity)} text-white border-0 text-xs`}>
-                                  {badge.power} +{badge.powerBoost}%
-                                </Badge>
-                              )}
-                            </div>
-                            <p className="text-xs text-slate-400">{badge.description}</p>
+                        {badge.owned ? (
+                          <CheckCircle className="w-3 h-3 text-green-400 flex-shrink-0" />
+                        ) : (
+                          <Lock className="w-3 h-3 text-slate-500 flex-shrink-0" />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <div className={`font-medium truncate ${badge.owned ? 'text-green-300' : 'text-slate-300'}`}>
+                            {badge.name}
                           </div>
+                          {badge.power && (
+                            <Badge className={`bg-gradient-to-r ${getRarityColor(badge.rarity)} text-white border-0 text-xs mt-1`}>
+                              +{badge.powerBoost}%
+                            </Badge>
+                          )}
                         </div>
-                        <Badge className={`bg-gradient-to-r ${getRarityColor(badge.rarity)} text-white border-0`}>
-                          {badge.rarity}
-                        </Badge>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Ultimate Reward Section */}
-                <div className={`bg-gradient-to-r ${getRarityColor(quest.reward.badge.rarity)} bg-opacity-10 border border-opacity-30 rounded-xl p-4`}>
-                  <h4 className="text-sm font-semibold text-yellow-300 mb-3 flex items-center gap-2">
-                    <Gift className="w-4 h-4" />
-                    Ultimate Reward - สุดยอดรางวัล!
+                {/* Ultimate Reward Section - Compact */}
+                <div className={`bg-gradient-to-r ${getRarityColor(quest.reward.badge.rarity)} bg-opacity-10 border border-opacity-30 rounded-lg p-3`}>
+                  <h4 className="text-xs font-semibold text-yellow-300 mb-2 flex items-center gap-1">
+                    <Gift className="w-3 h-3" />
+                    Ultimate Reward
                   </h4>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Badge Reward */}
-                    <div className="flex items-center gap-3">
-                      <div className={`w-16 h-16 bg-gradient-to-r ${getRarityColor(quest.reward.badge.rarity)} rounded-xl flex items-center justify-center relative`}>
-                        <Crown className="w-8 h-8 text-white" />
-                        {quest.reward.badge.isUpgradeable && (
-                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-                            <ArrowUpCircle className="w-3 h-3 text-white" />
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h5 className="font-bold text-white">{quest.reward.badge.name}</h5>
-                        <p className="text-xs text-slate-400 mb-1">{quest.reward.badge.description}</p>
-                        <div className="flex items-center gap-2">
-                          <Badge className={`bg-gradient-to-r ${getRarityColor(quest.reward.badge.rarity)} text-white border-0 text-xs`}>
-                            {quest.reward.badge.rarity}
-                          </Badge>
-                          <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30 text-xs">
-                            <Zap className="w-3 h-3 mr-1" />
-                            {quest.reward.badge.power} +{quest.reward.badge.powerBoost}%
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Other Rewards */}
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-300">รางวัลเพิ่มเติม:</span>
-                      </div>
-                      <div className="flex items-center gap-4 text-sm">
-                        <span className="flex items-center gap-1 text-blue-300">
-                          <TrendingUp className="w-3 h-3" />
-                          +{quest.reward.xp} XP
-                        </span>
-                        <span className="flex items-center gap-1 text-green-300">
-                          <Gem className="w-3 h-3" />
-                          +{quest.reward.tokens} Tokens
-                        </span>
-                      </div>
-                      {quest.reward.specialReward && (
-                        <div className="bg-pink-500/10 border border-pink-500/30 rounded-lg p-2 mt-2">
-                          <p className="text-xs text-pink-300">
-                            <Sparkles className="w-3 h-3 inline mr-1" />
-                            {quest.reward.specialReward}
-                          </p>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-10 h-10 bg-gradient-to-r ${getRarityColor(quest.reward.badge.rarity)} rounded-lg flex items-center justify-center relative`}>
+                      <Crown className="w-5 h-5 text-white" />
+                      {quest.reward.badge.isUpgradeable && (
+                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full flex items-center justify-center">
+                          <ArrowUpCircle className="w-2 h-2 text-white" />
                         </div>
                       )}
                     </div>
+                    <div className="flex-1 min-w-0">
+                      <h5 className="font-bold text-white text-sm truncate">{quest.reward.badge.name}</h5>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Badge className={`bg-gradient-to-r ${getRarityColor(quest.reward.badge.rarity)} text-white border-0 text-xs`}>
+                          {quest.reward.badge.rarity}
+                        </Badge>
+                        <Badge className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30 text-xs">
+                          +{quest.reward.badge.powerBoost}%
+                        </Badge>
+                      </div>
+                    </div>
                   </div>
+                  
+                  {/* Other Rewards - Compact */}
+                  <div className="flex items-center gap-3 text-xs mt-2">
+                    <span className="flex items-center gap-1 text-blue-300">
+                      <TrendingUp className="w-3 h-3" />
+                      +{quest.reward.xp} XP
+                    </span>
+                    <span className="flex items-center gap-1 text-green-300">
+                      <Gem className="w-3 h-3" />
+                      +{quest.reward.tokens} MEE
+                    </span>
+                  </div>
+                  {quest.reward.specialReward && (
+                    <div className="bg-pink-500/10 border border-pink-500/30 rounded p-1 mt-2">
+                      <p className="text-xs text-pink-300">
+                        <Sparkles className="w-3 h-3 inline mr-1" />
+                        {quest.reward.specialReward}
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Prerequisites & Unlocks */}
