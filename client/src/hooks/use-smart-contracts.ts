@@ -76,7 +76,7 @@ export function useSmartContracts() {
         }
       }
 
-      const service = new SmartContractService(provider);
+      const service = new SmartContractService(provider ? await provider.getSigner() : null);
       
       // ตรวจสอบสุขภาพของ contracts
       let health;

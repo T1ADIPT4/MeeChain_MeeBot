@@ -1,6 +1,16 @@
 
 import { Request, Response } from 'express';
-import { generateWallet, isValidAddress } from '../../client/src/lib/web3-utils';
+// Mock wallet address validation
+function isValidAddress(address: string): boolean {
+  return /^0x[a-fA-F0-9]{40}$/.test(address);
+}
+
+// Mock wallet generation
+function generateWallet() {
+  const randomBytes = Array.from({ length: 20 }, () => Math.floor(Math.random() * 256));
+  const address = '0x' + randomBytes.map(b => b.toString(16).padStart(2, '0')).join('');
+  return { address };
+}
 
 interface WalletData {
   address: string;
