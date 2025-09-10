@@ -20,7 +20,8 @@ const MAX_REQUESTS_PER_DAY = 1;
 const FAUCET_AMOUNTS = {
   'ETH': '0.01',
   'FUSE': '1.0',
-  'MEE': '100'
+  'MEE': '100',
+  'CUSTOM': '5'
 };
 
 export const requestFaucet = async (req: Request, res: Response) => {

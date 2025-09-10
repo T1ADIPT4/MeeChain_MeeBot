@@ -1,6 +1,6 @@
-import { 
-  type User, type InsertUser, 
-  type Wallet, type InsertWallet, 
+import {
+  type User, type InsertUser,
+  type Wallet, type InsertWallet,
   type OnboardingProgress, type InsertOnboardingProgress,
   type Token, type InsertToken,
   type UserTokenBalance, type InsertUserTokenBalance,
@@ -14,32 +14,32 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserBySocialId(socialId: string, provider: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  
+
   // Wallet operations
   getWalletByUserId(userId: string): Promise<Wallet | undefined>;
   createWallet(wallet: InsertWallet): Promise<Wallet>;
   updateWallet(id: string, updates: Partial<InsertWallet>): Promise<Wallet | undefined>;
-  
+
   // Onboarding operations
   getOnboardingProgress(userId: string): Promise<OnboardingProgress | undefined>;
   createOnboardingProgress(progress: InsertOnboardingProgress): Promise<OnboardingProgress>;
   updateOnboardingProgress(userId: string, updates: Partial<InsertOnboardingProgress>): Promise<OnboardingProgress | undefined>;
-  
+
   // Token operations
   getTokens(): Promise<Token[]>;
   getTokenByAddress(address: string, chainId: string): Promise<Token | undefined>;
   createToken(token: InsertToken): Promise<Token>;
-  
+
   // User token balance operations
   getUserTokenBalance(userId: string, tokenId: string): Promise<UserTokenBalance | undefined>;
   getUserTokenBalances(userId: string): Promise<UserTokenBalance[]>;
   updateUserTokenBalance(userId: string, tokenId: string, updates: Partial<InsertUserTokenBalance>): Promise<UserTokenBalance>;
-  
+
   // Mission operations
   getMissions(): Promise<Mission[]>;
   getMission(id: string): Promise<Mission | undefined>;
   createMission(mission: InsertMission): Promise<Mission>;
-  
+
   // User mission operations
   getUserMissions(userId: string): Promise<UserMission[]>;
   getUserMission(userId: string, missionId: string): Promise<UserMission | undefined>;
@@ -64,7 +64,7 @@ export class MemStorage implements IStorage {
     this.userTokenBalances = new Map();
     this.missions = new Map();
     this.userMissions = new Map();
-    
+
     // Initialize with default tokens and missions
     this.initializeDefaultData();
   }
@@ -138,7 +138,7 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    const user: User = { 
+    const user: User = {
       ...insertUser,
       email: insertUser.email ?? null,
       firstName: insertUser.firstName ?? null,
@@ -160,7 +160,7 @@ export class MemStorage implements IStorage {
 
   async createWallet(insertWallet: InsertWallet): Promise<Wallet> {
     const id = randomUUID();
-    const wallet: Wallet = { 
+    const wallet: Wallet = {
       ...insertWallet,
       type: insertWallet.type ?? "smart",
       biometricEnabled: insertWallet.biometricEnabled ?? false,
@@ -175,7 +175,7 @@ export class MemStorage implements IStorage {
   async updateWallet(id: string, updates: Partial<InsertWallet>): Promise<Wallet | undefined> {
     const wallet = this.wallets.get(id);
     if (!wallet) return undefined;
-    
+
     const updatedWallet = { ...wallet, ...updates };
     this.wallets.set(id, updatedWallet);
     return updatedWallet;
@@ -189,7 +189,7 @@ export class MemStorage implements IStorage {
 
   async createOnboardingProgress(insertProgress: InsertOnboardingProgress): Promise<OnboardingProgress> {
     const id = randomUUID();
-    const progress: OnboardingProgress = { 
+    const progress: OnboardingProgress = {
       ...insertProgress,
       mode: insertProgress.mode ?? null,
       currentStep: insertProgress.currentStep ?? "1",
@@ -206,11 +206,11 @@ export class MemStorage implements IStorage {
   async updateOnboardingProgress(userId: string, updates: Partial<InsertOnboardingProgress>): Promise<OnboardingProgress | undefined> {
     const existing = await this.getOnboardingProgress(userId);
     if (!existing) return undefined;
-    
-    const updated = { 
-      ...existing, 
-      ...updates, 
-      updatedAt: new Date() 
+
+    const updated = {
+      ...existing,
+      ...updates,
+      updatedAt: new Date()
     };
     this.onboardingProgress.set(existing.id, updated);
     return updated;
@@ -229,7 +229,7 @@ export class MemStorage implements IStorage {
 
   async createToken(insertToken: InsertToken): Promise<Token> {
     const id = randomUUID();
-    const token: Token = { 
+    const token: Token = {
       ...insertToken,
       decimals: insertToken.decimals ?? "18",
       logoUri: insertToken.logoUri ?? null,
@@ -257,12 +257,12 @@ export class MemStorage implements IStorage {
 
   async updateUserTokenBalance(userId: string, tokenId: string, updates: Partial<InsertUserTokenBalance>): Promise<UserTokenBalance> {
     const existing = await this.getUserTokenBalance(userId, tokenId);
-    
+
     if (existing) {
-      const updated = { 
-        ...existing, 
-        ...updates, 
-        updatedAt: new Date() 
+      const updated = {
+        ...existing,
+        ...updates,
+        updatedAt: new Date()
       };
       this.userTokenBalances.set(existing.id, updated);
       return updated;
@@ -293,7 +293,7 @@ export class MemStorage implements IStorage {
   }
 
   async createMission(insertMission: InsertMission): Promise<Mission> {
-    const mission: Mission = { 
+    const mission: Mission = {
       ...insertMission,
       description: insertMission.description ?? null,
       rewardTokenId: insertMission.rewardTokenId ?? null,
@@ -319,7 +319,7 @@ export class MemStorage implements IStorage {
 
   async createUserMission(insertUserMission: InsertUserMission): Promise<UserMission> {
     const id = randomUUID();
-    const userMission: UserMission = { 
+    const userMission: UserMission = {
       ...insertUserMission,
       status: insertUserMission.status ?? "pending",
       completedAt: insertUserMission.completedAt ?? null,
@@ -335,7 +335,7 @@ export class MemStorage implements IStorage {
   async updateUserMission(id: string, updates: Partial<InsertUserMission>): Promise<UserMission | undefined> {
     const userMission = this.userMissions.get(id);
     if (!userMission) return undefined;
-    
+
     const updated = { ...userMission, ...updates };
     this.userMissions.set(id, updated);
     return updated;

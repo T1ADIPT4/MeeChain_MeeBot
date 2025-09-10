@@ -312,7 +312,7 @@ export default function Missions() {
               <CardHeader>
                 <CardTitle className="text-white">รับเหรียญฟรี (Faucet)</CardTitle>
                 <CardDescription className="text-purple-200">
-                  รับเหรียญทดลองฟรี 5 เหรียญต่อวัน
+                  รับเหรียญทดลองฟรีทุกวัน - รองรับ ERC-20 Token ใหม่!
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">

@@ -1,4 +1,3 @@
-
 import { Request, Response } from 'express';
 
 interface UserTierData {
@@ -82,21 +81,21 @@ initializeMockTierData();
 
 const calculateTier = (missionsCompleted: number, tokensEarned: number, referrals: number): TierBenefit => {
   let currentTier = TIER_BENEFITS[0]; // Default to Beginner
-  
+
   for (const tier of TIER_BENEFITS) {
     const meetsRequirements = (
       missionsCompleted >= tier.requirements.missionsCompleted &&
       tokensEarned >= tier.requirements.tokensEarned &&
       referrals >= tier.requirements.referrals
     );
-    
+
     if (meetsRequirements) {
       currentTier = tier;
     } else {
       break;
     }
   }
-  
+
   return currentTier;
 };
 
@@ -116,7 +115,7 @@ export const getUserTierStatus = async (req: Request, res: Response) => {
     }
 
     let userData = userTiers.get(userId as string);
-    
+
     if (!userData) {
       // Initialize new user with Beginner tier
       userData = {

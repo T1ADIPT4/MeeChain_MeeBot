@@ -45,6 +45,14 @@ export function DailyQuests({ onLevelUp }: DailyQuestsProps) {
         difficulty: 'easy' as const
       },
       {
+        title: '🪙 รับเหรียญ CUSTOM จาก Faucet',
+        description: 'ทดลองรับเหรียญ ERC-20 ใหม่ผ่านระบบ Faucet',
+        reward: '+15 XP, Badge "Token Collector"',
+        xp: 15,
+        badge: 'Token Collector',
+        difficulty: 'medium' as const
+      },
+      {
         title: '💰 ตรวจสอบ Wallet Balance',
         description: 'เช็ค Balance ใน Wallet แล้วรู้จักระบบมากขึ้น!',
         reward: '+8 XP, Badge "Wallet Master"',
