@@ -6,32 +6,20 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Bot, 
   Sparkles, 
-  Users, 
-  MessageCircle, 
-  Send, 
-  Calendar,
-  Trophy,
-  Star,
-  Zap,
   Heart,
-  Settings,
-  HelpCircle,
+  ArrowLeft,
+  MessageCircle,
+  X,
+  Send,
+  User,
+  Zap,
+  Rocket,
+  Star,
+  RefreshCw,
   CheckCircle,
   Clock,
-  Wifi,
-  WifiOff,
-  User,
-  Home,
-  Menu,
-  X,
-  ArrowRight,
-  Shield,
-  Award,
-  Gift,
-  TrendingUp,
-  BarChart3,
-  Activity,
-  Target
+  Trophy,
+  Menu
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import logoUrl from '@assets/branding/logo.png';
@@ -39,8 +27,6 @@ import { DailyQuests } from '@/components/meebot/daily-quests';
 import { LevelUpNotification } from '@/components/meebot/level-up-notification';
 import { MeeBotOnboardingModal } from '@/components/meebot/meebot-onboarding-modal';
 import { Link } from 'wouter';
-import { SystemCheck } from '@/components/meebot/system-check';
-import { CommunityWidget } from '@/components/meebot/community-widget';
 
 // Placeholder for the new SystemCheck component
 const SystemCheck = () => {
@@ -383,7 +369,19 @@ export default function MeeBotPage() {
 
           {/* System Check */}
           <SystemCheck />
-          <CommunityWidget />
+
+          {/* Additional MeeBot Features Placeholder */}
+          <Card className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-purple-500/30">
+            <CardContent className="p-6 text-center">
+              <Sparkles className="w-12 h-12 text-purple-400 mx-auto mb-4" />
+              <h3 className="text-xl font-bold text-purple-300 mb-2">
+                🚀 ฟีเจอร์ใหม่กำลังมา
+              </h3>
+              <p className="text-purple-200">
+                MeeBot กำลังเตรียมฟีเจอร์เจ๋ง ๆ มาให้ ติดตามได้เลย!
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
 
