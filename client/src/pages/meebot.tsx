@@ -19,71 +19,9 @@ import { useToast } from '@/hooks/use-toast';
 import logoUrl from '@assets/branding/logo.png';
 import { DailyQuests } from '@/components/meebot/daily-quests';
 import { LevelUpNotification } from '@/components/meebot/level-up-notification';
+import { MeeBotOnboardingModal } from '@/components/meebot/meebot-onboarding-modal';
 
-// Placeholder for MeeBotOnboardingModal component
-const MeeBotOnboardingModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
-  if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-xl bg-slate-800/95 border-green-500/30 flex flex-col">
-        <div className="bg-gradient-to-r from-green-500/20 to-cyan-500/20 p-5 border-b border-green-500/30 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-cyan-500 rounded-full flex items-center justify-center">
-              <Rocket className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h3 className="font-bold text-white text-xl">ยินดีต้อนรับสู่ TaskPilot!</h3>
-              <p className="text-sm text-green-300">สุดยอด! เราจะลุยภารกิจ Web3 ด้วยกัน!</p>
-            </div>
-          </div>
-          <Button
-            variant="ghost"
-            size="lg"
-            onClick={onClose}
-            className="text-gray-400 hover:text-white"
-          >
-            <X className="w-6 h-6" />
-          </Button>
-        </div>
-        <CardContent className="p-6 flex-1">
-          <div className="space-y-5">
-            <p className="text-gray-300 leading-relaxed text-lg">
-              สวัสดีครับ! ผม MeeBot ตัวช่วยภารกิจสุดเจ๋งของคุณ! 🤖✨ <br />
-              เตรียมตัวให้พร้อม เราจะพาคุณดำดิ่งสู่โลก Web3 แบบสนุก ๆ เหมือนเล่นเกม! 🎮🚀
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-slate-700/50 p-4 rounded-lg border border-green-500/30">
-                <h4 className="font-semibold text-green-400 flex items-center gap-2 mb-2">
-                  <Sparkles className="w-5 h-5" />
-                  ภารกิจหลัก
-                </h4>
-                <p className="text-gray-300 text-sm">เรียนรู้ Web3, จัดการ DApp, และอื่น ๆ อีกมากมาย!</p>
-              </div>
-              <div className="bg-slate-700/50 p-4 rounded-lg border border-cyan-500/30">
-                <h4 className="font-semibold text-cyan-400 flex items-center gap-2 mb-2">
-                  <Heart className="w-5 h-5" />
-                  สไตล์การสอน
-                </h4>
-                <p className="text-gray-300 text-sm">เหมือนมีเมนเตอร์ส่วนตัวที่คอยให้กำลังใจ!</p>
-              </div>
-            </div>
-            <p className="text-gray-400 italic text-sm">
-              "การเริ่มต้นคือครึ่งหนึ่งของความสำเร็จ" - มาเริ่มภารกิจแรกกันเลย! 💪
-            </p>
-            <Button
-              onClick={onClose}
-              className="w-full bg-gradient-to-r from-green-500 to-cyan-500 hover:from-green-600 hover:to-cyan-600 text-white py-3 rounded-xl font-bold text-lg transform transition-all duration-200 hover:scale-105 shadow-lg"
-            >
-              <Zap className="w-5 h-5 mr-2" />
-              พร้อมลุย! เริ่มเลย!
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
 
 export default function MeeBotPage() {
   const [, navigate] = useLocation();
