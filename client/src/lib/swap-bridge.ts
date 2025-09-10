@@ -2,7 +2,7 @@
 import { ethers } from "ethers";
 
 // ใส่ address และ ABI ของ swap/bridge contract จริง
-const CONTRACT_ADDRESS = "0xYourSwapBridgeContractAddress";
+const CONTRACT_ADDRESS = "0x..."; // ใส่ contract address จริงของคุณที่นี่
 const CONTRACT_ABI = [
   // ตัวอย่าง ABI สำหรับ swap/bridge function
   {
