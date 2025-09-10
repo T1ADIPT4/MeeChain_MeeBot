@@ -617,10 +617,10 @@ export default function Dashboard() {
           <Button
             variant="ghost"
             className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-200 p-2"
-            onClick={() => navigate('/missions')}
+            onClick={handleBotClick}
             data-testid="nav-meebot"
           >
-            <User className="w-5 h-5" />
+            <Bot className="w-5 h-5" />
             <span className="text-xs">MeeBot</span>
           </Button>
         </div>
