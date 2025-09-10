@@ -1,26 +1,30 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { 
+import {
   insertUserSchema, insertWalletSchema, insertOnboardingProgressSchema,
-  insertTokenSchema, insertUserMissionSchema 
+  insertTokenSchema, insertUserMissionSchema
 } from "@shared/schema";
 import { z } from "zod";
 import crypto from "crypto";
+import { Request, Response } from 'express';
+import { requestFaucet, getFaucetStatus } from './api/faucet';
+import { getEarningsSummary, getEarningsHistory, transferEarnings } from './api/earnings';
+import { getUserTierStatus, getTierBenefits, updateUserTier } from './api/user-tier';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth endpoints
   app.post("/api/auth/social", async (req, res) => {
     try {
       const { provider, socialId, email, firstName, lastName, profileImageUrl } = req.body;
-      
+
       if (!provider || !socialId) {
         return res.status(400).json({ message: "Provider and social ID are required" });
       }
 
       // Check if user exists
       let user = await storage.getUserBySocialId(socialId, provider);
-      
+
       if (!user) {
         // Create new user
         const userData = insertUserSchema.parse({
@@ -32,7 +36,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           profileImageUrl,
         });
         user = await storage.createUser(userData);
-        
+
         // Create initial onboarding progress
         await storage.createOnboardingProgress({
           userId: user.id,
@@ -55,7 +59,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { userId } = req.params;
       const progress = await storage.getOnboardingProgress(userId);
-      
+
       if (!progress) {
         return res.status(404).json({ message: "Onboarding progress not found" });
       }
@@ -71,9 +75,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { userId } = req.params;
       const updates = req.body;
-      
+
       const progress = await storage.updateOnboardingProgress(userId, updates);
-      
+
       if (!progress) {
         return res.status(404).json({ message: "Onboarding progress not found" });
       }
@@ -89,7 +93,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/wallet/create", async (req, res) => {
     try {
       const { userId, biometricEnabled, pinHash } = req.body;
-      
+
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
@@ -108,7 +112,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Generate a mock wallet address (in real implementation, this would call smart contract)
       const address = `0x${crypto.randomBytes(20).toString('hex')}`;
-      
+
       const walletData = insertWalletSchema.parse({
         userId,
         address,
@@ -116,7 +120,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         biometricEnabled: biometricEnabled || hasBiometricStep,
         pinHash: pinHash || (hasPinStep ? "temp_pin_hash" : null),
       });
-      
+
       const wallet = await storage.createWallet(walletData);
       res.json({ wallet });
     } catch (error) {
@@ -129,7 +133,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { userId } = req.params;
       const wallet = await storage.getWalletByUserId(userId);
-      
+
       if (!wallet) {
         return res.status(404).json({ message: "Wallet not found" });
       }
@@ -145,14 +149,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/security/pin", async (req, res) => {
     try {
       const { userId, pin } = req.body;
-      
+
       if (!userId || !pin || pin.length !== 6) {
         return res.status(400).json({ message: "User ID and 6-digit PIN are required" });
       }
 
       // Hash the PIN (in real implementation, use proper bcrypt)
       const pinHash = crypto.createHash('sha256').update(pin).digest('hex');
-      
+
       // Try to update existing wallet, or store PIN in onboarding progress
       const wallet = await storage.getWalletByUserId(userId);
       if (wallet) {
@@ -161,12 +165,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Store PIN hash in onboarding progress for later use
         const progress = await storage.getOnboardingProgress(userId);
         if (progress) {
-          await storage.updateOnboardingProgress(userId, { 
+          await storage.updateOnboardingProgress(userId, {
             completedSteps: [...(progress.completedSteps as string[] || []), "pin"],
           });
         }
       }
-      
+
       res.json({ success: true, pinHash });
     } catch (error) {
       console.error("Set PIN error:", error);
@@ -177,7 +181,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/security/biometric", async (req, res) => {
     try {
       const { userId } = req.body;
-      
+
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
@@ -190,7 +194,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Store biometric setting in onboarding progress for later use
         const progress = await storage.getOnboardingProgress(userId);
         if (progress) {
-          await storage.updateOnboardingProgress(userId, { 
+          await storage.updateOnboardingProgress(userId, {
             completedSteps: [...(progress.completedSteps as string[] || []), "biometric"],
           });
         }
@@ -207,22 +211,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/mission/complete", async (req, res) => {
     try {
       const { userId, missionId = "create_wallet" } = req.body;
-      
+
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
 
       // Mark first mission as completed in onboarding progress
       if (missionId === "first" || missionId === "create_wallet") {
-        await storage.updateOnboardingProgress(userId, { 
-          firstMissionCompleted: true 
+        await storage.updateOnboardingProgress(userId, {
+          firstMissionCompleted: true
         });
 
         // Complete the create_wallet mission using new system
         const mission = await storage.getMission("create_wallet");
         if (mission) {
           let userMission = await storage.getUserMission(userId, "create_wallet");
-          
+
           if (!userMission) {
             userMission = await storage.createUserMission({
               userId,
@@ -236,7 +240,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             if (mission.rewardTokenId) {
               const rewardAmount = mission.rewardAmount + "000000000000000000"; // Add 18 decimals
               const currentBalance = await storage.getUserTokenBalance(userId, mission.rewardTokenId);
-              
+
               await storage.updateUserTokenBalance(userId, mission.rewardTokenId, {
                 balance: (BigInt(currentBalance?.balance ?? "0") + BigInt(rewardAmount)).toString(),
                 totalEarned: (BigInt(currentBalance?.totalEarned ?? "0") + BigInt(rewardAmount)).toString(),
@@ -246,9 +250,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      res.json({ 
-        success: true, 
-        reward: { amount: 100, token: "MEE" } 
+      res.json({
+        success: true,
+        reward: { amount: 100, token: "MEE" }
       });
     } catch (error) {
       console.error("Complete mission error:", error);
@@ -271,11 +275,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { address, chainId } = req.params;
       const token = await storage.getTokenByAddress(address, chainId);
-      
+
       if (!token) {
         return res.status(404).json({ message: "Token not found" });
       }
-      
+
       res.json(token);
     } catch (error) {
       console.error("Get token by address error:", error);
@@ -287,7 +291,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/faucet/request", async (req, res) => {
     try {
       const { userId, tokenAddress, chainId } = req.body;
-      
+
       if (!userId || !tokenAddress || !chainId) {
         return res.status(400).json({ message: "User ID, token address, and chain ID are required" });
       }
@@ -302,11 +306,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userBalance = await storage.getUserTokenBalance(userId, token.id);
       const now = new Date();
       const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-      
+
       if (userBalance?.lastFaucetClaim && new Date(userBalance.lastFaucetClaim) > oneDayAgo) {
         const timeRemaining = new Date(userBalance.lastFaucetClaim).getTime() + 24 * 60 * 60 * 1000 - now.getTime();
-        return res.status(429).json({ 
-          message: "Faucet cooldown active", 
+        return res.status(429).json({
+          message: "Faucet cooldown active",
           timeRemaining: Math.ceil(timeRemaining / 1000) // seconds
         });
       }
@@ -322,8 +326,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         totalEarned: (BigInt(userBalance?.totalEarned ?? "0") + BigInt(faucetAmount)).toString(),
       });
 
-      res.json({ 
-        success: true, 
+      res.json({
+        success: true,
         amount: faucetAmount,
         token: token.symbol,
         nextClaim: new Date(now.getTime() + 24 * 60 * 60 * 1000)
@@ -339,7 +343,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { userId } = req.params;
       const balances = await storage.getUserTokenBalances(userId);
-      
+
       // Include token details
       const balancesWithTokens = await Promise.all(
         balances.map(async (balance) => {
@@ -363,25 +367,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/missions/list", async (req, res) => {
     try {
       const { userId } = req.query;
-      
+
       if (!userId) {
         return res.status(400).json({ message: "User ID is required" });
       }
 
       const missions = await storage.getMissions();
       const userMissions = await storage.getUserMissions(userId as string);
-      
+
       // Combine mission data with user progress
       const missionList = await Promise.all(
         missions.map(async (mission) => {
           const userMission = userMissions.find(um => um.missionId === mission.id);
           let rewardToken = null;
-          
+
           if (mission.rewardTokenId) {
             const tokens = await storage.getTokens();
             rewardToken = tokens.find(t => t.id === mission.rewardTokenId);
           }
-          
+
           return {
             missionId: mission.id,
             title: mission.title,
@@ -408,7 +412,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/missions/complete", async (req, res) => {
     try {
       const { userId, missionId, proof } = req.body;
-      
+
       if (!userId || !missionId) {
         return res.status(400).json({ message: "User ID and mission ID are required" });
       }
@@ -421,7 +425,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Check if user already has this mission
       let userMission = await storage.getUserMission(userId, missionId);
-      
+
       if (!userMission) {
         // Create new user mission
         userMission = await storage.createUserMission({
@@ -445,7 +449,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (mission.rewardType === "token" && mission.rewardTokenId) {
         const rewardAmount = mission.rewardAmount + "000000000000000000"; // Add 18 decimals
         const currentBalance = await storage.getUserTokenBalance(userId, mission.rewardTokenId);
-        
+
         await storage.updateUserTokenBalance(userId, mission.rewardTokenId, {
           balance: (BigInt(currentBalance?.balance ?? "0") + BigInt(rewardAmount)).toString(),
           totalEarned: (BigInt(currentBalance?.totalEarned ?? "0") + BigInt(rewardAmount)).toString(),
@@ -453,7 +457,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
         const tokens = await storage.getTokens();
         const rewardToken = tokens.find(t => t.id === mission.rewardTokenId);
-        
+
         rewardGranted = {
           type: mission.rewardType,
           amount: mission.rewardAmount,
@@ -461,10 +465,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
       }
 
-      res.json({ 
-        status: "success", 
+      res.json({
+        status: "success",
         rewardGranted,
-        userMission 
+        userMission
       });
     } catch (error) {
       console.error("Complete mission error:", error);
@@ -475,7 +479,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/missions/claim", async (req, res) => {
     try {
       const { userId, missionId } = req.body;
-      
+
       if (!userId || !missionId) {
         return res.status(400).json({ message: "User ID and mission ID are required" });
       }
@@ -501,7 +505,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const mission = await storage.getMission(missionId);
       let reward = null;
-      
+
       if (mission?.rewardTokenId) {
         const tokens = await storage.getTokens();
         const rewardToken = tokens.find(t => t.id === mission.rewardTokenId);
@@ -512,16 +516,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
       }
 
-      res.json({ 
-        status: "claimed", 
+      res.json({
+        status: "claimed",
         reward,
-        userMission: updatedMission 
+        userMission: updatedMission
       });
     } catch (error) {
       console.error("Claim mission reward error:", error);
       res.status(500).json({ message: "Failed to claim mission reward" });
     }
   });
+
+  // Health check endpoint
+  app.get('/health', (req: Request, res: Response) => {
+    res.json({
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      contracts: {
+        token: process.env.VITE_TOKEN_CONTRACT_ADDRESS,
+        nft: process.env.VITE_NFT_CONTRACT_ADDRESS
+      }
+    });
+  });
+
+  // Default route
+  app.get('/api', (req: Request, res: Response) => {
+    res.json({
+      message: 'MeeChain API Server',
+      version: '1.0.0',
+      endpoints: [
+        'GET /health - Health check',
+        'GET /api - This endpoint',
+        '--- Faucet API ---',
+        'POST /faucet/request - Request testnet tokens',
+        'GET /faucet/status - Check faucet eligibility',
+        '--- Earnings API ---',
+        'GET /earnings/summary - Get user earnings summary',
+        'GET /earnings/history - Get user activity history',
+        'POST /earnings/transfer - Transfer earnings to wallet',
+        '--- User Tier API ---',
+        'GET /user-tier/status - Get current user tier',
+        'GET /user-tier/benefits - List tier benefits',
+        'POST /user-tier/update - Update user tier'
+      ]
+    });
+  });
+
+  // Faucet API routes
+  app.post('/faucet/request', requestFaucet);
+  app.get('/faucet/status', getFaucetStatus);
+
+  // Earnings API routes
+  app.get('/earnings/summary', getEarningsSummary);
+  app.get('/earnings/history', getEarningsHistory);
+  app.post('/earnings/transfer', transferEarnings);
+
+  // User Tier API routes
+  app.get('/user-tier/status', getUserTierStatus);
+  app.get('/user-tier/benefits', getTierBenefits);
+  app.post('/user-tier/update', updateUserTier);
+
+  // CORS preflight for all API routes
+  app.options('*', (req: Request, res: Response) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.sendStatus(200);
+  });
+
 
   const httpServer = createServer(app);
   return httpServer;

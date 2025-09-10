@@ -161,7 +161,7 @@ export function DailyQuests({ onLevelUp }: DailyQuestsProps) {
     // เช็คว่ามีเควสของวันนี้ใน localStorage หรือไม่
     const today = new Date().toDateString();
     const savedQuests = localStorage.getItem(`meebot_daily_quests_${today}`);
-    
+
     if (savedQuests) {
       return JSON.parse(savedQuests);
     } else {
@@ -186,11 +186,11 @@ export function DailyQuests({ onLevelUp }: DailyQuestsProps) {
 
   const completedQuests = quests.filter(q => q.completed).length;
   const totalQuests = quests.length;
-  const questProgress = (completedQuests / totalQuests) * 100;
+  const questProgress = (totalQuests > 0) ? (completedQuests / totalQuests) * 100 : 0;
 
   // XP จำนวนที่ต้องการสำหรับเลเวลถัดไป
   const xpForNextLevel = currentLevel * 50;
-  const xpProgress = (currentXP / xpForNextLevel) * 100;
+  const xpProgress = (xpForNextLevel > 0) ? (currentXP / xpForNextLevel) * 100 : 0;
 
   useEffect(() => {
     localStorage.setItem('meebot_xp', currentXP.toString());
@@ -203,23 +203,23 @@ export function DailyQuests({ onLevelUp }: DailyQuestsProps) {
     const checkNewDay = () => {
       const today = new Date().toDateString();
       const lastQuestDate = localStorage.getItem('meebot_last_quest_date');
-      
+
       if (lastQuestDate !== today) {
         // วันใหม่! สร้างเควสใหม่
         const newQuests = generateDailyQuests();
         setQuests(newQuests);
         localStorage.setItem(`meebot_daily_quests_${today}`, JSON.stringify(newQuests));
         localStorage.setItem('meebot_last_quest_date', today);
-        
+
         // เช็ค streak
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayQuests = localStorage.getItem(`meebot_daily_quests_${yesterday.toDateString()}`);
-        
+
         if (yesterdayQuests) {
           const parsedYesterdayQuests = JSON.parse(yesterdayQuests);
           const yesterdayCompleted = parsedYesterdayQuests.filter((q: Quest) => q.completed).length;
-          
+
           if (yesterdayCompleted >= 3) { // ทำเควสครบ 3 เควสขึ้นไป
             setDailyStreak(prev => prev + 1);
           } else {
@@ -232,7 +232,7 @@ export function DailyQuests({ onLevelUp }: DailyQuestsProps) {
     checkNewDay();
     // เช็คทุก ๆ นาที (สำหรับกรณีเปิดแอปค้างไว้ข้ามวัน)
     const interval = setInterval(checkNewDay, 60000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -262,6 +262,7 @@ export function DailyQuests({ onLevelUp }: DailyQuestsProps) {
 
   const handleCompleteQuest = (questId: number) => {
     const quest = quests.find(q => q.id === questId);
+    // เพิ่มการตรวจสอบว่า quest มีอยู่และยังไม่ถูก completed
     if (!quest || quest.completed) return;
 
     // อัปเดต quest status
@@ -283,7 +284,8 @@ export function DailyQuests({ onLevelUp }: DailyQuestsProps) {
     if (newXP >= requiredXP) {
       const newLevel = currentLevel + 1;
       setCurrentLevel(newLevel);
-      setCurrentXP(newXP - requiredXP); // เหลือ XP ไปเลเวลถัดไป
+      // ตรวจสอบให้แน่ใจว่า newXP - requiredXP ไม่ติดลบ
+      setCurrentXP(Math.max(0, newXP - requiredXP)); 
 
       if (onLevelUp) {
         onLevelUp(newLevel);
@@ -291,8 +293,11 @@ export function DailyQuests({ onLevelUp }: DailyQuestsProps) {
     }
 
     // แสดง toast พร้อมคำพูด MeeBot
-    const comments = meeBotComments[quest.category];
-    const randomComment = comments[Math.floor(Math.random() * comments.length)];
+    // ตรวจสอบว่า quest.category มีอยู่ใน meeBotComments หรือไม่
+    const comments = meeBotComments[quest.category as keyof typeof meeBotComments];
+    const randomComment = comments && comments.length > 0 
+      ? comments[Math.floor(Math.random() * comments.length)]
+      : "เยี่ยมมาก!"; // ข้อความสำรองหากไม่มี category ที่ตรงกัน
 
     toast({
       title: "🎉 เควสสำเร็จ!",
