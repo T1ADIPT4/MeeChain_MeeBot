@@ -332,6 +332,7 @@ export default function MeeBotPage() {
         isOpen={showOnboarding} 
         onClose={() => setShowOnboarding(false)} 
       />
+      </div>
     </div>
   );
 }
