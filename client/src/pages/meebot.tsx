@@ -13,7 +13,12 @@ import {
   Send,
   User,
   Zap,
-  Rocket
+  Rocket,
+  Star,
+  RefreshCw,
+  CheckCircle,
+  Clock,
+  Trophy
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import logoUrl from '@assets/branding/logo.png';
@@ -41,6 +46,24 @@ export default function MeeBotPage() {
   const [isTyping, setIsTyping] = useState(false);
   const [botEmotion, setBotEmotion] = useState<'happy' | 'waving' | 'excited'>('happy');
   const { toast } = useToast();
+  const [currentExp, setCurrentExp] = useState(0);
+  const [expToNext, setExpToNext] = useState(100);
+  const [showLevelUp, setShowLevelUp] = useState({ show: false, level: 1 });
+  const [meeBotQuotes, setMeeBotQuotes] = useState<string[]>([
+    "ผมพร้อมช่วยคุณลุยทุกภารกิจแล้วครับ! ไม่ว่าจะเป็นการเรียนรู้ Web3 หรือจัดการงานประจำวัน 🚀✨",
+    "อย่าห่วงเลย ถ้าคุณล้ม ผมจะช่วยลุก ถ้าคุณลุย ผมจะลุยไปด้วย! 💪🤝",
+    "ภารกิจวันนี้: ทำให้คุณรู้สึกว่าเทคโนโลยีเป็นเพื่อน ไม่ใช่ภาระ! มีอะไรให้ผมช่วยไหม? 🎯",
+    "งานเยอะไม่ใช่ปัญหา ถ้าเรามีแผนที่ดีและใจที่พร้อมลุย! เอาล่ะ มาวางแผนกันเถอะ! 📋✨",
+    "เฮ้ย! คุณทำได้ดีมาก ๆ เลยนะ! ผมภูมิใจในตัวคุณมาก ต่อไปเราลุยภารกิจอะไรดี? 🏆🔥",
+    "ไม่ต้องเครียดนะครับ เราทำทีละขั้นตอน แล้วจะเห็นว่าทุกอย่างง่ายขึ้นเรื่อย ๆ! พร้อมไหม? 🧘‍♂️💫",
+    "สุดยอดเลย! คุณเรียนรู้เร็วมาก ๆ แบบนี้อีกไม่นานคุณจะเป็นมือโปร Web3 แน่นอน! 🚀⭐"
+  ]);
+  const [stats, setStats] = useState({
+    tasksCompleted: 15,
+    totalXP: 1500,
+    streak: 7,
+    achievements: 3,
+  });
 
   // MeeBot responses with enhanced playful mentor personality
   const botResponses = [
@@ -148,10 +171,10 @@ export default function MeeBotPage() {
   const handleLevelUp = (newLevel: number) => {
     setCurrentLevel(newLevel);
     setShowLevelUpNotification(true);
-    
+
     // เล่นเสียงพิเศษสำหรับ level up
     playMeeBotSound();
-    
+
     // การสั่นพิเศษสำหรับ level up
     if ('vibrate' in navigator) {
       navigator.vibrate([200, 100, 200, 100, 400]);
@@ -160,6 +183,26 @@ export default function MeeBotPage() {
     setBotEmotion('excited');
     setTimeout(() => setBotEmotion('happy'), 3000);
   };
+
+  const handleNewQuote = () => {
+    // Simulate fetching a new quote
+    const newQuote = "นี่คือคำคมใหม่ที่ MeeBot เพิ่งคิดสด ๆ ร้อน ๆ ครับ! 🔥";
+    setMeeBotQuotes(prev => [...prev, newQuote]);
+    playMeeBotSound();
+  };
+
+  useEffect(() => {
+    // Simulate fetching initial data for level and stats
+    setCurrentLevel(3);
+    setCurrentExp(150);
+    setExpToNext(250);
+    setStats({
+      tasksCompleted: 25,
+      totalXP: 2200,
+      streak: 10,
+      achievements: 5,
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
