@@ -347,6 +347,91 @@ body {
     }
   }
 
+  /* MeeBot Insight animations */
+  @keyframes insight-glow {
+    0%, 100% { 
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+    }
+    50% { 
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+    }
+  }
+
+  @keyframes quest-complete {
+    0% { 
+      transform: scale(1);
+      filter: brightness(1);
+    }
+    50% { 
+      transform: scale(1.1);
+      filter: brightness(1.5);
+    }
+    100% { 
+      transform: scale(1);
+      filter: brightness(1);
+    }
+  }
+
+  @keyframes chat-typing {
+    0%, 60%, 100% {
+      transform: translateY(0);
+      opacity: 0.4;
+    }
+    30% {
+      transform: translateY(-10px);
+      opacity: 1;
+    }
+  }
+
+  @keyframes emotion-bounce {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-5px) scale(1.2);
+    }
+  }
+
+  @keyframes reward-sparkle {
+    0% {
+      transform: scale(0) rotate(0deg);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.2) rotate(180deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* Utility animations */
+  .animate-fadeIn {
+    animation: fade-in 0.5s ease-out;
+  }
+
+  .animate-chat-bubble-appear {
+    animation: chat-bubble-appear 0.6s ease-out;
+  }
+
+  .animate-insight-glow {
+    animation: insight-glow 2s ease-in-out infinite;
+  }
+
+  .animate-quest-complete {
+    animation: quest-complete 0.8s ease-out;
+  }
+
+  .animate-emotion-bounce {
+    animation: emotion-bounce 1s ease-in-out;
+  }
+
+  .animate-reward-sparkle {
+    animation: reward-sparkle 1.5s ease-out;
+  }
+
   .animate-wiggle {
     animation: wiggle 0.5s ease-in-out infinite;
   }

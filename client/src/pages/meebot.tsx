@@ -27,6 +27,10 @@ import { DailyQuests } from '@/components/meebot/daily-quests';
 import { LevelUpNotification } from '@/components/meebot/level-up-notification';
 import { MeeBotOnboardingModal } from '@/components/meebot/meebot-onboarding-modal';
 import { Link } from 'wouter';
+import { MeeBotTips } from '@/components/meebot/meebot-tips';
+import { MeeBotInsight } from '@/components/meebot/meebot-insight';
+import { WeeklyQuest } from '@/components/meebot/weekly-quest';
+import { MeeBotChat } from '@/components/meebot/meebot-chat';
 
 // Placeholder for the new SystemCheck component
 const SystemCheck = () => {
@@ -382,6 +386,19 @@ export default function MeeBotPage() {
               </p>
             </CardContent>
           </Card>
+
+        {/* New MeeBot Features Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1">
+            <MeeBotInsight />
+          </div>
+          <div className="lg:col-span-1">
+            <WeeklyQuest />
+          </div>
+          <div className="lg:col-span-1">
+            <MeeBotChat />
+          </div>
+        </div>
         </div>
       </div>
 
