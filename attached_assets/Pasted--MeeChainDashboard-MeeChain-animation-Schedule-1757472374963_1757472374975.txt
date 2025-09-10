@@ -1,0 +1,263 @@
+ชุดธีม หน้า MeeChainDashboard 
+โลโก้ MeeChain ตรงกลาง พร้อม animation "หายใจ"
+กราฟแสดงสถานะ Scheduled Tasks (แบบเส้นและแท่ง)
+Toast Notification พร้อมเสียง/vibration
+Navigation bar ครบ พร้อม avatar
+ปุ่มควบคุม & Cancel
+Responsive, โทนสีฟ้า-เทา-ดำ
+
+import React, { useState, useEffect, useRef } from "react";
+import "./MeeChainDashboard.css";
+import { Line, Bar } from "react-chartjs-2";
+import { Chart, CategoryScale, LinearScale, PointElement, LineElement, BarElement } from "chart.js";
+
+Chart.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement);
+
+const LOGO_URL = "/images/mee_chain_logo.png"; /
+
+function breatheAnimation(ref: React.RefObject<HTMLDivElement>) {
+  let scale = 1;
+  let direction = 1;
+  let frame: number;
+  function animate() {
+    if (ref.current) {
+      scale += direction * 0.005;
+      if (scale > 1.05) direction = -1;
+      if (scale < 0.95) direction = 1;
+      ref.current.style.transform = `scale(${scale})`;
+    }
+    frame = requestAnimationFrame(animate);
+  }
+  animate();
+  return () => cancelAnimationFrame(frame);
+}
+
+export default function MeeChainDashboard() {
+  // กราฟจำลองข้อมูล
+  const [taskData, setTaskData] = useState([10, 12, 16, 14, 18, 22, 24]);
+  const [labels, setLabels] = useState(["08:00", "08:10", "08:20", "08:30", "08:40", "08:50", "09:00"]);
+  const [toast, setToast] = useState("");
+  const logoRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Animation "หายใจ"
+    const cancel = breatheAnimation(logoRef);
+    return cancel;
+  }, []);
+
+  // Toast/Notification + vibration + sound
+  function showToast(msg: string) {
+    setToast(msg);
+    // vibration
+    if ("vibrate" in navigator) navigator.vibrate([200, 50, 200]);
+    // sound
+    const audio = new Audio("/sounds/notification.mp3");
+    audio.play();
+    setTimeout(() => setToast(""), 3000);
+  }
+
+  // กดปุ่มจำลอง task สำเร็จ
+  function handleCompleteTask() {
+    showToast("Task completed successfully!");
+    setTaskData([...taskData, Math.floor(Math.random() * 30)]);
+    setLabels([...labels, new Date().toLocaleTimeString().slice(0,5)]);
+  }
+
+  return (
+    <div className="mc-root">
+      <nav className="mc-navbar">
+        <button className="mc-menu"><span>&#9776;</span></button>
+        <span className="mc-title">Scheduled Tasks</span>
+        <img src="/images/avatar.png" alt="avatar" className="mc-avatar" />
+      </nav>
+
+      <div className="mc-card">
+        <div className="mc-controls">
+          <button onClick={handleCompleteTask}>Start</button>
+          <button>Pause</button>
+          <button>Stop</button>
+          <button>Settings</button>
+        </div>
+        <div className="mc-logo-bg" ref={logoRef}>
+          <img src={LOGO_URL} alt="MeeChain Logo" className="mc-logo" />
+        </div>
+        <h1 className="mc-brand">MeeChain</h1>
+        <p className="mc-status">Monitoring in progress…</p>
+        <button className="mc-cancel">Cancel</button>
+        <div style={{margin: "32px 0"}}>
+          <Line
+            data={{
+              labels,
+              datasets: [{
+                label: "Task Progress",
+                data: taskData,
+                borderColor: "#67aaff",
+                backgroundColor: "#222b3a22",
+                tension: 0.4
+              }]
+            }}
+            options={{
+              responsive: true,
+              plugins: { legend: { display: false } },
+              scales: { x: { grid: { color: "#444" } }, y: { grid: { color: "#444" }, beginAtZero: true } }
+            }}
+            height={190}
+          />
+          <Bar
+            data={{
+              labels,
+              datasets: [{
+                label: "Tasks",
+                data: taskData,
+                backgroundColor: "#67aaffaa",
+              }]
+            }}
+            options={{
+              responsive: true,
+              plugins: { legend: { display: false } },
+              scales: { x: { grid: { color: "#444" } }, y: { grid: { color: "#444" }, beginAtZero: true } }
+            }}
+            height={120}
+          />
+        </div>
+      </div>
+
+      {/* Toast notification */}
+      {toast &&
+        <div className="mc-toast">
+          <span role="img" aria-label="bell">🔔</span>
+          {toast}
+        </div>
+      }
+    </div>
+  );
+}
+
+.mc-root {
+  background: #222b3a;
+  min-height: 100vh;
+  color: #f8fbff;
+  font-family: 'Montserrat', 'Mitr', Arial, sans-serif;
+  padding: 0;
+}
+.mc-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #232c3a;
+  padding: 12px 24px;
+  border-bottom: 1.5px solid #334466;
+}
+.mc-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #aabdff;
+}
+.mc-menu {
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  color: #aabdff;
+  cursor: pointer;
+}
+.mc-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #fff;
+  object-fit: cover;
+}
+.mc-card {
+  margin: 36px auto;
+  background: #232c3a;
+  border-radius: 20px;
+  box-shadow: 0 2px 16px #151b23;
+  max-width: 430px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.mc-controls {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.mc-controls button, .mc-cancel {
+  background: #353e4e;
+  color: #aabdff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.mc-controls button:hover, .mc-cancel:hover {
+  background: #67aaff;
+  color: #fff;
+}
+.mc-logo-bg {
+  margin: 16px 0 4px 0;
+  background: #222b3a;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 14px #10141d;
+  transition: transform 0.18s cubic-bezier(.6,-0.28,.74,.05);
+}
+.mc-logo {
+  width: 95px;
+  height: 95px;
+  object-fit: contain;
+}
+.mc-brand {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #f6f8ff;
+  margin: 8px 0;
+}
+.mc-status {
+  font-size: 1.1rem;
+  color: #b2caff;
+  margin-bottom: 18px;
+}
+.mc-cancel {
+  width: 100%;
+  margin: 12px 0;
+}
+.mc-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  background: #2c3443;
+  color: #e6f2ff;
+  border-radius: 14px;
+  padding: 15px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 12px #191f29;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 999;
+  animation: toastShow 0.32s ease;
+}
+@keyframes toastShow {
+  from { opacity: 0; bottom: 0px;}
+  to { opacity: 1; bottom: 30px;}
+}
+
+@media (max-width: 700px) {
+  .mc-card { max-width: 97vw; padding: 18px 7vw; }
+  .mc-navbar { padding: 8px 10px; }
+  .mc-logo-bg { width: 84px; height: 84px; }
+  .mc-logo { width: 65px; height: 65px; }
+  .mc-brand { font-size: 1.3rem; }
+  .mc-controls button, .mc-cancel { font-size: 0.92rem; padding: 7px 10px;}
+}

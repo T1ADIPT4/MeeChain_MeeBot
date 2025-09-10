@@ -1,0 +1,133 @@
+ขอบคุณสำหรับรายละเอียดครับ!  
+**โจทย์:**  
+- ใช้ React  
+- หน้าเดียว (Single Page Application – SPA)  
+- มีระบบพิเศษ: swap หรือ bridge (สำหรับ token หรือเหรียญ)
+
+## โครงสร้างไฟล์แนะนำ
+
+```plaintext
+├── public/
+│   └── assets/         # โลโก้, ไอคอน
+├── src/
+│   ├── components/
+│   │   ├── Header.tsx
+│   │   ├── SwapForm.tsx      # ฟอร์มสำหรับ swap หรือ bridge
+│   │   └── TokenInfo.tsx     # แสดงข้อมูล token
+│   ├── App.tsx               # หน้าเดียวหลัก
+│   ├── styles/
+│   │   └── theme.ts
+│   └── utils/
+│       └── api.ts            # สำหรับเรียก API swap/bridge
+```
+
+## ตัวอย่างไฟล์เริ่มต้น
+
+```typescript name=src/App.tsx
+import React from 'react';
+import Header from './components/Header';
+import SwapForm from './components/SwapForm';
+import TokenInfo from './components/TokenInfo';
+
+const App: React.FC = () => {
+  return (
+    <div>
+      <Header />
+      <main>
+        <SwapForm />
+        <TokenInfo />
+      </main>
+    </div>
+  );
+};
+
+export default App;
+```
+
+```typescript name=src/components/Header.tsx
+import React from 'react';
+
+const Header: React.FC = () => (
+  <header style={{ padding: 16, background: '#222', color: '#fff', borderRadius: 8 }}>
+    <img src="/assets/logo.png" alt="Logo" height={40} />
+    <h1 style={{ fontFamily: 'Rounded Sans, Nunito, Arial', marginLeft: 16, display: 'inline-block' }}>
+      Token Bridge & Swap
+    </h1>
+    <div style={{ fontSize: 18, marginTop: 4 }}>
+      <span>แลกเปลี่ยนเหรียญข้ามเครือข่ายง่ายๆ</span>
+    </div>
+  </header>
+);
+
+export default Header;
+```
+
+```typescript name=src/components/SwapForm.tsx
+import React, { useState } from 'react';
+
+const SwapForm: React.FC = () => {
+  const [fromToken, setFromToken] = useState('ETH');
+  const [toToken, setToToken] = useState('USDT');
+  const [amount, setAmount] = useState('');
+
+  const handleSwap = () => {
+    // Call API or smart contract for swap/bridge
+    alert(`Swapping ${amount} ${fromToken} to ${toToken}`);
+  };
+
+  return (
+    <section style={{ padding: 24, background: '#f8f8f8', borderRadius: 12, margin: '24px 0' }}>
+      <h2>Swap/Bridge</h2>
+      <div>
+        <label>From:</label>
+        <select value={fromToken} onChange={e => setFromToken(e.target.value)}>
+          <option value="ETH">ETH</option>
+          <option value="USDT">USDT</option>
+        </select>
+        <label>To:</label>
+        <select value={toToken} onChange={e => setToToken(e.target.value)}>
+          <option value="ETH">ETH</option>
+          <option value="USDT">USDT</option>
+        </select>
+        <label>Amount:</label>
+        <input value={amount} onChange={e => setAmount(e.target.value)} type="number" />
+        <button onClick={handleSwap}>Swap / Bridge</button>
+      </div>
+    </section>
+  );
+};
+
+export default SwapForm;
+```
+
+```typescript name=src/components/TokenInfo.tsx
+import React from 'react';
+
+const TokenInfo: React.FC = () => (
+  <section style={{ padding: 12 }}>
+    <h3>ข้อมูลเหรียญล่าสุด</h3>
+    {/* แสดงข้อมูล token เช่น balance, symbol, network */}
+    <ul>
+      <li>ETH: 1.234</li>
+      <li>USDT: 500.00</li>
+    </ul>
+  </section>
+);
+
+export default TokenInfo;
+```
+
+```typescript name=src/utils/api.ts
+// ตัวอย่างฟังก์ชั่นสำหรับเรียก API สมมติ
+export const swapToken = async (from: string, to: string, amount: number) => {
+  // connect wallet, call smart contract, หรือ fetch ไปยัง backend
+  return { success: true, txHash: '0x123...' };
+};
+```
+
+## หมายเหตุ
+- สามารถนำโครงสร้างนี้ไปต่อยอดกับการเชื่อมต่อ wallet (MetaMask, WalletConnect ฯลฯ)
+- ฟังก์ชัน swap/bridge สามารถเพิ่ม logic สำหรับเชื่อมกับ smart contract หรือ backend ได้
+- สามารถปรับดีไซน์และระบบตามต้องการ
+
+ถ้าต้องการเสริมระบบ, เพิ่มฟีเจอร์, หรือโค้ดแบบมีเชื่อมต่อ smart contract แจ้งรายละเอียดเพิ่มได้ครับ!
