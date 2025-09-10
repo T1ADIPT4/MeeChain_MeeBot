@@ -25,6 +25,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Link } from 'wouter';
 import { AcademyWelcome } from '@/components/academy/academy-welcome';
+import { WalletSetup } from '@/components/academy/wallet-setup';
 
 interface Quest {
   id: string;
@@ -55,6 +56,7 @@ export default function Academy() {
   
   const [showWelcome, setShowWelcome] = useState(true);
   const [isFirstTime, setIsFirstTime] = useState(true);
+  const [currentAcademyStep, setCurrentAcademyStep] = useState(1);
   const [currentLevel, setCurrentLevel] = useState(1);
   const [currentExp, setCurrentExp] = useState(0);
   const [selectedQuest, setSelectedQuest] = useState<Quest | null>(null);
@@ -188,6 +190,7 @@ export default function Academy() {
   const handleStartJourney = () => {
     setShowWelcome(false);
     setIsFirstTime(false);
+    setCurrentAcademyStep(2);
     
     toast({
       title: "🎓 ยินดีต้อนรับสู่ Academy!",
@@ -243,6 +246,16 @@ export default function Academy() {
       <AcademyWelcome 
         onStartJourney={handleStartJourney}
         onSkip={handleSkipWelcome}
+      />
+    );
+  }
+
+  // Show Wallet Setup step
+  if (currentAcademyStep === 2) {
+    return (
+      <WalletSetup 
+        onNext={() => setCurrentAcademyStep(3)}
+        onPrev={() => setCurrentAcademyStep(1)}
       />
     );
   }
