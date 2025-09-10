@@ -11,6 +11,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useQuery } from '@tanstack/react-query';
 import { TOKEN_ADDRESSES, CHAIN_OPTIONS, swapOrBridgeToken, getSwapQuote } from '@/lib/swap-bridge';
 import logoUrl from '@assets/branding/logo.png';
+import { LoadingSpinner, LoadingDots } from '@/components/ui/loading-spinner';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function SwapBridge() {
   const [location, navigate] = useLocation();
@@ -50,7 +52,7 @@ export default function SwapBridge() {
   };
 
   // Fetch user balances
-  const { data: balances } = useQuery({
+  const { data: balances, isLoading: isLoadingBalances } = useQuery({
     queryKey: ['/api/wallet/balances'],
     queryFn: async () => {
       const response = await fetch('/api/wallet/balances', {
@@ -141,13 +143,15 @@ export default function SwapBridge() {
         targetChain: mode === 'bridge' ? targetChain : undefined
       });
 
-      const txHash = await swapOrBridgeToken(
+      const result = await swapOrBridgeToken(
         TOKEN_ADDRESSES[fromToken as keyof typeof TOKEN_ADDRESSES],
         TOKEN_ADDRESSES[toToken as keyof typeof TOKEN_ADDRESSES],
         amount,
         mode === 'bridge' ? targetChain : undefined
       );
 
+      const txHash = typeof result === 'string' ? result : result.txHash;
+      
       toast({
         title: `${mode === 'swap' ? 'Swap' : 'Bridge'} สำเร็จ! 🎉`,
         description: `Transaction Hash: ${txHash.slice(0, 10)}...`,

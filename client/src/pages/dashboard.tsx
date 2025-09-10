@@ -43,6 +43,8 @@ import { QRCodeGenerator } from '@/components/web3/qr-code-generator';
 import logoUrl from '@assets/branding/logo.png';
 import { MeeBotSecretsAlert } from '@/components/meebot/secrets-alert';
 import { Link } from 'wouter'; // Assuming Link is needed for navigation
+import { LoadingSpinner, LoadingDots } from '@/components/ui/loading-spinner';
+import { BalanceCardSkeleton, WalletInfoSkeleton } from '@/components/ui/balance-card-skeleton';
 import ContractHealthMonitor from '@/components/meebot/contract-health-monitor';
 import BadgeViewer from '@/components/nft/badge-viewer';
 import { useSmartContracts } from '@/hooks/use-smart-contracts';
@@ -101,7 +103,7 @@ export default function DashboardPage() {
   });
 
   // Fetch token balances  
-  const { data: balances } = useQuery({
+  const { data: balances, isLoading: isLoadingBalances } = useQuery({
     queryKey: ['/api/wallet/balances'],
     queryFn: async () => {
       const response = await fetch('/api/wallet/balances', {
@@ -206,8 +208,37 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
-        <div className="text-blue-300 text-lg animate-pulse">กำลังโหลด...</div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+        {/* Enhanced Header */}
+        <nav className="flex items-center justify-between bg-slate-800/80 backdrop-blur-sm border-b border-slate-600/50 p-4">
+          <Button variant="ghost" size="sm" className="text-blue-300">
+            <Menu className="w-5 h-5" />
+          </Button>
+          <h1 className="text-xl font-bold text-blue-300">MeeChain Dashboard</h1>
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+            <User className="w-5 h-5 text-white" />
+          </div>
+        </nav>
+
+        <div className="px-6 pb-6 space-y-6">
+          <div className="pt-6">
+            <WalletInfoSkeleton />
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <BalanceCardSkeleton />
+            <BalanceCardSkeleton />
+            <BalanceCardSkeleton />
+          </div>
+
+          <div className="flex items-center justify-center py-8">
+            <div className="text-center space-y-3">
+              <LoadingSpinner size="lg" />
+              <p className="text-cyan-400">กำลังโหลดข้อมูล Wallet...</p>
+              <LoadingDots />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -579,7 +610,11 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {balances?.tokens?.map((token: any) => (
+              {isLoadingBalances ? (
+                Array.from({ length: 3 }).map((_, index) => (
+                  <BalanceCardSkeleton key={index} />
+                ))
+              ) : balances?.data?.map((token: any) => (
                 <div key={token.symbol} className="flex items-center justify-between p-3 bg-slate-900/30 rounded-lg hover:bg-slate-900/50 transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
