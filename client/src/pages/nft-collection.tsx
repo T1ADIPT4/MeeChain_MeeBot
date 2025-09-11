@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useLocation } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -50,9 +49,9 @@ export default function NFTCollectionPage() {
           <ArrowLeft className="w-4 h-4" />
           <span className="hidden sm:inline">ย้อนกลับ</span>
         </Button>
-        
+
         <h1 className="text-xl font-bold text-blue-300">NFT Collection & Marketplace</h1>
-        
+
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
@@ -239,7 +238,7 @@ export default function NFTCollectionPage() {
         <div className="flex justify-around items-center max-w-md mx-auto">
           <Button
             variant="ghost"
-            className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-200 p-2"
+            className="flex flex-col items-center gap-1 text-slate-400 hover:text-cyan-200 p-2"
             onClick={() => navigate('/dashboard')}
           >
             <Wallet className="w-5 h-5" />
@@ -248,7 +247,7 @@ export default function NFTCollectionPage() {
 
           <Button
             variant="ghost"
-            className="flex flex-col items-center gap-1 text-blue-400 hover:text-blue-200 p-2 relative"
+            className="flex flex-col items-center gap-1 text-blue-400 hover:text-cyan-200 p-2 relative"
           >
             <div className="relative">
               <Sparkles className="w-5 h-5" />
@@ -260,7 +259,7 @@ export default function NFTCollectionPage() {
 
           <Button
             variant="ghost"
-            className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-200 p-2"
+            className="flex flex-col items-center gap-1 text-slate-400 hover:text-cyan-200 p-2"
             onClick={() => navigate('/meebot')}
           >
             <Bot className="w-5 h-5" />
