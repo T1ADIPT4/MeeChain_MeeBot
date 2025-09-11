@@ -79,12 +79,12 @@ body {
 }
 
 .dark {
-  --background: hsl(20, 14%, 4%);
-  --foreground: hsl(45, 25%, 91%);
-  --card: hsl(20, 14%, 8%);
-  --card-foreground: hsl(45, 25%, 85%);
-  --popover: hsl(20, 14%, 4%);
-  --popover-foreground: hsl(45, 25%, 91%);
+  --background: hsl(220 13% 7%);
+  --foreground: hsl(200 6.6667% 91.1765%);
+  --card: hsl(228 12% 15%);
+  --card-foreground: hsl(0 0% 92%);
+  --popover: hsl(220 13% 9%);
+  --popover-foreground: hsl(200 6.6667% 91.1765%);
   --primary: hsl(9, 75%, 61%);
   --primary-foreground: hsl(0, 0%, 100%);
   --secondary: hsl(30, 15%, 52%);
@@ -95,22 +95,22 @@ body {
   --accent-foreground: hsl(45, 25%, 85%);
   --destructive: hsl(356.3033, 90.5579%, 54.3137%);
   --destructive-foreground: hsl(0, 0%, 100%);
-  --border: hsl(20, 14%, 15%);
-  --input: hsl(20, 14%, 18%);
-  --ring: hsl(9, 75%, 61%);
+  --border: hsl(210 8% 25%);
+  --input: hsl(207.6923 25% 22%);
+  --ring: hsl(202.8169 89.1213% 53.1373%);
   --chart-1: hsl(203.8863, 88.2845%, 53.1373%);
   --chart-2: hsl(159.7826, 100%, 36.0784%);
   --chart-3: hsl(42.0290, 92.8251%, 56.2745%);
   --chart-4: hsl(147.1429, 78.5047%, 41.9608%);
   --chart-5: hsl(341.4894, 75.2000%, 50.9804%);
-  --sidebar: hsl(20, 14%, 8%);
-  --sidebar-foreground: hsl(45, 25%, 85%);
-  --sidebar-primary: hsl(9, 75%, 61%);
-  --sidebar-primary-foreground: hsl(0, 0%, 100%);
-  --sidebar-accent: hsl(25, 45%, 20%);
-  --sidebar-accent-foreground: hsl(45, 25%, 85%);
-  --sidebar-border: hsl(20, 14%, 15%);
-  --sidebar-ring: hsl(9, 75%, 61%);
+  --sidebar: hsl(228 12% 15%);
+  --sidebar-foreground: hsl(0 0% 92%);
+  --sidebar-primary: hsl(202.8169 89.1213% 53.1373%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(205.7143 70% 12%);
+  --sidebar-accent-foreground: hsl(203.7736 87.6033% 60%);
+  --sidebar-border: hsl(205.7143 15.7895% 30%);
+  --sidebar-ring: hsl(202.8169 89.1213% 53.1373%);
   --font-sans: Open Sans, sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
@@ -245,7 +245,7 @@ body {
   .bg-slate-800\/80 {
     background-color: hsl(215 25% 15% / 0.95);
   }
-  
+
   .text-slate-400 {
     color: hsl(215 15% 70%);
   }
@@ -323,7 +323,7 @@ body {
     padding: 12px 16px;
     font-size: 14px;
   }
-  
+
   .meebot-control-button:active {
     transform: scale(0.98);
     transition: transform 0.1s ease;
