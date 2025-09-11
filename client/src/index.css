@@ -205,14 +205,60 @@ body {
   animation: slideIn 0.4s ease-out;
 }
 
-/* Custom hover effects */
+/* Enhanced hover effects with accessibility */
 .auth-button {
   transition: all 0.2s ease;
+  outline: 2px solid transparent;
 }
 
 .auth-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px hsla(262 83% 58% / 0.3);
+}
+
+.auth-button:focus-visible {
+  outline: 2px solid hsl(203.8863 88.2845% 53.1373%);
+  outline-offset: 2px;
+}
+
+/* Custom dashboard animations */
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes gentle-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+}
+
+.gentle-pulse {
+  animation: gentle-pulse 3s ease-in-out infinite;
+}
+
+.gentle-float {
+  animation: gentle-float 2s ease-in-out infinite;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .bg-slate-800\/80 {
+    background-color: hsl(215 25% 15% / 0.95);
+  }
+  
+  .text-slate-400 {
+    color: hsl(215 15% 70%);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .gentle-pulse,
+  .gentle-float,
+  .animate-pulse,
+  .animate-bounce {
+    animation: none;
+  }
 }
 
 /* Mission card styling */
