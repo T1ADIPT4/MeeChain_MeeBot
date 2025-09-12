@@ -19,6 +19,8 @@ import { NFTMarketplace } from '@/components/nft/marketplace';
 import { NFTQuestSystem } from '@/components/nft/quest-system';
 import { RPGMarketplace } from '@/components/nft/rpg-marketplace';
 import { CollectionQuestSystem } from '@/components/nft/collection-quest-system';
+import { BadgeMinter } from '@/components/nft/badge-minter';
+import { QuestTracker } from '@/components/nft/quest-tracker';
 import { useToast } from '@/hooks/use-toast';
 
 export default function NFTCollectionPage() {
@@ -116,7 +118,7 @@ export default function NFTCollectionPage() {
 
         {/* Main Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-slate-800/50 border border-slate-600/50">
+          <TabsList className="grid w-full grid-cols-6 bg-slate-800/50 border border-slate-600/50">
             <TabsTrigger 
               value="collection" 
               className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300"
@@ -139,11 +141,18 @@ export default function NFTCollectionPage() {
               NFT Quests
             </TabsTrigger>
             <TabsTrigger 
-              value="rpg-marketplace" 
+              value="tracker" 
               className="data-[state=active]:bg-pink-500/20 data-[state=active]:text-pink-300"
             >
-              <Bot className="w-4 h-4 mr-2" />
-              RPG Marketplace
+              <Target className="w-4 h-4 mr-2" />
+              Tracker
+            </TabsTrigger>
+            <TabsTrigger 
+              value="minter" 
+              className="data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-300"
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              Minter
             </TabsTrigger>
             <TabsTrigger 
               value="marketplace" 
@@ -169,9 +178,14 @@ export default function NFTCollectionPage() {
             <NFTQuestSystem />
           </TabsContent>
 
-          {/* RPG Marketplace Tab */}
-          <TabsContent value="rpg-marketplace" className="space-y-6">
-            <RPGMarketplace />
+          {/* Quest Tracker Tab */}
+          <TabsContent value="tracker" className="space-y-6">
+            <QuestTracker />
+          </TabsContent>
+
+          {/* Badge Minter Tab */}
+          <TabsContent value="minter" className="space-y-6">
+            <BadgeMinter />
           </TabsContent>
 
           {/* Marketplace Tab */}
