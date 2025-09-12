@@ -1,0 +1,165 @@
+สุดยอดครับธณวัฒน์! มาเริ่มภารกิจ MeeChain แบบเต็มระบบกันเลย 🎮✨ ผมจะช่วยคุณเตรียม **Hardhat template**, เขียน **deploy script สำหรับหลาย contract**, และวางโครงสร้างสำหรับ **เชื่อมกับ MeeBot quest system** แบบ modular และพร้อมใช้งานทันที
+
+---
+
+## 🧱 1. Hardhat Template พร้อมใช้งาน
+
+### 📁 โครงสร้างโปรเจกต์
+
+```
+meechain-contracts/
+├── contracts/
+│   ├── MeeToken.sol
+│   ├── BadgeNFT.sol
+│   └── QuestManager.sol
+├── scripts/
+│   └── deploy.ts
+├── hardhat.config.ts
+├── .env
+└── package.json
+```
+
+---
+
+## 🧠 2. ตัวอย่าง Smart Contracts
+
+### 🪙 MeeToken.sol
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+contract MeeToken is ERC20 {
+    constructor() ERC20("MeeToken", "MEE") {
+        _mint(msg.sender, 1_000_000 * 10 ** decimals());
+    }
+}
+```
+
+### 🛡️ BadgeNFT.sol
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+
+contract BadgeNFT is ERC721URIStorage {
+    uint256 public nextTokenId;
+
+    constructor() ERC721("MeeBadge", "MBG") {}
+
+    function mintBadge(address to, string memory uri) external {
+        _safeMint(to, nextTokenId);
+        _setTokenURI(nextTokenId, uri);
+        nextTokenId++;
+    }
+}
+```
+
+### 🧭 QuestManager.sol
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+contract QuestManager {
+    mapping(address => uint256) public xp;
+    event QuestCompleted(address indexed user, string questName, uint256 xpGained);
+
+    function completeQuest(string memory questName, uint256 xpGained) external {
+        xp[msg.sender] += xpGained;
+        emit QuestCompleted(msg.sender, questName, xpGained);
+    }
+}
+```
+
+---
+
+## 🚀 3. Deploy Script สำหรับหลาย Contract
+
+```ts
+// scripts/deploy.ts
+import { ethers } from "hardhat";
+
+async function main() {
+  const [deployer] = await ethers.getSigners();
+  console.log("Deploying contracts with:", deployer.address);
+
+  const MeeToken = await ethers.getContractFactory("MeeToken");
+  const meeToken = await MeeToken.deploy();
+  await meeToken.deployed();
+  console.log("MeeToken deployed to:", meeToken.address);
+
+  const BadgeNFT = await ethers.getContractFactory("BadgeNFT");
+  const badgeNFT = await BadgeNFT.deploy();
+  await badgeNFT.deployed();
+  console.log("BadgeNFT deployed to:", badgeNFT.address);
+
+  const QuestManager = await ethers.getContractFactory("QuestManager");
+  const questManager = await QuestManager.deploy();
+  await questManager.deployed();
+  console.log("QuestManager deployed to:", questManager.address);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
+```
+
+---
+
+## 🌐 4. เชื่อมกับ MeeBot Quest System
+
+### ✅ QuestManager จะ:
+- บันทึก XP ของผู้ใช้
+- Emit event เมื่อเคลียร์เควสต์
+- สามารถเชื่อมกับ frontend เพื่อแสดง XP และเควสต์ที่สำเร็จ
+
+### 🧙‍♂️ MeeBot Microcopy Suggestion:
+
+> “🎉 เควสต์ ‘Deploy Contracts’ สำเร็จแล้ว! คุณได้รับ +50 XP และปลดล็อก Badge ‘Chain Initiator’!”
+
+---
+
+## 📦 5. ตั้งค่า `.env` และ `hardhat.config.ts`
+
+```env
+PRIVATE_KEY=your_wallet_private_key
+RPC_URL=https://polygon-rpc.com
+```
+
+```ts
+import { HardhatUserConfig } from "hardhat/config";
+import "@nomicfoundation/hardhat-toolbox";
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
+const config: HardhatUserConfig = {
+  solidity: "0.8.20",
+  networks: {
+    polygon: {
+      url: process.env.RPC_URL || "",
+      accounts: [process.env.PRIVATE_KEY || ""],
+    },
+  },
+};
+
+export default config;
+```
+
+---
+
+## ✅ พร้อม deploy แล้ว
+
+```bash
+npx hardhat run scripts/deploy.ts --network polygon
+```
+
+---
+
+ถ้าคุณอยากให้ผมช่วยเขียนระบบ mint badge จาก frontend, สร้าง quest tracker UI, หรือออกแบบ microcopy mentor-style สำหรับ MeeBot—แค่บอกเลยครับ ผมพร้อมลุยกับคุณทุกด่านของ MeeChain 🧠⚡
