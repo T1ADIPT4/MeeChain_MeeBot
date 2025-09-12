@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,10 +15,13 @@ import {
   Users,
   ArrowRight 
 } from 'lucide-react';
+import { BadgeMinter } from '../components/badge-minter';
+import { QuestTracker } from '../components/quest-tracker';
 
 export default function Home() {
-  const { isConnected, address } = useWeb3();
+  const { isConnected, address, account, balance, connectWallet } = useWeb3();
   const { isActive, messages } = useMeebot();
+  const [activeTab, setActiveTab] = useState('dashboard');
 
   return (
     <div className="min-h-screen">
@@ -40,7 +42,7 @@ export default function Home() {
           <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-3xl mx-auto">
             Web3 wallet ที่ออกแบบมาสำหรับผู้ใช้ไทย พร้อมระบบ NFT, Gaming และ DeFi ที่ง่ายต่อการใช้งาน
           </p>
-          
+
           {!isConnected ? (
             <WalletConnector />
           ) : (
@@ -116,33 +118,161 @@ export default function Home() {
         </div>
       </section>
 
-      {/* MeeBot Section */}
-      {isConnected && (
-        <section className="py-20 px-4">
-          <div className="max-w-4xl mx-auto">
-            <Card className="glass-card">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-purple-500 animate-glow" />
-                  MeeBot Assistant
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <MeeBotChat />
-              </CardContent>
-            </Card>
-          </div>
-        </section>
-      )}
+      {/* Tabbed Content Section */}
+      <section className="py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <nav className="flex space-x-4 mb-8">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`px-4 py-2 rounded-md transition-colors ${
+                activeTab === 'dashboard'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              📊 Dashboard
+            </button>
+            <button
+              onClick={() => setActiveTab('quests')}
+              className={`px-4 py-2 rounded-md transition-colors ${
+                activeTab === 'quests'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              🎮 Quests
+            </button>
+            <button
+              onClick={() => setActiveTab('badges')}
+              className={`px-4 py-2 rounded-md transition-colors ${
+                activeTab === 'badges'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              🔨 Badge Minter
+            </button>
+            <button
+              onClick={() => setActiveTab('meebot')}
+              className={`px-4 py-2 rounded-md transition-colors ${
+                activeTab === 'meebot'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
+              🤖 MeeBot
+            </button>
+          </nav>
 
-      {/* Token Balance Section */}
-      {isConnected && (
-        <section className="py-10 px-4">
-          <div className="max-w-2xl mx-auto">
-            <TokenBalance />
-          </div>
-        </section>
-      )}
+          {activeTab === 'dashboard' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Wallet Status */}
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  💼 Wallet Status
+                </h3>
+                {account ? (
+                  <div>
+                    <p className="text-sm text-gray-600 mb-2">Connected to:</p>
+                    <p className="font-mono text-sm bg-gray-100 p-2 rounded">
+                      {account.slice(0, 6)}...{account.slice(-4)}
+                    </p>
+                    <div className="mt-4">
+                      <p className="text-sm text-gray-600">Network:</p>
+                      <p className="text-green-600 font-medium">Fuse Network</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-gray-600 mb-4">No wallet connected</p>
+                    <button
+                      onClick={connectWallet}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors"
+                    >
+                      Connect Wallet
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Balance */}
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  💰 Balance
+                </h3>
+                <div>
+                  <p className="text-2xl font-bold text-green-600">
+                    {balance.formatted} {balance.symbol}
+                  </p>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Available balance
+                  </p>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  ⚡ Quick Actions
+                </h3>
+                <div className="space-y-2">
+                  <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md transition-colors">
+                    📤 Send Tokens
+                  </button>
+                  <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors">
+                    📥 Receive Tokens
+                  </button>
+                  <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-md transition-colors">
+                    🔄 Swap Tokens
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'quests' && (
+            <QuestTracker />
+          )}
+
+          {activeTab === 'badges' && (
+            <BadgeMinter onMinted={(tokenId) => {
+              alert(`Badge สร้างสำเร็จ! Token ID: ${tokenId}`);
+            }} />
+          )}
+
+          {activeTab === 'meebot' && (
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                🤖 MeeBot Assistant
+              </h3>
+              <div className="mb-4">
+                <p className="text-gray-600">
+                  Hello! I'm MeeBot, your Web3 assistant. How can I help you today?
+                </p>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <p className="text-sm">
+                    <strong>💡 Tip:</strong> You can ask me about wallet connections, 
+                    transaction history, or how to use MeeChain features!
+                  </p>
+                </div>
+                {messages.map((message, index) => (
+                  <div key={index} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} mb-4`}>
+                    <div className={`max-w-md p-4 rounded-lg ${message.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
+                      {message.text}
+                    </div>
+                  </div>
+                ))}
+                <MeeBotChat />
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* MeeBot Section (Remains as is, but is now part of tabs) */}
+      {/* Token Balance Section (Remains as is, but is now part of tabs) */}
     </div>
   );
 }

@@ -605,7 +605,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // System health and deployment
   app.get('/api/secrets/health', getSecretsHealth);
-  app.get('/api/deployment/check', deploymentCheck);
+  // Badge API
+  const { mintBadge, getBadgesByUser } = await import('./api/badge-mint');
+  app.post('/api/badge/mint', mintBadge);
+  app.get('/api/badge/user/:address', getBadgesByUser);
+
+  // Quest API
+  const { completeQuest, getQuestList } = await import('./api/quest-complete');
+  app.post('/api/quest/complete', completeQuest);
+  app.get('/api/quest/list', getQuestList);
 
   // Badge minting and management
   app.post('/api/badge/mint', mintBadge);
