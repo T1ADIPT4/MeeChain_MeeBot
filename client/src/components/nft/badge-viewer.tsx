@@ -67,11 +67,42 @@ export default function BadgeViewer({ userAddress }: BadgeViewerProps) {
     
     setIsUpgrading(true);
     try {
-      const txHash = await service.upgradeBadge(tokenId);
+      // Check if badge can be upgraded first
+      const userAddress = await service.getCurrentAddress();
+      if (!userAddress) {
+        toast({
+          title: "❌ เชื่อมต่อ Wallet",
+          description: "กรุณาเชื่อมต่อ wallet ก่อนครับ",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const { canUpgrade, reason } = await service.canUpgradeBadge(tokenId, userAddress);
+      if (!canUpgrade) {
+        toast({
+          title: "❌ ไม่สามารถอัปเกรดได้",
+          description: `MeeBot: ${reason}`,
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      // Get upgrade cost
+      const upgradeCost = await service.getBadgeUpgradeCost(tokenId);
+      if (upgradeCost) {
+        toast({
+          title: "💰 ค่าใช้จ่ายในการอัปเกรด",
+          description: `ใช้ ${upgradeCost} MEE tokens`,
+          variant: "default",
+        });
+      }
+      
+      const txHash = await service.upgradeBadgeRarity(tokenId);
       if (txHash) {
         toast({
           title: "🎉 MeeBot ยินดี!",
-          description: "อัปเกรด badge สำเร็จแล้วครับ! พลังเพิ่มขึ้นแล้ว!",
+          description: "อัปเกรด badge สำเร็จแล้วครับ! ระดับความหายากเพิ่มขึ้นแล้ว! 🔥",
           variant: "default",
         });
         await loadUserBadges(); // Reload badges
@@ -80,7 +111,7 @@ export default function BadgeViewer({ userAddress }: BadgeViewerProps) {
     } catch (error) {
       toast({
         title: "❌ MeeBot เสียใจ",
-        description: "ไม่สามารถอัปเกรด badge ได้ครับ",
+        description: "ไม่สามารถอัปเกรด badge ได้ครับ ลองใหม่อีกครั้งนะ",
         variant: "destructive",
       });
     } finally {

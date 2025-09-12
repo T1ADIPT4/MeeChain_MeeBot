@@ -235,6 +235,84 @@ export class SmartContractService {
   }
 
   /**
+   * Upgrade badge rarity using MeeToken
+   */
+  async upgradeBadgeRarity(tokenId: number): Promise<string | null> {
+    try {
+      if (!this.signer) throw new Error('Signer required for badge upgrade');
+      
+      // Note: This requires BadgeNFTUpgrade contract to be deployed
+      const upgradeContractAddress = process.env.VITE_BADGE_UPGRADE_CONTRACT_ADDRESS;
+      if (!upgradeContractAddress) {
+        throw new Error('Badge upgrade contract address not configured');
+      }
+      
+      const upgradeContract = new ethers.Contract(
+        upgradeContractAddress,
+        [
+          'function upgradeBadge(uint256 tokenId) external',
+          'function getUpgradeCost(uint256 tokenId) external view returns (uint256)',
+          'function canUpgradeBadge(uint256 tokenId, address user) external view returns (bool, string)',
+        ],
+        this.signer
+      );
+      
+      const tx = await upgradeContract.upgradeBadge(tokenId);
+      await tx.wait();
+      return tx.hash;
+    } catch (error) {
+      console.error('Error upgrading badge:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get badge upgrade cost
+   */
+  async getBadgeUpgradeCost(tokenId: number): Promise<string | null> {
+    try {
+      const upgradeContractAddress = process.env.VITE_BADGE_UPGRADE_CONTRACT_ADDRESS;
+      if (!upgradeContractAddress) return null;
+      
+      const upgradeContract = new ethers.Contract(
+        upgradeContractAddress,
+        ['function getUpgradeCost(uint256 tokenId) external view returns (uint256)'],
+        this.provider
+      );
+      
+      const cost = await upgradeContract.getUpgradeCost(tokenId);
+      return ethers.formatEther(cost);
+    } catch (error) {
+      console.error('Error getting upgrade cost:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Check if badge can be upgraded
+   */
+  async canUpgradeBadge(tokenId: number, userAddress: string): Promise<{ canUpgrade: boolean; reason: string }> {
+    try {
+      const upgradeContractAddress = process.env.VITE_BADGE_UPGRADE_CONTRACT_ADDRESS;
+      if (!upgradeContractAddress) {
+        return { canUpgrade: false, reason: 'Upgrade contract not configured' };
+      }
+      
+      const upgradeContract = new ethers.Contract(
+        upgradeContractAddress,
+        ['function canUpgradeBadge(uint256 tokenId, address user) external view returns (bool, string)'],
+        this.provider
+      );
+      
+      const [canUpgrade, reason] = await upgradeContract.canUpgradeBadge(tokenId, userAddress);
+      return { canUpgrade, reason };
+    } catch (error) {
+      console.error('Error checking upgrade eligibility:', error);
+      return { canUpgrade: false, reason: 'Error checking upgrade status' };
+    }
+  }
+
+  /**
    * Get MEE token balance
    */
   async getMEEBalance(userAddress: string): Promise<string> {

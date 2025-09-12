@@ -250,6 +250,33 @@ contract MeeBadgeNFT is ERC721URIStorage, Ownable, Pausable {
     }
     
     /**
+     * @dev Upgrade badge rarity (only authorized upgrader)
+     */
+    function upgradeBadgeRarity(uint256 tokenId, uint8 newRarity) external {
+        require(
+            authorizedMinters[msg.sender] || msg.sender == owner(),
+            "Not authorized to upgrade"
+        );
+        require(_exists(tokenId), "Badge does not exist");
+        require(newRarity <= 4, "Invalid rarity level");
+        
+        Badge storage badge = badges[tokenId];
+        require(badge.isUpgradeable, "Badge not upgradeable");
+        require(newRarity > uint8(badge.rarity), "New rarity must be higher");
+        
+        uint8 oldRarity = uint8(badge.rarity);
+        badge.rarity = Rarity(newRarity);
+        
+        // Increase power boost based on new rarity
+        badge.powerBoost += (newRarity - oldRarity) * 10; // +10% per rarity level
+        
+        // Update max level based on new rarity
+        badge.maxLevel = getRarityMaxLevel(badge.rarity);
+        
+        emit BadgeUpgraded(tokenId, badge.level, badge.power);
+    }
+    
+    /**
      * @dev Check and complete quest sets
      */
     function _checkAndCompleteQuestSets(address user) internal {
