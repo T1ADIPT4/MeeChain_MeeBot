@@ -15,6 +15,7 @@ import { getSecretsHealth, getDetailedSecretsReport } from './api/secrets-health
 import { createWallet, getWallet, getWalletBalances, connectWallet, getMyWallet } from './api/wallet';
 import { getSwapBridgeConfig, executeSwap, getQuote } from './api/swap-bridge';
 import { checkDeploymentReadiness } from './api/deployment-check';
+import { mintBadge, getBadgesByUser } from './api/badge-mint';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth endpoints
@@ -601,6 +602,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Deployment readiness check
   app.get('/api/deployment-check', checkDeploymentReadiness);
+
+  // System health and deployment
+  app.get('/api/secrets/health', getSecretsHealth);
+  app.get('/api/deployment/check', deploymentCheck);
+
+  // Badge minting and management
+  app.post('/api/badge/mint', mintBadge);
+  app.get('/api/badge/user/:address', getBadgesByUser);
 
   // CORS preflight for all API routes
   app.options('*', (req: Request, res: Response) => {
