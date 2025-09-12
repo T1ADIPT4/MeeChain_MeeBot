@@ -51,6 +51,7 @@ import { useSmartContracts } from '@/hooks/use-smart-contracts';
 import { VoiceCoach } from '@/components/meebot/voice-coach';
 import { BadgeCollection } from '@/components/nft/badge-collection';
 import { TokenManager } from '@/components/web3/token-manager';
+import { DeploymentChecker } from '@/components/meebot/deployment-checker';
 
 export default function DashboardPage() {
   const [, navigate] = useLocation(); // navigate is used instead of useLocation() directly
@@ -227,7 +228,7 @@ export default function DashboardPage() {
           <div className="pt-6">
             <WalletInfoSkeleton />
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <BalanceCardSkeleton />
             <BalanceCardSkeleton />
@@ -315,6 +316,9 @@ export default function DashboardPage() {
 
             {/* Compact Contract Health Monitor */}
             <ContractHealthMonitor compact />
+
+            {/* Deployment Checker */}
+            <DeploymentChecker />
           </CardContent>
         </Card>
 

@@ -14,6 +14,7 @@ import { getUserTierStatus, getTierBenefits, updateUserTier } from './api/user-t
 import { getSecretsHealth, getDetailedSecretsReport } from './api/secrets-health';
 import { createWallet, getWallet, getWalletBalances, connectWallet, getMyWallet } from './api/wallet';
 import { getSwapBridgeConfig, executeSwap, getQuote } from './api/swap-bridge';
+import { checkDeploymentReadiness } from './api/deployment-check';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth endpoints
@@ -597,6 +598,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/wallet/create', createWallet);
   app.get('/api/wallet/:address', getWallet);
   app.get('/api/wallet/:address/balances', getWalletBalances);
+
+  // Deployment readiness check
+  app.get('/api/deployment-check', checkDeploymentReadiness);
 
   // CORS preflight for all API routes
   app.options('*', (req: Request, res: Response) => {
