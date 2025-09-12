@@ -49,6 +49,7 @@ import ContractHealthMonitor from '@/components/meebot/contract-health-monitor';
 import BadgeViewer from '@/components/nft/badge-viewer';
 import { useSmartContracts } from '@/hooks/use-smart-contracts';
 import { VoiceCoach } from '@/components/meebot/voice-coach';
+import { BadgeCollection } from '@/components/nft/badge-collection';
 
 export default function DashboardPage() {
   const [, navigate] = useLocation(); // navigate is used instead of useLocation() directly
@@ -458,6 +459,14 @@ export default function DashboardPage() {
         {/* Voice Coach Section */}
         <VoiceCoach onVoiceMessage={(message) => {
           console.log('MeeBot Voice:', message);
+        }} />
+
+        {/* Badge & NFT Zone Section */}
+        <BadgeCollection onMarketplaceClick={() => {
+          toast({
+            title: "🏪 ตลาด NFT",
+            description: "กำลังพัฒนา! เร็วๆ นี้จะสามารถแลกเปลี่ยน Badge และซื้อภารกิจพิเศษได้",
+          });
         }} />
 
         {/* === ส่วนที่ 2: ส่วนกลาง (Task Progress & Wallet) === */}

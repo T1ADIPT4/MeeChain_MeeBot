@@ -135,3 +135,52 @@ export type InsertMission = z.infer<typeof insertMissionSchema>;
 export type Mission = typeof missions.$inferSelect;
 export type InsertUserMission = z.infer<typeof insertUserMissionSchema>;
 export type UserMission = typeof userMissions.$inferSelect;
+
+// Badge & NFT System
+export const badges = pgTable("badges", {
+  id: varchar("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  imageUrl: text("image_url"),
+  rarity: text("rarity").notNull(), // Common, Rare, Legendary
+  category: text("category").notNull(), // achievement, quest, special, season
+  isNFT: boolean("is_nft").default(false),
+  contractAddress: text("contract_address"),
+  tokenId: text("token_id"),
+  powers: jsonb("powers"), // {type: "xp_boost", value: 10, condition: "night_quest"}
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User badge collection
+export const userBadges = pgTable("user_badges", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  badgeId: varchar("badge_id").notNull().references(() => badges.id),
+  mintedAt: timestamp("minted_at").defaultNow(),
+  isEquipped: boolean("is_equipped").default(false),
+  earnedFrom: text("earned_from"), // mission_id, quest_type, special_event
+  metadata: jsonb("metadata"), // additional data like mint transaction hash
+});
+
+export const insertBadgeSchema = createInsertSchema(badges).omit({
+  createdAt: true,
+});
+
+export const insertUserBadgeSchema = createInsertSchema(userBadges).omit({
+  id: true,
+  mintedAt: true,
+});
+
+export type InsertBadge = z.infer<typeof insertBadgeSchema>;
+export type Badge = typeof badges.$inferSelect;
+export type InsertUserBadge = z.infer<typeof insertUserBadgeSchema>;
+export type UserBadge = typeof userBadges.$inferSelect;
+
+// Badge Power Types
+export type BadgePower = {
+  type: 'xp_boost' | 'token_boost' | 'quest_unlock' | 'special_access';
+  value: number;
+  condition?: string;
+  description: string;
+};
