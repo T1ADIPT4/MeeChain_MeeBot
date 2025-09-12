@@ -24,11 +24,148 @@ PINATA_SECRET_KEY=your_pinata_secret
 ```
 
 ### 🎯 Contract Deployment Sequence
-1. Deploy MeeToken contract
-2. Deploy MembershipNFT contract  
-3. Link contracts together
-4. Set authorized minters
+1. Deploy MeeToken contract first
+2. Deploy BadgeNFT contract  
+3. Deploy QuestManager contract (with MeeToken and BadgeNFT addresses)
+4. **CRITICAL: Initialize authorization** (see detailed steps below)
 5. Upload NFT metadata to IPFS
+
+### ⚡ Critical Authorization Setup (MUST DO AFTER DEPLOYMENT)
+
+After deploying all contracts, you MUST run the authorization setup or quest completion will fail:
+
+#### Method 1: Manual Authorization (RECOMMENDED)
+```javascript
+// Get contract addresses first
+const { meeTokenAddress, badgeNFTAddress, questManagerAddress } = 
+  await questManagerContract.getContractAddresses();
+
+console.log('Contract addresses:');
+console.log('MeeToken:', meeTokenAddress);
+console.log('BadgeNFT:', badgeNFTAddress);
+console.log('QuestManager:', questManagerAddress);
+
+// 1. Authorize QuestManager to mint MeeTokens (as MeeToken owner)
+await meeTokenContract.authorizeMinter(questManagerAddress);
+
+// 2. Authorize QuestManager to mint BadgeNFTs (as BadgeNFT owner)
+await badgeNFTContract.authorizeMinter(questManagerAddress);
+
+console.log('✅ Authorization setup complete!');
+```
+
+#### Method 2: QuestManager.initializeAuthorization() (DEPRECATED - WILL FAIL)
+```javascript
+// ❌ THIS METHOD IS BROKEN - DO NOT USE
+// await questManagerContract.initializeAuthorization();
+// 
+// REASON: initializeAuthorization() calls authorizeMinter() which requires 
+// onlyOwner permission, but QuestManager is not the owner of MeeToken/BadgeNFT.
+// The deployer (you) owns these contracts, not QuestManager.
+```
+
+#### Ownership Transfer Method (Alternative for Advanced Users)
+```javascript
+// If you want to use initializeAuthorization(), you must transfer ownership first:
+
+// 1. Transfer MeeToken ownership to QuestManager
+await meeTokenContract.transferOwnership(questManagerAddress);
+
+// 2. Transfer BadgeNFT ownership to QuestManager  
+await badgeNFTContract.transferOwnership(questManagerAddress);
+
+// 3. Now initializeAuthorization() can work
+await questManagerContract.initializeAuthorization();
+
+// WARNING: After this, only QuestManager owner can manage these contracts!
+```
+
+#### Frontend Integration
+Add to your environment variables:
+```bash
+# Contract addresses after deployment
+VITE_MEETOKEN_CONTRACT=0x...
+VITE_BADGE_CONTRACT=0x...
+VITE_QUESTMANAGER_CONTRACT=0x...
+```
+
+### 🔍 Troubleshooting Authorization Issues
+
+#### Common Error: "QuestManager not authorized to mint MeeTokens/BadgeNFTs"
+This happens when QuestManager doesn't have permission to mint tokens/badges.
+
+**Solution:**
+1. Check authorization status using QuestManager's built-in function:
+```javascript
+// Use the QuestManager's checkAuthorization function
+const { isAuthorized, tokenAuthorized, badgeAuthorized } = 
+  await questManagerContract.checkAuthorization();
+
+console.log('✅ Full authorization:', isAuthorized);
+console.log('🪙 Token minting authorized:', tokenAuthorized);
+console.log('🏆 Badge minting authorized:', badgeAuthorized);
+```
+
+2. If authorization is missing, run manual setup:
+```javascript
+// Get contract addresses
+const { meeTokenAddress, badgeNFTAddress, questManagerAddress } = 
+  await questManagerContract.getContractAddresses();
+
+// Manual authorization (RECOMMENDED)
+if (!tokenAuthorized) {
+  await meeTokenContract.authorizeMinter(questManagerAddress);
+  console.log('✅ MeeToken authorization granted');
+}
+
+if (!badgeAuthorized) {
+  await badgeNFTContract.authorizeMinter(questManagerAddress);
+  console.log('✅ BadgeNFT authorization granted');
+}
+```
+
+#### Production Environment Check
+```javascript
+// Verify contracts are not using placeholder addresses
+const { meeTokenAddress, badgeNFTAddress, questManagerAddress } = 
+  await questManagerContract.getContractAddresses();
+
+const PLACEHOLDER_REGEX = /^0x[1-9]+0*$/; // Matches 0x111...000 patterns
+
+if (PLACEHOLDER_REGEX.test(meeTokenAddress)) {
+  throw new Error('❌ MeeToken using placeholder address: ' + meeTokenAddress);
+}
+if (PLACEHOLDER_REGEX.test(badgeNFTAddress)) {
+  throw new Error('❌ BadgeNFT using placeholder address: ' + badgeNFTAddress);
+}
+
+console.log('✅ All contracts using production addresses');
+```
+
+#### Common Error: Quest completion reverts
+This indicates contract interface mismatch.
+
+**Solution:**
+- Ensure BadgeNFT contract is deployed (not MeeBadgeNFT)  
+- Verify QuestManager imports "./BadgeNFT.sol"
+- Check mintBadge() function signature matches
+
+#### Testing Authorization Setup
+```javascript
+// Create a test quest
+const questId = await questManagerContract.createQuest(
+  "Test Quest",
+  "Test description", 
+  ethers.parseEther("10"), // 10 MEE reward
+  "Test Badge",
+  "Test badge description",
+  "https://test.uri"
+);
+
+// Try to complete the quest
+await questManagerContract.completeQuest(questId);
+// Should mint 10 MEE tokens + Test Badge NFT
+```
 
 ### 🖼️ NFT Metadata Structure
 ```json

@@ -50,6 +50,7 @@ import BadgeViewer from '@/components/nft/badge-viewer';
 import { useSmartContracts } from '@/hooks/use-smart-contracts';
 import { VoiceCoach } from '@/components/meebot/voice-coach';
 import { BadgeCollection } from '@/components/nft/badge-collection';
+import { TokenManager } from '@/components/web3/token-manager';
 
 export default function DashboardPage() {
   const [, navigate] = useLocation(); // navigate is used instead of useLocation() directly
@@ -460,6 +461,9 @@ export default function DashboardPage() {
         <VoiceCoach onVoiceMessage={(message) => {
           console.log('MeeBot Voice:', message);
         }} />
+
+        {/* Token Manager Section */}
+        <TokenManager />
 
         {/* Badge & NFT Zone Section */}
         <BadgeCollection onMarketplaceClick={() => {
