@@ -14,6 +14,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { VoiceCoach } from './voice-coach';
 
 interface Quest {
   id: number;
@@ -24,7 +25,7 @@ interface Quest {
   badge?: string;
   completed: boolean;
   difficulty: 'easy' | 'medium' | 'hard';
-  category: 'productivity' | 'learning' | 'social' | 'wellness';
+  category: 'productivity' | 'learning' | 'social' | 'wellness' | 'exploration' | 'lifestyle';
 }
 
 interface DailyQuestsProps {
@@ -33,6 +34,24 @@ interface DailyQuestsProps {
 
 export function DailyQuests({ onLevelUp }: DailyQuestsProps) {
   const { toast } = useToast();
+  
+  // Voice Coach Functions
+  const triggerVoiceCoach = (action: 'questComplete' | 'levelUp' | 'encouragement', data?: any) => {
+    if (typeof window !== 'undefined' && (window as any).meeBotVoice) {
+      const voice = (window as any).meeBotVoice;
+      switch (action) {
+        case 'questComplete':
+          voice.sayQuestComplete();
+          break;
+        case 'levelUp':
+          voice.sayLevelUp(data);
+          break;
+        case 'encouragement':
+          voice.sayEncouragement();
+          break;
+      }
+    }
+  };
   // รายการเควสแบ่งตามหมวดหมู่ที่หลากหลาย
   const questPool = {
     exploration: [
@@ -265,6 +284,16 @@ export function DailyQuests({ onLevelUp }: DailyQuestsProps) {
       "ขอบคุณที่คุยกับผมนะครับ! ผมมีความสุขมาก! 😊",
       "คุณทำให้ MeeBot รู้สึกเป็นเพื่อนจริง ๆ เลย! 🤗",
       "พูดคุยกับคุณสนุกมาก! มีอะไรอยากถามเพิ่มไหม? 💬"
+    ],
+    exploration: [
+      "ผจญภัยกันเลยครับ! Web3 รอคุณอยู่นะ! 🚀⛵",
+      "สำรวจโลกใหม่กันเถอะ! Blockchain เป็นยังไงบ้าง? 🌍",
+      "คุณเป็น Explorer ตัวจริงเลย! ผมติดตามผลงานครับ! 🗺️"
+    ],
+    lifestyle: [
+      "สมดุลชีวิตสุดยอด! Work-Life Balance เป็นงี้ต่างหาก! ⚖️✨",
+      "คุณรู้จักใช้ชีวิต! ผมชื่นชมมาก! 🌟",
+      "ความสุขในชีวิตสำคัญมาก! เก่งมากครับ! 😊"
     ]
   };
 
@@ -295,6 +324,9 @@ export function DailyQuests({ onLevelUp }: DailyQuestsProps) {
       // ตรวจสอบให้แน่ใจว่า newXP - requiredXP ไม่ติดลบ
       setCurrentXP(Math.max(0, newXP - requiredXP)); 
 
+      // Voice Coach: Level Up!
+      triggerVoiceCoach('levelUp', newLevel);
+
       if (onLevelUp) {
         onLevelUp(newLevel);
       }
@@ -306,6 +338,9 @@ export function DailyQuests({ onLevelUp }: DailyQuestsProps) {
     const randomComment = comments && comments.length > 0 
       ? comments[Math.floor(Math.random() * comments.length)]
       : "เยี่ยมมาก!"; // ข้อความสำรองหากไม่มี category ที่ตรงกัน
+
+    // Voice Coach: Quest Complete!
+    triggerVoiceCoach('questComplete');
 
     toast({
       title: "🎉 เควสสำเร็จ!",
@@ -328,6 +363,8 @@ export function DailyQuests({ onLevelUp }: DailyQuestsProps) {
       case 'learning': return <Sparkles className="w-4 h-4" />;
       case 'wellness': return <Star className="w-4 h-4" />;
       case 'social': return <Gift className="w-4 h-4" />;
+      case 'exploration': return <Zap className="w-4 h-4" />;
+      case 'lifestyle': return <Star className="w-4 h-4" />;
       default: return <Zap className="w-4 h-4" />;
     }
   };
