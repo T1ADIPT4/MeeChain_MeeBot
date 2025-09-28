@@ -22,14 +22,11 @@ import {
 import { useToast } from '@/hooks/use-toast';
 
 // Import deploy registry functions
-import registry from "../../deploy-registry.json";
-
-export const getContractAddress = (name: string): string => {
-  return registry.contracts[name] || "0x0000000000000000000000000000000000000000";
-};
-
-export const getNetwork = (): string => registry.network;
-export const isFallbackEnabled = (): boolean => registry.metadata.fallbackEnabled;
+import { 
+  getContractAddress, 
+  getNetwork, 
+  isFallbackEnabled 
+} from '@/services/deploy-registry';
 
 // Mock ethers and FOOTBALLNFT_ABI for demonstration purposes
 const ethers = {
