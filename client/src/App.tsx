@@ -2,7 +2,8 @@ import { Switch, Route } from "wouter";
 import { lazy, Suspense } from 'react';
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from '@/components/ui/toaster';
+import { DeploymentStatusOverlay } from '@/components/meebot/deployment-status-overlay';
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { OnboardingProvider } from "@/hooks/use-onboarding";
 import NotFound from '@/pages/not-found';
@@ -59,6 +60,7 @@ function App() {
       <OnboardingProvider>
         <TooltipProvider>
           <Toaster />
+          <DeploymentStatusOverlay />
           <Router />
         </TooltipProvider>
       </OnboardingProvider>

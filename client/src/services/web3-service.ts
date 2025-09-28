@@ -52,12 +52,14 @@ const QUESTMANAGER_ABI = [
   "event QuestCompleted(address indexed user, uint256 indexed questId, uint256 rewardAmount)"
 ];
 
-// Contract addresses (would be from environment in production)
+import { getContractAddress, isDeploymentSuccessful, validateDeployment } from './deploy-registry';
+
+// Contract addresses from deploy registry
 const CONTRACT_ADDRESSES = {
-  // These would be set after deployment
-  MEETOKEN: import.meta.env.VITE_MEETOKEN_CONTRACT || '0x' + '1'.repeat(40), // placeholder
-  BADGE_NFT: import.meta.env.VITE_BADGE_CONTRACT || '0x' + '2'.repeat(40), // placeholder
-  QUEST_MANAGER: import.meta.env.VITE_QUESTMANAGER_CONTRACT || '0x' + '3'.repeat(40), // placeholder
+  MEETOKEN: getContractAddress("MeeToken"),
+  BADGE_NFT: getContractAddress("MeeBadgeNFT"),
+  QUEST_MANAGER: getContractAddress("QuestManager"),
+  FOOTBALL_NFT: getContractAddress("FootballNFT"),
 };
 
 // Production hardening: Detect placeholder addresses
@@ -153,6 +155,19 @@ class Web3Service {
    */
   async initialize(): Promise<boolean> {
     try {
+      // Validate deployment first
+      const validation = validateDeployment();
+      if (!validation.canProceed) {
+        console.error('❌ Deployment validation failed:', validation.errors);
+        console.warn('⚠️ Deployment warnings:', validation.warnings);
+        return this.initializeDemoMode();
+      }
+
+      if (!isDeploymentSuccessful()) {
+        console.warn('⚠️ Deployment not successful, using demo mode');
+        return this.initializeDemoMode();
+      }
+
       if (typeof window.ethereum === 'undefined') {
         console.warn('MetaMask not detected - using demo mode');
         return this.initializeDemoMode();
@@ -174,7 +189,8 @@ class Web3Service {
       );
       
       this.isConnected = true;
-      console.log('Web3 initialized successfully');
+      console.log('✅ Web3 initialized successfully with deploy registry');
+      console.log('📋 Using contracts:', CONTRACT_ADDRESSES);
       return true;
     } catch (error) {
       console.warn('Web3 initialization failed, using demo mode:', error);

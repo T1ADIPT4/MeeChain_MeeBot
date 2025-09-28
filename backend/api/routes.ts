@@ -762,6 +762,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Registry status endpoint
+  app.get("/api/registry-status", async (req, res) => {
+    try {
+      const { getRegistryStatus } = await import("../../server/api/registry-status");
+      return await getRegistryStatus(req, res);
+    } catch (error) {
+      console.error("Registry status error:", error);
+      res.status(500).json({ message: "Failed to get registry status" });
+    }
+  });
+
   // User Tier API endpoints
   app.get("/api/user-tier/status", async (req, res) => {
     try {

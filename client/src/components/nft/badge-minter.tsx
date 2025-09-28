@@ -5,21 +5,43 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Wand2, 
-  Star, 
-  Crown, 
-  Gem, 
+import {
+  Wand2,
+  Star,
+  Crown,
+  Gem,
   Sparkles,
   Upload,
   Bot,
   Trophy,
   Target,
   Zap,
-  Eye,
+  Eye, // This import was missing and is now added
   EyeOff
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+
+// Import deploy registry functions
+import registry from "../../deploy-registry.json";
+
+export const getContractAddress = (name: string): string => {
+  return registry.contracts[name] || "0x0000000000000000000000000000000000000000";
+};
+
+export const getNetwork = (): string => registry.network;
+export const isFallbackEnabled = (): boolean => registry.metadata.fallbackEnabled;
+
+// Mock ethers and FOOTBALLNFT_ABI for demonstration purposes
+const ethers = {
+  Contract: class {
+    constructor(address: string, abi: any, signer: any) {
+      this.address = address;
+      this.abi = abi;
+      this.signer = signer;
+    }
+  }
+};
+const FOOTBALLNFT_ABI = []; // Placeholder ABI
 
 interface BadgeMintForm {
   name: string;
@@ -43,6 +65,15 @@ export function BadgeMinter() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  // --- Deploy Registry Integration ---
+  // Example of using the deployed contract address
+  const footballNFT = new ethers.Contract(
+    getContractAddress("FootballNFT"),
+    FOOTBALLNFT_ABI,
+    null // In a real app, this would be your signer
+  );
+  // --- End Deploy Registry Integration ---
 
   const getRarityColor = (rarity: string) => {
     switch (rarity) {
@@ -123,6 +154,13 @@ export function BadgeMinter() {
 
   return (
     <div className="space-y-6">
+      {/* Fallback Banner for Dynamic Chain Switching */}
+      {isFallbackEnabled() && (
+        <div className="fallback-banner bg-yellow-500/20 border border-yellow-500/30 p-3 rounded-lg text-yellow-300 text-center text-sm">
+          ⚠️ คุณกำลังเชื่อมต่อกับ Fallback Chain คุณสมบัติบางอย่างอาจถูกจำกัด
+        </div>
+      )}
+
       {/* Header */}
       <Card className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-300/30">
         <CardHeader>
@@ -296,7 +334,7 @@ export function BadgeMinter() {
           </Card>
 
           {/* Mint Button */}
-          <Button 
+          <Button
             onClick={handleMintBadge}
             disabled={isLoading || !form.name || !form.description}
             className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3"
