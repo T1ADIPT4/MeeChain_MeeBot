@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import {
   Calendar,
@@ -343,10 +342,10 @@ export function AppSidebar({
                     <Collapsible>
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton>
-                          <item.icon className="w-4 h-4" />
-                          <span>{item.title}</span>
+                          <item.icon className="w-3.5 h-3.5" />
+                          <span className="text-xs">{item.title}</span>
                           {item.badge && (
-                            <Badge variant="outline" className="ml-auto text-xs">
+                            <Badge variant="outline" className="ml-auto text-xs px-1">
                               {item.badge}
                             </Badge>
                           )}
@@ -361,8 +360,8 @@ export function AppSidebar({
                                 onClick={() => navigate(subItem.url)}
                               >
                                 <a href={subItem.url}>
-                                  <subItem.icon className="w-4 h-4" />
-                                  <span>{subItem.title}</span>
+                                  <subItem.icon className="w-3 h-3" />
+                                  <span className="text-xs">{subItem.title}</span>
                                 </a>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
@@ -376,10 +375,10 @@ export function AppSidebar({
                       onClick={() => navigate(item.url)}
                     >
                       <a href={item.url}>
-                        <item.icon className="w-4 h-4" />
-                        <span>{item.title}</span>
+                        <item.icon className="w-3.5 h-3.5" />
+                        <span className="text-xs">{item.title}</span>
                         {item.badge && (
-                          <Badge variant="outline" className="ml-auto text-xs">
+                          <Badge variant="outline" className="ml-auto text-xs px-1">
                             {item.badge}
                           </Badge>
                         )}
@@ -403,10 +402,10 @@ export function AppSidebar({
                     <Collapsible>
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton>
-                          <item.icon className="w-4 h-4" />
-                          <span>{item.title}</span>
+                          <item.icon className="w-3.5 h-3.5" />
+                          <span className="text-xs">{item.title}</span>
                           {item.badge && (
-                            <Badge variant="outline" className="ml-auto text-xs">
+                            <Badge variant="outline" className="ml-auto text-xs px-1">
                               {item.badge}
                             </Badge>
                           )}
@@ -421,8 +420,8 @@ export function AppSidebar({
                                 onClick={() => navigate(subItem.url)}
                               >
                                 <a href={subItem.url}>
-                                  <subItem.icon className="w-4 h-4" />
-                                  <span>{subItem.title}</span>
+                                  <subItem.icon className="w-3 h-3" />
+                                  <span className="text-xs">{subItem.title}</span>
                                 </a>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
@@ -436,10 +435,10 @@ export function AppSidebar({
                       onClick={() => navigate(item.url)}
                     >
                       <a href={item.url}>
-                        <item.icon className="w-4 h-4" />
-                        <span>{item.title}</span>
+                        <item.icon className="w-3.5 h-3.5" />
+                        <span className="text-xs">{item.title}</span>
                         {item.badge && (
-                          <Badge variant="outline" className="ml-auto text-xs">
+                          <Badge variant="outline" className="ml-auto text-xs px-1">
                             {item.badge}
                           </Badge>
                         )}
@@ -463,10 +462,10 @@ export function AppSidebar({
                     <Collapsible>
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton>
-                          <item.icon className="w-4 h-4" />
-                          <span>{item.title}</span>
+                          <item.icon className="w-3.5 h-3.5" />
+                          <span className="text-xs">{item.title}</span>
                           {item.badge && (
-                            <Badge variant="outline" className="ml-auto text-xs">
+                            <Badge variant="outline" className="ml-auto text-xs px-1">
                               {item.badge}
                             </Badge>
                           )}
@@ -481,8 +480,8 @@ export function AppSidebar({
                                 onClick={() => navigate(subItem.url)}
                               >
                                 <a href={subItem.url}>
-                                  <subItem.icon className="w-4 h-4" />
-                                  <span>{subItem.title}</span>
+                                  <subItem.icon className="w-3 h-3" />
+                                  <span className="text-xs">{subItem.title}</span>
                                 </a>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
@@ -496,10 +495,10 @@ export function AppSidebar({
                       onClick={() => navigate(item.url)}
                     >
                       <a href={item.url}>
-                        <item.icon className="w-4 h-4" />
-                        <span>{item.title}</span>
+                        <item.icon className="w-3.5 h-3.5" />
+                        <span className="text-xs">{item.title}</span>
                         {item.badge && (
-                          <Badge variant="outline" className="ml-auto text-xs">
+                          <Badge variant="outline" className="ml-auto text-xs px-1">
                             {item.badge}
                           </Badge>
                         )}
@@ -524,10 +523,10 @@ export function AppSidebar({
                     onClick={() => navigate(item.url)}
                   >
                     <a href={item.url}>
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.title}</span>
+                      <item.icon className="w-3.5 h-3.5" />
+                      <span className="text-xs">{item.title}</span>
                       {item.badge && (
-                        <Badge variant="outline" className="ml-auto text-xs">
+                        <Badge variant="outline" className="ml-auto text-xs px-1">
                           {item.badge}
                         </Badge>
                       )}
@@ -551,10 +550,10 @@ export function AppSidebar({
                     onClick={() => navigate(item.url)}
                   >
                     <a href={item.url}>
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.title}</span>
+                      <item.icon className="w-3.5 h-3.5" />
+                      <span className="text-xs">{item.title}</span>
                       {item.badge && (
-                        <Badge variant="outline" className="ml-auto text-xs">
+                        <Badge variant="outline" className="ml-auto text-xs px-1">
                           {item.badge}
                         </Badge>
                       )}
