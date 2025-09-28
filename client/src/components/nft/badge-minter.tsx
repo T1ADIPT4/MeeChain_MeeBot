@@ -20,7 +20,6 @@ import {
   EyeOff
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff } from 'lucide-react';
 
 // Import deploy registry functions
 import { 
