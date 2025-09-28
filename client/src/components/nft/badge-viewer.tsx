@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Trophy, Star, Zap, ArrowUp, Sparkles } from 'lucide-react';
 import { useSmartContracts } from '@/hooks/use-smart-contracts';
 import { useToast } from '@/hooks/use-toast';
@@ -229,6 +229,9 @@ export default function BadgeViewer({ userAddress }: BadgeViewerProps) {
               <Trophy className="w-5 h-5" />
               {selectedBadge?.name}
             </DialogTitle>
+            <DialogDescription>
+              View detailed information about this badge including its power, rarity, and upgrades.
+            </DialogDescription>
           </DialogHeader>
           
           {selectedBadge && (
