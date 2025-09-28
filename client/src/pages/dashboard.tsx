@@ -57,6 +57,7 @@ import { BadgeMinter } from '@/components/nft/badge-minter'; // Imported BadgeMi
 import { QuestTracker } from '@/components/nft/quest-tracker'; // Imported QuestTracker
 import { TokenManager } from '@/components/web3/token-manager';
 import { DeploymentChecker } from '@/components/meebot/deployment-checker';
+import { BalanceCardSkeleton, WalletInfoSkeleton } from '@/components/ui/balance-card-skeleton';
 
 // Placeholder for the new FootballZone component
 const FootballZone = () => {
