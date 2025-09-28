@@ -35,7 +35,9 @@ import {
   BookOpen, // Added BookOpen icon
   ArrowRightLeft, // Added ArrowRightLeft icon
   Target, // Added Target icon
-  Trophy // Added Trophy icon
+  Trophy, // Added Trophy icon
+  RefreshCw, // Added RefreshCw icon
+  Bug // Added Bug icon
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
@@ -46,7 +48,6 @@ import logoUrl from '@assets/branding/logo.png';
 import { MeeBotSecretsAlert } from '@/components/meebot/secrets-alert';
 import { Link } from 'wouter'; // Assuming Link is needed for navigation
 import { LoadingSpinner, LoadingDots } from '@/components/ui/loading-spinner';
-import { BalanceCardSkeleton, WalletInfoSkeleton } from '@/components/ui/balance-card-skeleton';
 import ContractHealthMonitor from '@/components/meebot/contract-health-monitor';
 import BadgeViewer from '@/components/nft/badge-viewer';
 import { useSmartContracts } from '@/hooks/use-smart-contracts';
@@ -80,6 +81,7 @@ export default function DashboardPage() {
   const [chartLabels, setChartLabels] = useState(['08:00', '08:10', '08:20', '08:30', '08:40', '08:50', '09:00']);
   const { toast } = useToast();
   const logoRef = useRef<HTMLDivElement>(null);
+  const [showDebugModal, setShowDebugModal] = useState(false); // Added state for debug modal
 
   // State สำหรับปุ่ม มีบอท
   const [isBotReady, setIsBotReady] = useState(true);
@@ -268,14 +270,14 @@ export default function DashboardPage() {
   return (
     <SidebarProvider>
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex">
-        <AppSidebar 
+        <AppSidebar
           userAddress={userAddress}
           isConnected={isConnected}
           userName={walletData?.name || 'Anonymous User'}
           userLevel={walletData?.level || 1}
           userTier={walletData?.tier || 'Bronze'}
         />
-        
+
         <div className="flex-1 flex flex-col">
           {/* Enhanced Header with Hamburger Menu */}
           <nav className="flex items-center justify-between bg-slate-800/80 backdrop-blur-sm border-b border-slate-600/50 p-4">
@@ -928,7 +930,7 @@ export default function DashboardPage() {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-cyan-400/10 to-transparent rounded-full -translate-y-6 translate-x-6"></div>
               </CardContent>
             </Card>
-          
+
       </div>
         </div>
       </div>
