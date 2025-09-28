@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,6 +14,7 @@ import {
   Check
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { WalletConnectionFlow } from './wallet-connection-flow';
 
 interface MeeBotOnboardingModalProps {
   isOpen: boolean;
@@ -68,12 +68,12 @@ export function MeeBotOnboardingModal({ isOpen, onClose }: MeeBotOnboardingModal
 
   const handleCompleteMission = (missionId: number) => {
     setIsAnimating(true);
-    
+
     setTimeout(() => {
       setMissions(prev => prev.map(mission => 
         mission.id === missionId ? { ...mission, isCompleted: true } : mission
       ));
-      
+
       const mission = missions.find(m => m.id === missionId);
       if (mission) {
         toast({
@@ -81,9 +81,9 @@ export function MeeBotOnboardingModal({ isOpen, onClose }: MeeBotOnboardingModal
           description: `ได้รับ Badge "${mission.badge}" แล้ว! สุดยอดเลย!`,
         });
       }
-      
+
       setIsAnimating(false);
-      
+
       if (currentStep < missions.length - 1) {
         setTimeout(() => setCurrentStep(prev => prev + 1), 1000);
       }
@@ -109,7 +109,7 @@ export function MeeBotOnboardingModal({ isOpen, onClose }: MeeBotOnboardingModal
                   </div>
                   <Sparkles className="absolute -top-1 -right-1 w-6 h-6 text-yellow-400 animate-spin" />
                 </div>
-                
+
                 <div>
                   <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent">
                     🚀 ยินดีต้อนรับสู่ TaskPilot
@@ -119,7 +119,7 @@ export function MeeBotOnboardingModal({ isOpen, onClose }: MeeBotOnboardingModal
                   </p>
                 </div>
               </div>
-              
+
               <Button
                 variant="ghost"
                 size="sm"
@@ -148,66 +148,180 @@ export function MeeBotOnboardingModal({ isOpen, onClose }: MeeBotOnboardingModal
             </p>
           </div>
 
-          {/* Current Mission */}
+          {/* Current Mission Content */}
           <div className="p-6">
-            <div className="bg-gradient-to-r from-green-500/10 to-yellow-500/10 rounded-xl p-6 border border-green-500/20 mb-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Target className="w-6 h-6 text-yellow-400" />
+            {currentStep === 0 ? (
+              <div className="text-center space-y-6">
+                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full flex items-center justify-center relative">
+                  <img 
+                    src={logoUrl} 
+                    alt="MeeBot" 
+                    className="w-12 h-12 object-contain"
+                  />
+                  <div className="absolute -bottom-2 -right-2 text-2xl animate-bounce">
+                    👋
+                  </div>
                 </div>
-                
-                <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-2 text-cyan-300">
-                    {currentMission.title}
+
+                <div>
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    สวัสดีครับ! ผม MeeBot
                   </h3>
-                  <p className="text-gray-300 mb-4">
-                    {currentMission.description}
+                  <p className="text-gray-300 leading-relaxed">
+                    ผมจะเป็นผู้ช่วยสุดเท่ของคุณใน MeeChain! 
+                    พร้อมเริ่มต้นการผจญภัยในโลก Web3 ไหมครับ?
                   </p>
-                  
-                  {/* MeeBot Speech Bubble */}
-                  <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-4 mb-4 relative">
-                    <div className="absolute -left-2 top-4 w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-cyan-500/30"></div>
-                    <div className="flex items-start gap-3">
-                      <Bot className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
-                      <p className="text-cyan-100 italic leading-relaxed">
-                        "{currentMission.meeBotSays}"
-                      </p>
-                    </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-xl p-4">
+                  <h4 className="text-cyan-300 font-semibold mb-2">🎯 สิ่งที่คุณจะได้เรียนรู้</h4>
+                  <ul className="text-sm text-blue-100 space-y-1 text-left">
+                    <li>• การใช้งาน Smart Contracts</li>
+                    <li>• การทำธุรกรรม DeFi</li>
+                    <li>• การสะสมและอัพเกรด NFT Badge</li>
+                    <li>• การรับ rewards จากภารกิจต่างๆ</li>
+                  </ul>
+                </div>
+
+                <Button
+                  onClick={() => setCurrentStep(1)}
+                  className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-white font-semibold py-3 text-lg"
+                >
+                  เริ่มต้นกันเลย! 🚀
+                </Button>
+              </div>
+            ) : currentStep === 1 ? (
+              <div className="text-center space-y-6">
+                <div className="w-20 h-20 mx-auto bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full flex items-center justify-center relative">
+                  <img 
+                    src={logoUrl} 
+                    alt="MeeBot" 
+                    className="w-12 h-12 object-contain"
+                  />
+                  <div className="absolute -bottom-2 -right-2 text-2xl animate-bounce">
+                    👋
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    สวัสดีครับ! ผม MeeBot
+                  </h3>
+                  <p className="text-gray-300 leading-relaxed">
+                    ผมจะเป็นผู้ช่วยสุดเท่ของคุณใน MeeChain! 
+                    พร้อมเริ่มต้นการผจญภัยในโลก Web3 ไหมครับ?
+                  </p>
+                </div>
+
+                <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-xl p-4">
+                  <h4 className="text-cyan-300 font-semibold mb-2">🎯 สิ่งที่คุณจะได้เรียนรู้</h4>
+                  <ul className="text-sm text-blue-100 space-y-1 text-left">
+                    <li>• การใช้งาน Smart Contracts</li>
+                    <li>• การทำธุรกรรม DeFi</li>
+                    <li>• การสะสมและอัพเกรด NFT Badge</li>
+                    <li>• การรับ rewards จากภารกิจต่างๆ</li>
+                  </ul>
+                </div>
+
+                <Button
+                  onClick={() => setCurrentStep(2)}
+                  className="w-full bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-white font-semibold py-3 text-lg"
+                >
+                  เริ่มต้นกันเลย! 🚀
+                </Button>
+              </div>
+            ) : currentStep === 2 ? (
+              <div className="space-y-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto bg-gradient-to-br from-cyan-400 to-purple-500 rounded-full flex items-center justify-center mb-4">
+                    <Wallet className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">ภารกิจแรก: เชื่อมต่อ Wallet</h3>
+                  <p className="text-gray-300 text-sm">
+                    เริ่มต้นด้วยการเชื่อมต่อ wallet เพื่อรับ badge แรกของคุณ!
+                  </p>
+                </div>
+
+                <WalletConnectionFlow />
+
+                <div className="flex gap-3">
+                  <Button
+                    onClick={() => setCurrentStep(1)}
+                    variant="outline"
+                    className="flex-1 border-slate-600 text-gray-300 hover:bg-slate-800"
+                  >
+                    ย้อนกลับ
+                  </Button>
+                  <Button
+                    onClick={() => setCurrentStep(3)}
+                    className="flex-1 bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-white"
+                  >
+                    ขั้นต่อไป
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              /* Current Mission Content */
+              <div className="bg-gradient-to-r from-green-500/10 to-yellow-500/10 rounded-xl p-6 border border-green-500/20 mb-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <Target className="w-6 h-6 text-yellow-400" />
                   </div>
 
-                  {/* Mission Action */}
-                  <div className="flex items-center gap-3">
-                    {currentMission.isCompleted ? (
-                      <div className="flex items-center gap-2 text-green-400">
-                        <Check className="w-5 h-5" />
-                        <span className="font-semibold">ภารกิจสำเร็จ!</span>
-                        <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
-                          {currentMission.badge}
-                        </Badge>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold mb-2 text-cyan-300">
+                      {currentMission.title}
+                    </h3>
+                    <p className="text-gray-300 mb-4">
+                      {currentMission.description}
+                    </p>
+
+                    {/* MeeBot Speech Bubble */}
+                    <div className="bg-cyan-500/10 border border-cyan-500/30 rounded-lg p-4 mb-4 relative">
+                      <div className="absolute -left-2 top-4 w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-cyan-500/30"></div>
+                      <div className="flex items-start gap-3">
+                        <Bot className="w-5 h-5 text-cyan-400 flex-shrink-0 mt-0.5" />
+                        <p className="text-cyan-100 italic leading-relaxed">
+                          "{currentMission.meeBotSays}"
+                        </p>
                       </div>
-                    ) : (
-                      <Button
-                        onClick={() => handleCompleteMission(currentMission.id)}
-                        disabled={isAnimating}
-                        className="bg-yellow-500 text-yellow-900 hover:bg-yellow-400 font-semibold"
-                      >
-                        {isAnimating ? (
-                          <>
-                            <Sparkles className="w-4 h-4 mr-2 animate-spin" />
-                            กำลังดำเนินการ...
-                          </>
-                        ) : (
-                          <>
-                            <Rocket className="w-4 h-4 mr-2" />
-                            เริ่มภารกิจ!
-                          </>
-                        )}
-                      </Button>
-                    )}
+                    </div>
+
+                    {/* Mission Action */}
+                    <div className="flex items-center gap-3">
+                      {currentMission.isCompleted ? (
+                        <div className="flex items-center gap-2 text-green-400">
+                          <Check className="w-5 h-5" />
+                          <span className="font-semibold">ภารกิจสำเร็จ!</span>
+                          <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
+                            {currentMission.badge}
+                          </Badge>
+                        </div>
+                      ) : (
+                        <Button
+                          onClick={() => handleCompleteMission(currentMission.id)}
+                          disabled={isAnimating}
+                          className="bg-yellow-500 text-yellow-900 hover:bg-yellow-400 font-semibold"
+                        >
+                          {isAnimating ? (
+                            <>
+                              <Sparkles className="w-4 h-4 mr-2 animate-spin" />
+                              กำลังดำเนินการ...
+                            </>
+                          ) : (
+                            <>
+                              <Rocket className="w-4 h-4 mr-2" />
+                              เริ่มภารกิจ!
+                            </>
+                          )}
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Mission List */}
             <div className="space-y-3 mb-6">
@@ -215,7 +329,7 @@ export function MeeBotOnboardingModal({ isOpen, onClose }: MeeBotOnboardingModal
                 <Trophy className="w-5 h-5 text-yellow-400" />
                 รายการภารกิจทั้งหมด
               </h4>
-              
+
               {missions.map((mission, index) => (
                 <div 
                   key={mission.id}
@@ -240,7 +354,7 @@ export function MeeBotOnboardingModal({ isOpen, onClose }: MeeBotOnboardingModal
                       <span className="text-sm font-bold">{mission.id}</span>
                     )}
                   </div>
-                  
+
                   <div className="flex-1">
                     <p className={`font-medium ${
                       mission.isCompleted ? 'text-green-300' : 
@@ -249,7 +363,7 @@ export function MeeBotOnboardingModal({ isOpen, onClose }: MeeBotOnboardingModal
                       {mission.title}
                     </p>
                   </div>
-                  
+
                   {mission.isCompleted && (
                     <Badge className="bg-green-500/20 text-green-300 border-green-500/30 text-xs">
                       {mission.badge}
