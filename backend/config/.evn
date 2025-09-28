@@ -1,0 +1,19 @@
+# 🧠 MeeChain-specific (ตัวอย่างสำหรับ quest หรือ badge minting)
+MEECHAIN_CONTRACT_ADDRESS="0xYourMeeTokenAddress"
+MEECHAIN_CHAIN_ID="31337" # หรือ chain ที่คุณใช้ เช่น 11155111 สำหรับ Sepolia
+
+# 🧪 Viem RPC endpoint (ถ้าใช้ custom RPC)
+VIEM_RPC_URL="http://localhost:8545"
+GITHUB_ID="Ov23liB0SjJvz6NcWBM4"
+GITHUB_
+GITHUB_PAT="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"
+
+NEXT_PUBLIC_STACK_PROJECT_ID=b6e69452-3095-4cfe-93a8-ffa21e53bb4c
+NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY=pck_8cm8dddgp1xcn8frctgxckx4vv6207j877qwz2bjy6hng
+STACK_SECRET_SERVER_KEY=ssk_4zb8y57r1y951sh6v28fm52f1djz0430297gnmenh6pm
+
+PGHOST=ep-odd-resonance-adlpgy93-pooler.c-2.us-east-1.aws.neon.tech
+PGHOST_UNPOOLED=ep-odd-resonance-adlpgy93.c-2.us-east-1.aws.neon.tech
+PGUSER=neondb_owner
+PGDATABASE=neondb
+PGPASSWORD=npg_47evWxYSObfB

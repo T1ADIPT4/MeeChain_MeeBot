@@ -1,0 +1,24 @@
+# serverless.yml
+service: fallbackMintBadge
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-southeast-1
+  environment:
+    RPC_URL: https://your-rpc-url
+    FALLBACK_MINT_PRIVATE_KEY: ${env:FALLBACK_MINT_PRIVATE_KEY}
+    NEON_SYNC_API: https://your-neon-api.com/api/syncBadge
+
+functions:
+  fallbackMint:
+    handler: fallbackMintLambda.handler
+    events:
+      - eventBridge:
+          pattern:
+            source:
+              - meechain.quest
+            detail-type:
+              - FallbackMintRequest

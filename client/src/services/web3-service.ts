@@ -512,6 +512,7 @@ class Web3Service {
   }
 }
 
+
 // Export singleton instance
 export const web3Service = new Web3Service();
 

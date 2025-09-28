@@ -1,0 +1,7 @@
+ignoredBuiltDependencies:
+  - '@swc/core'
+  - '@tailwindcss/oxide'
+  - bufferutil
+  - core-js
+  - es5-ext
+  - esbuild
