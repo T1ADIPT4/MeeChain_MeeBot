@@ -3,7 +3,8 @@ import { useLocation } from 'wouter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'; // Tabs components imported
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/ui/app-sidebar';
 import {
   Wallet,
   Send,
@@ -79,7 +80,6 @@ export default function DashboardPage() {
   const [chartLabels, setChartLabels] = useState(['08:00', '08:10', '08:20', '08:30', '08:40', '08:50', '09:00']);
   const { toast } = useToast();
   const logoRef = useRef<HTMLDivElement>(null);
-  const [activeTab, setActiveTab] = useState('home'); // State to manage active tab
 
   // State สำหรับปุ่ม มีบอท
   const [isBotReady, setIsBotReady] = useState(true);
@@ -266,19 +266,27 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
-      {/* Enhanced Header with Navigation */}
-      <nav className="flex items-center justify-between bg-slate-800/80 backdrop-blur-sm border-b border-slate-600/50 p-4">
-        <Button variant="ghost" size="sm" className="text-blue-300">
-          <Menu className="w-5 h-5" />
-        </Button>
-        <h1 className="text-xl font-bold text-blue-300">MeeChain Dashboard</h1>
-        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-          <User className="w-5 h-5 text-white" />
-        </div>
-      </nav>
+    <SidebarProvider>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex">
+        <AppSidebar 
+          userAddress={userAddress}
+          isConnected={isConnected}
+          userName={walletData?.name || 'Anonymous User'}
+          userLevel={walletData?.level || 1}
+          userTier={walletData?.tier || 'Bronze'}
+        />
+        
+        <div className="flex-1 flex flex-col">
+          {/* Enhanced Header with Hamburger Menu */}
+          <nav className="flex items-center justify-between bg-slate-800/80 backdrop-blur-sm border-b border-slate-600/50 p-4">
+            <SidebarTrigger className="text-blue-300" />
+            <h1 className="text-xl font-bold text-blue-300">MeeChain Dashboard</h1>
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+              <User className="w-5 h-5 text-white" />
+            </div>
+          </nav>
 
-      <div className="px-6 pb-6 space-y-6">
+          <div className="flex-1 px-6 pb-6 space-y-6 overflow-auto">
         {/* === ส่วนที่ 1: ส่วนหัว (Profile & Quick Stats) === */}
 
         {/* Profile Header */}
@@ -341,25 +349,7 @@ export default function DashboardPage() {
         </Card>
 
         {/* MeeBot Secrets Health Check - แถบแจ้งเตือนด้านบน */}
-        <MeeBotSecretsAlert />
-
-        {/* MeeBot Tabbed Interface */}
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          {/* Updated TabsList with Football tab and 7 columns */}
-          <TabsList className="grid w-full grid-cols-7 bg-slate-800/50">
-            <TabsTrigger value="home" className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-300">หน้าหลัก</TabsTrigger>
-            <TabsTrigger value="wallet" className="data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-300">กระเป๋าเงิน</TabsTrigger>
-            <TabsTrigger value="badges" className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300">Badge & NFT</TabsTrigger>
-            <TabsTrigger value="minter" className="data-[state=active]:bg-yellow-500/20 data-[state=active]:text-yellow-300">Mint Badge</TabsTrigger>
-            <TabsTrigger value="quests" className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-300">ภารกิจ</TabsTrigger>
-            <TabsTrigger value="tracker" className="data-[state=active]:bg-indigo-500/20 data-[state=active]:text-indigo-300">Quest Tracker</TabsTrigger>
-            <TabsTrigger value="meebot" className="data-[state=active]:bg-pink-500/20 data-[state=active]:text-pink-300">MeeBot</TabsTrigger>
-            <TabsTrigger value="system" className="data-[state=active]:bg-gray-500/20 data-[state=active]:text-gray-300">ระบบ</TabsTrigger>
-            {/* New Football Tab */}
-            <TabsTrigger value="football" className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-300">⚽ ฟุตบอล</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="home">
+            <MeeBotSecretsAlert />
             {/* Main MeeBot Card with Control Buttons */}
             <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm mt-6">
               <CardContent className="p-6">
@@ -938,163 +928,10 @@ export default function DashboardPage() {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-cyan-400/10 to-transparent rounded-full -translate-y-6 translate-x-6"></div>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value="wallet">
-            {/* Wallet Section Content - Placeholder for now */}
-            <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm mt-6">
-              <CardContent>
-                <h2 className="text-xl font-semibold text-blue-300 mb-4">Wallet Details</h2>
-                <p className="text-slate-400">Information about your wallet will be displayed here.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="badges">
-            <BadgeCollection onMarketplaceClick={() => setActiveTab('badges')} />
-          </TabsContent>
-
-          {/* New TabsContent for Badge Minter */}
-          <TabsContent value="minter">
-            <div className="flex justify-center">
-              <BadgeMinter
-                isOwner={true} // You should check actual owner status
-                onMinted={(badgeId) => {
-                  toast({
-                    title: "🎉 Badge Minted!",
-                    description: `Badge ${badgeId} has been created successfully`,
-                  });
-                }}
-              />
-            </div>
-          </TabsContent>
-
-          {/* New TabsContent for Quest Tracker */}
-          <TabsContent value="tracker">
-            <QuestTracker />
-          </TabsContent>
-
-          <TabsContent value="quests">
-            {/* Quests Section Content - Placeholder for now */}
-            <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm mt-6">
-              <CardContent>
-                <h2 className="text-xl font-semibold text-purple-300 mb-4">Your Quests</h2>
-                <p className="text-slate-400">Track your ongoing and completed quests here.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="meebot">
-            {/* MeeBot Section Content - Placeholder for now */}
-            <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm mt-6">
-              <CardContent>
-                <h2 className="text-xl font-semibold text-cyan-300 mb-4">MeeBot Assistant</h2>
-                <p className="text-slate-400">Manage your MeeBot interactions and settings here.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="system">
-            {/* System Section Content - Placeholder for now */}
-            <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm mt-6">
-              <CardContent>
-                <h2 className="text-xl font-semibold text-gray-300 mb-4">System Status</h2>
-                <p className="text-slate-400">View system information and health status.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* New TabsContent for Football Zone */}
-          <TabsContent value="football">
-            <FootballZone />
-          </TabsContent>
-
-        </Tabs>
+          
       </div>
-
-      {/* Enhanced Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-sm border-t border-slate-600/50 px-4 py-2">
-        <div className="flex justify-around items-center max-w-md mx-auto">
-          <Button
-            variant="ghost"
-            className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-200 p-2 transition-all duration-200 hover:scale-110"
-            onClick={() => navigate('/')}
-            data-testid="nav-home"
-          >
-            <Wallet className="w-5 h-5" />
-            <span className="text-xs">Home</span>
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="flex flex-col items-center gap-1 text-slate-400 hover:text-blue-200 p-2 transition-all duration-200 hover:scale-110"
-            onClick={() => navigate('/swap')}
-            data-testid="nav-swap"
-          >
-            <Send className="w-5 h-5" />
-            <span className="text-xs">Swap</span>
-          </Button>
-
-          <Button
-            variant="ghost"
-            className={`flex flex-col items-center gap-1 p-2 transition-all duration-200 hover:scale-110 ${activeTab === 'home' ? 'text-blue-400' : 'text-slate-400'}`}
-            onClick={() => setActiveTab('home')}
-            data-testid="nav-dashboard"
-          >
-            <div className="relative">
-              <TrendingUp className="w-5 h-5" />
-              {activeTab === 'home' && <div className="absolute -top-1 -right-1 w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>}
-            </div>
-            <span className={`text-xs ${activeTab === 'home' ? 'font-semibold' : ''}`}>Dashboard</span>
-            {/* Active indicator */}
-            {activeTab === 'home' && <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-blue-400 rounded-full"></div>}
-          </Button>
-
-          <Link to="/meebot">
-            <Button
-              variant="ghost"
-              size="icon"
-              className={`w-10 h-10 rounded-full relative overflow-hidden transition-all duration-300 hover:scale-110 ${activeTab === 'meebot' ? 'bg-gradient-to-r from-cyan-500/20 to-purple-500/20 border border-cyan-300 text-cyan-300' : 'bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/30 text-cyan-300'}`}
-              title="MeeBot"
-              onClick={() => setActiveTab('meebot')}
-            >
-              <Bot className="w-5 h-5" />
-              {/* Online indicator */}
-              {activeTab === 'meebot' && <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-slate-900">
-                <div className="w-1 h-1 bg-white rounded-full animate-pulse mx-auto mt-0.5"></div>
-              </div>}
-            </Button>
-          </Link>
-          <Link to="/academy">
-            <Button
-              variant="ghost"
-              size="icon"
-              className={`w-10 h-10 rounded-full relative overflow-hidden transition-all duration-300 hover:scale-110 ${activeTab === 'academy' ? 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-300 text-yellow-300' : 'bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/30 text-yellow-300'}`}
-              title="Academy"
-              onClick={() => setActiveTab('academy')}
-            >
-              <BookOpen className="w-5 h-5 group-hover:animate-bounce" />
-              {/* Sparkle effect */}
-              {activeTab === 'academy' && <div className="absolute top-0 right-0 w-2 h-2 bg-yellow-400 rounded-full animate-pulse opacity-60"></div>}
-            </Button>
-          </Link>
-          <Link to="/nft-collection">
-            <Button
-              variant="ghost"
-              size="icon"
-              className={`w-10 h-10 rounded-full relative overflow-hidden transition-all duration-300 hover:scale-110 ${activeTab === 'nft-collection' ? 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-300 text-purple-300' : 'bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/30 text-purple-300'}`}
-              title="NFT Collection"
-              onClick={() => setActiveTab('nft-collection')}
-            >
-              <Sparkles className="w-5 h-5 group-hover:animate-spin" />
-              {/* New badge */}
-              {activeTab === 'nft-collection' && <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full border border-slate-900">
-                <div className="w-1 h-1 bg-white rounded-full animate-pulse mx-auto mt-0.5"></div>
-              </div>}
-            </Button>
-          </Link>
         </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }
