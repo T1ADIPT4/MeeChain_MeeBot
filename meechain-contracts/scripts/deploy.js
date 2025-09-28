@@ -145,6 +145,42 @@ async function main() {
       QuestManager: questManager.address,
       BadgeNFTUpgrade: badgeUpgrade.address,
       FootballNFT: footballNFT.address
+    },
+    metadata: {
+      version: "v1.3.0",
+      environment: network.name === "hardhat" ? "sandbox" : "production",
+      fallbackEnabled: true,
+      chainId: network.config.chainId?.toString() || "31337",
+      rpcUrl: network.config.url || "http://localhost:8545",
+      explorerUrl: network.name === "smanky" ? "https://explorer.smanky.dev" : "https://etherscan.io"
+    },
+    deploymentStatus: {
+      success: true,
+      failedContracts: [],
+      fallbackRequired: false,
+      lastAttempt: new Date().toISOString(),
+      retryCount: 0
+    },
+    features: {
+      questSystem: true,
+      nftMinting: true,
+      tokenRewards: true,
+      badgeUpgrades: true,
+      footballPlayers: true
+    },
+    authorizations: {
+      questManagerCanMintTokens: true,
+      questManagerCanMintBadges: true,
+      questManagerCanMintFootballNFTs: true,
+      badgeUpgradeCanBurnTokens: true,
+      badgeUpgradeCanUpgradeBadges: true
+    },
+    fallbackConfig: {
+      enabled: true,
+      network: "smanky",
+      rpcUrl: "https://rpc.smanky.dev",
+      chainId: "1337",
+      explorerUrl: "https://explorer.smanky.dev"
     }
   };
 
