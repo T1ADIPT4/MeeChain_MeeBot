@@ -1,0 +1,19 @@
+
+{
+  "network": "development",
+  "timestamp": "2024-01-01T00:00:00.000Z",
+  "deployer": "0x0000000000000000000000000000000000000000",
+  "contracts": {
+    "MeeToken": "0x0000000000000000000000000000000000000000",
+    "MembershipNFT": "0x0000000000000000000000000000000000000000",
+    "MeeBadgeNFT": "0x0000000000000000000000000000000000000000",
+    "FootballNFT": "0x0000000000000000000000000000000000000000",
+    "QuestManager": "0x0000000000000000000000000000000000000000",
+    "BadgeNFTUpgrade": "0x0000000000000000000000000000000000000000"
+  },
+  "deploymentStatus": {
+    "success": false,
+    "failedContracts": [],
+    "fallbackRequired": false
+  }
+}

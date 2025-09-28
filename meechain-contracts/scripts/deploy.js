@@ -1,9 +1,9 @@
-
-const { ethers } = require("hardhat");
+const { ethers, network } = require("hardhat");
+const fs = require("fs");
 
 async function main() {
   console.log("🚀 Starting MeeChain contracts deployment...");
-  
+
   const [deployer] = await ethers.getSigners();
   console.log("Deploying contracts with account:", deployer.address);
   console.log("Account balance:", (await deployer.getBalance()).toString());
@@ -43,26 +43,37 @@ async function main() {
   await badgeUpgrade.deployed();
   console.log("✅ BadgeNFTUpgrade deployed to:", badgeUpgrade.address);
 
+  // ⚽ Deploy FootballNFT
+  console.log("\n⚽ Deploying FootballNFT...");
+  const FootballNFT = await ethers.getContractFactory("FootballNFT");
+  const footballNFT = await FootballNFT.deploy("Football Legends", "FBL");
+  await footballNFT.deployed();
+  console.log("✅ FootballNFT deployed to:", footballNFT.address);
+
   // 6. Set up authorizations
   console.log("\n🔐 Setting up contract authorizations...");
-  
+
   // Authorize QuestManager to mint tokens and badges
   await meeToken.authorizeMinter(questManager.address);
   console.log("✅ QuestManager authorized to mint MeeTokens");
-  
+
   await badgeNFT.authorizeMinter(questManager.address);
   console.log("✅ QuestManager authorized to mint BadgeNFTs");
-  
+
   // Authorize BadgeUpgrade to burn tokens and upgrade badges
   await meeToken.authorizeMinter(badgeUpgrade.address);
   console.log("✅ BadgeUpgrade authorized to burn MeeTokens");
-  
+
   await badgeNFT.authorizeMinter(badgeUpgrade.address);
   console.log("✅ BadgeUpgrade authorized to upgrade BadgeNFTs");
 
+  // Authorize QuestManager to mint FootballNFT
+  await footballNFT.authorizeMinter(questManager.address);
+  console.log("✅ QuestManager authorized to mint FootballNFTs");
+
   // 7. Create initial quests
   console.log("\n🎮 Creating initial quests...");
-  
+
   await questManager.createQuest(
     "First Steps",
     "Complete your first wallet transaction",
@@ -75,13 +86,40 @@ async function main() {
 
   await questManager.createQuest(
     "Explorer",
-    "Connect to Fuse Network and explore DeFi",
+    "Visit 5 different pages in the app",
     ethers.utils.parseEther("25"), // 25 MEE reward
     "Explorer Badge",
-    "You've explored the MeeChain ecosystem",
+    "For the curious minds",
     "https://api.meechain.com/nft/badges/explorer.json"
   );
   console.log("✅ Created 'Explorer' quest");
+
+  // Create player recruitment quests
+  await questManager.createPlayerQuest(
+    "Recruit Ronaldo",
+    "Complete the legendary scouting quest to recruit Cristiano Ronaldo",
+    ethers.utils.parseEther("100"), // 100 MEE reward
+    "Cristiano Ronaldo",
+    "Forward",
+    95, // Rating
+    "Portugal",
+    true, // isLegendary
+    "https://api.meechain.com/nft/players/ronaldo.json"
+  );
+  console.log("✅ Created 'Recruit Ronaldo' player quest");
+
+  await questManager.createPlayerQuest(
+    "Scout Messi",
+    "Find and recruit the GOAT Lionel Messi",
+    ethers.utils.parseEther("100"), // 100 MEE reward
+    "Lionel Messi",
+    "Forward",
+    96, // Rating
+    "Argentina",
+    true, // isLegendary
+    "https://api.meechain.com/nft/players/messi.json"
+  );
+  console.log("✅ Created 'Scout Messi' player quest");
 
   // 8. Summary
   console.log("\n🎉 MeeChain deployment completed!");
@@ -92,8 +130,9 @@ async function main() {
   console.log("MeeBadgeNFT:", badgeNFT.address);
   console.log("QuestManager:", questManager.address);
   console.log("BadgeNFTUpgrade:", badgeUpgrade.address);
+  console.log("FootballNFT:", footballNFT.address);
   console.log("=====================================");
-  
+
   // Save addresses to file for frontend use
   const deploymentInfo = {
     network: network.name,
@@ -104,12 +143,14 @@ async function main() {
       MembershipNFT: membershipNFT.address,
       MeeBadgeNFT: badgeNFT.address,
       QuestManager: questManager.address,
-      BadgeNFTUpgrade: badgeUpgrade.address
+      BadgeNFTUpgrade: badgeUpgrade.address,
+      FootballNFT: footballNFT.address
     }
   };
-  
+
   console.log("\n💾 Deployment info saved for frontend integration");
   console.log(JSON.stringify(deploymentInfo, null, 2));
+  fs.writeFileSync("deploy-registry.json", JSON.stringify(deploymentInfo, null, 2));
 }
 
 main()

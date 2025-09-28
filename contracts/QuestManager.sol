@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "./MeeToken.sol";
 import "./BadgeNFT.sol";
+import "./FootballNFT.sol"; // Import FootballNFT contract
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract QuestManager is Ownable {
@@ -10,9 +11,16 @@ contract QuestManager is Ownable {
         string name;
         string description;
         uint256 rewardAmount;
+        string rewardType; // "badge", "player", etc.
         string badgeName;
         string badgeDescription;
         string badgeTokenURI;
+        // Fields for player NFT rewards
+        string playerName;
+        string playerPosition;
+        uint256 playerRating;
+        string playerNationality;
+        bool isLegendary;
         bool isActive;
         uint256 completions;
     }
@@ -22,14 +30,16 @@ contract QuestManager is Ownable {
     uint256 public questCounter;
 
     MeeToken public meeToken;
-    MeeBadgeNFT public badgeNFT;
-    
-    event QuestCreated(uint256 indexed questId, string name);
+    BadgeNFT public badgeNFT;
+    FootballNFT public footballNFT; // Add FootballNFT contract instance
+
+    event QuestCreated(uint256 indexed questId, string name, string rewardType);
     event QuestCompleted(address indexed user, uint256 indexed questId, uint256 rewardAmount);
 
-    constructor(address _meeToken, address _badgeNFT) {
+    constructor(address _meeToken, address _badgeNFT, address _footballNFT) {
         meeToken = MeeToken(_meeToken);
-        badgeNFT = MeeBadgeNFT(_badgeNFT);
+        badgeNFT = BadgeNFT(_badgeNFT);
+        footballNFT = FootballNFT(_footballNFT); // Initialize FootballNFT
         questCounter = 0;
     }
 
@@ -40,84 +50,145 @@ contract QuestManager is Ownable {
         string memory name,
         string memory description,
         uint256 rewardAmount,
+        string memory rewardType, // Specify reward type
         string memory badgeName,
         string memory badgeDescription,
         string memory badgeTokenURI
     ) external onlyOwner returns (uint256) {
         uint256 questId = questCounter;
         questCounter++;
-        
+
         quests[questId] = Quest({
             name: name,
             description: description,
             rewardAmount: rewardAmount,
+            rewardType: rewardType,
             badgeName: badgeName,
             badgeDescription: badgeDescription,
             badgeTokenURI: badgeTokenURI,
+            playerName: "", // Default empty for non-player rewards
+            playerPosition: "",
+            playerRating: 0,
+            playerNationality: "",
+            isLegendary: false,
             isActive: true,
             completions: 0
         });
-        
-        emit QuestCreated(questId, name);
+
+        emit QuestCreated(questId, name, rewardType);
         return questId;
     }
-    
+
     /**
-     * @dev Complete a quest - mint tokens and badge
+     * @dev Create a new quest with player reward details (only owner)
+     */
+    function createQuestWithPlayerReward(
+        string memory name,
+        string memory description,
+        uint256 rewardAmount,
+        string memory playerName,
+        string memory playerPosition,
+        uint256 playerRating,
+        string memory playerNationality,
+        bool isLegendary,
+        string memory playerTokenURI // This will be the tokenURI for the player NFT
+    ) external onlyOwner returns (uint256) {
+        uint256 questId = questCounter;
+        questCounter++;
+
+        quests[questId] = Quest({
+            name: name,
+            description: description,
+            rewardAmount: rewardAmount,
+            rewardType: "player", // Set reward type to player
+            badgeName: "", // Not used for player rewards
+            badgeDescription: "",
+            badgeTokenURI: playerTokenURI, // Store player NFT URI here
+            playerName: playerName,
+            playerPosition: playerPosition,
+            playerRating: playerRating,
+            playerNationality: playerNationality,
+            isLegendary: isLegendary,
+            isActive: true,
+            completions: 0
+        });
+
+        emit QuestCreated(questId, name, "player");
+        return questId;
+    }
+
+
+    /**
+     * @dev Complete a quest - mint tokens and reward
      */
     function completeQuest(uint256 questId) public {
         require(quests[questId].isActive, "Quest inactive");
         require(!completed[msg.sender][questId], "Already completed");
 
-        // Check authorization before attempting to mint (provide clearer error messages)
-        require(meeToken.isMinter(address(this)), "QuestManager not authorized to mint MeeTokens. Run manual authorization setup first.");
-        require(badgeNFT.authorizedMinters(address(this)), "QuestManager not authorized to mint BadgeNFTs. Run manual authorization setup first.");
+        // Check authorization before attempting to mint
+        require(meeToken.isMinter(address(this)), "QuestManager not authorized to mint MeeTokens");
 
         Quest storage quest = quests[questId];
         completed[msg.sender][questId] = true;
         quest.completions++;
-        
+
         // Mint MeeToken reward
         meeToken.mint(msg.sender, quest.rewardAmount);
-        
-        // Mint Badge NFT with correct parameters for BadgeNFT contract
-        badgeNFT.mintBadge(
-            msg.sender,                    // to
-            quest.badgeName,              // name
-            quest.badgeDescription,       // description
-            MeeBadgeNFT.BadgeType.ACHIEVER, // badgeType (using ACHIEVER for quest rewards)
-            MeeBadgeNFT.Rarity.COMMON,    // rarity
-            quest.badgeTokenURI,          // tokenURI
-            true,                         // isQuestReward
-            uintToString(questId)         // questId as string
-        );
-        
+
+        // Handle different reward types
+        if (keccak256(bytes(quest.rewardType)) == keccak256(bytes("player"))) {
+            // Mint Football Player NFT
+            require(address(footballNFT) != address(0), "FootballNFT not set");
+            footballNFT.mintPlayer(
+                msg.sender,
+                quest.playerName,
+                quest.playerPosition,
+                quest.playerRating,
+                quest.playerNationality,
+                quest.isLegendary,
+                quest.badgeTokenURI // Using badgeTokenURI to store player NFT URI
+            );
+        } else if (keccak256(bytes(quest.rewardType)) == keccak256(bytes("badge"))) {
+            // Default: Mint Badge NFT
+            require(badgeNFT.authorizedMinters(address(this)), "QuestManager not authorized to mint BadgeNFTs");
+            badgeNFT.mintBadge(
+                msg.sender,
+                quest.badgeName,
+                quest.badgeDescription,
+                MeeBadgeNFT.BadgeType.ACHIEVER, // Assuming ACHIEVER for quest badges
+                MeeBadgeNFT.Rarity.COMMON,    // Assuming COMMON rarity
+                quest.badgeTokenURI,
+                true,                         // isQuestReward
+                uintToString(questId)         // questId as string
+            );
+        }
+        // Add other reward types as needed
+
         emit QuestCompleted(msg.sender, questId, quest.rewardAmount);
     }
-    
+
     /**
      * @dev Check if this contract is properly authorized to mint tokens and badges
-     * @return isAuthorized True if both token and badge minting are authorized
+     * @return isAuthorized True if all necessary minting are authorized
      * @return tokenAuthorized True if this contract can mint MeeTokens
      * @return badgeAuthorized True if this contract can mint BadgeNFTs
+     * @return footballNFTAuthorized True if this contract can mint Football NFTs
      */
-    function checkAuthorization() external view returns (bool isAuthorized, bool tokenAuthorized, bool badgeAuthorized) {
+    function checkAuthorization() external view returns (bool isAuthorized, bool tokenAuthorized, bool badgeAuthorized, bool footballNFTAuthorized) {
         tokenAuthorized = meeToken.isMinter(address(this));
         badgeAuthorized = badgeNFT.authorizedMinters(address(this));
-        isAuthorized = tokenAuthorized && badgeAuthorized;
-        return (isAuthorized, tokenAuthorized, badgeAuthorized);
+        footballNFTAuthorized = footballNFT.isAuthorizedMinter(address(this)); // Check authorization for FootballNFT
+        isAuthorized = tokenAuthorized && badgeAuthorized && footballNFTAuthorized;
+        return (isAuthorized, tokenAuthorized, badgeAuthorized, footballNFTAuthorized);
     }
 
     /**
      * @dev Get contract addresses for external authorization setup
-     * @return meeTokenAddress Address of the MeeToken contract
-     * @return badgeNFTAddress Address of the BadgeNFT contract
-     * @return questManagerAddress Address of this QuestManager contract
      */
-    function getContractAddresses() external view returns (address meeTokenAddress, address badgeNFTAddress, address questManagerAddress) {
-        return (address(meeToken), address(badgeNFT), address(this));
+    function getContractAddresses() external view returns (address meeTokenAddress, address badgeNFTAddress, address footballNFTAddress, address questManagerAddress) {
+        return (address(meeToken), address(badgeNFT), address(footballNFT), address(this));
     }
-    
+
     /**
      * @dev Deactivate a quest
      */
@@ -125,21 +196,21 @@ contract QuestManager is Ownable {
         require(quests[questId].isActive, "Quest already inactive");
         quests[questId].isActive = false;
     }
-    
+
     /**
      * @dev Get quest details
      */
     function getQuest(uint256 questId) external view returns (Quest memory) {
         return quests[questId];
     }
-    
+
     /**
      * @dev Check if user has completed quest
      */
     function hasCompletedQuest(address user, uint256 questId) external view returns (bool) {
         return completed[user][questId];
     }
-    
+
     /**
      * @dev Convert uint256 to string
      */
