@@ -56,6 +56,20 @@ import { QuestTracker } from '@/components/nft/quest-tracker'; // Imported Quest
 import { TokenManager } from '@/components/web3/token-manager';
 import { DeploymentChecker } from '@/components/meebot/deployment-checker';
 
+// Placeholder for the new FootballZone component
+const FootballZone = () => {
+  return (
+    <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm mt-6">
+      <CardContent>
+        <h2 className="text-xl font-semibold text-green-300 mb-4">Football Zone</h2>
+        <p className="text-slate-400">Welcome to the Football Zone! Manage your football NFTs and quests here.</p>
+        {/* Add football-specific components here */}
+      </CardContent>
+    </Card>
+  );
+};
+
+
 export default function DashboardPage() {
   const [, navigate] = useLocation(); // navigate is used instead of useLocation() directly
   const [showBalance, setShowBalance] = useState(true);
@@ -331,15 +345,18 @@ export default function DashboardPage() {
 
         {/* MeeBot Tabbed Interface */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-8">
-            <TabsTrigger value="home">หน้าหลัก</TabsTrigger>
-            <TabsTrigger value="wallet">กระเป๋าเงิน</TabsTrigger>
-            <TabsTrigger value="badges">Badge & NFT</TabsTrigger>
-            <TabsTrigger value="minter">Mint Badge</TabsTrigger>
-            <TabsTrigger value="quests">ภารกิจ</TabsTrigger>
-            <TabsTrigger value="tracker">Quest Tracker</TabsTrigger>
-            <TabsTrigger value="meebot">MeeBot</TabsTrigger>
-            <TabsTrigger value="system">ระบบ</TabsTrigger>
+          {/* Updated TabsList with Football tab and 7 columns */}
+          <TabsList className="grid w-full grid-cols-7 bg-slate-800/50">
+            <TabsTrigger value="home" className="data-[state=active]:bg-cyan-500/20 data-[state=active]:text-cyan-300">หน้าหลัก</TabsTrigger>
+            <TabsTrigger value="wallet" className="data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-300">กระเป๋าเงิน</TabsTrigger>
+            <TabsTrigger value="badges" className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300">Badge & NFT</TabsTrigger>
+            <TabsTrigger value="minter" className="data-[state=active]:bg-yellow-500/20 data-[state=active]:text-yellow-300">Mint Badge</TabsTrigger>
+            <TabsTrigger value="quests" className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-300">ภารกิจ</TabsTrigger>
+            <TabsTrigger value="tracker" className="data-[state=active]:bg-indigo-500/20 data-[state=active]:text-indigo-300">Quest Tracker</TabsTrigger>
+            <TabsTrigger value="meebot" className="data-[state=active]:bg-pink-500/20 data-[state=active]:text-pink-300">MeeBot</TabsTrigger>
+            <TabsTrigger value="system" className="data-[state=active]:bg-gray-500/20 data-[state=active]:text-gray-300">ระบบ</TabsTrigger>
+            {/* New Football Tab */}
+            <TabsTrigger value="football" className="data-[state=active]:bg-green-500/20 data-[state=active]:text-green-300">⚽ ฟุตบอล</TabsTrigger>
           </TabsList>
 
           <TabsContent value="home">
@@ -986,6 +1003,12 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* New TabsContent for Football Zone */}
+          <TabsContent value="football">
+            <FootballZone />
+          </TabsContent>
+
         </Tabs>
       </div>
 
