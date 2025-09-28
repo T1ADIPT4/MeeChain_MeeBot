@@ -1,0 +1,107 @@
+# 🧪 Tech Stack Assumptions
+- **Next.js (App Router)**
+- **wagmi v2** for wallet connection
+- **ethers.js** under the hood
+- **MeeBot UI**: emoji + message + button system
+- **Fallback preview mode** if user rejects
+
+---
+
+## 🧱 1. Setup wagmi config
+
+```ts
+// lib/wagmi.ts
+import { createConfig, configureChains } from 'wagmi';
+import { mainnet } from 'wagmi/chains';
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
+
+export const wagmiConfig = createConfig({
+  autoConnect: true,
+  connectors: [new MetaMaskConnector()],
+  publicClient: configureChains([mainnet], [/* providers */]).publicClient,
+});
+```
+
+---
+
+## 🎛️ 2. MeeBot UI Component
+
+```tsx
+// components/MeeBot.tsx
+export function MeeBot({ emoji, message, action }: { emoji: string; message: string; action?: () => void }) {
+  return (
+    <div className="meebot">
+      <span>{emoji}</span>
+      <p>{message}</p>
+      {action && <button onClick={action}>ลองใหม่อีกครั้ง</button>}
+    </div>
+  );
+}
+```
+
+---
+## 🚀 3. Wallet Connect Flow with Fallback
+```tsx
+// components/WalletConnect.tsx
+'use client';
+import { useAccount, useConnect } from 'wagmi';
+import { MeeBot } from './MeeBot';
+
+export default function WalletConnect() {
+  const { connect } = useConnect();
+  const { address, isConnected } = useAccount();
+  const [errorCode, setErrorCode] = useState<number | null>(null);
+
+  const handleConnect = async () => {
+    try {
+      await connect({ connector: new MetaMaskConnector() });
+    } catch (err: any) {
+      if (err.code === 4001) {
+        setErrorCode(4001); // user rejected
+      } else {
+        setErrorCode(500); // unknown error
+      }
+    }
+  };
+
+  if (isConnected) {
+    return <MeeBot emoji="🎉" message={`เชื่อมต่อสำเร็จ! ${address}`} />;
+  }
+
+  if (errorCode === 4001) {
+    return (
+      <MeeBot
+        emoji="😅"
+        message="คุณปฏิเสธคำขอเชื่อมต่อ wallet ลองใหม่อีกครั้งไหม?"
+        action={handleConnect}
+      />
+    );
+  }
+
+  if (errorCode === 500) {
+    return <MeeBot emoji="🚨" message="เกิดข้อผิดพลาดในการเชื่อมต่อ wallet" />;
+  }
+
+  return (
+    <MeeBot
+      emoji="🧭"
+      message="ภารกิจแรก: เชื่อม wallet เพื่อรับ badge แรกของคุณ!"
+      action={handleConnect}
+    />
+  );
+}
+```
+---
+## 👀 4. Fallback Preview Mode
+```tsx
+// If user rejects or skips, enable preview mode
+function enablePreviewMode() {
+  return <MeeBot emoji="👀" message="คุณสามารถดูตัวอย่าง flow ได้โดยไม่ต้องเชื่อม wallet" />;
+}
+```
+---
+## 🧩 5. Integration with MeeChain UI
+
+- Embed `<WalletConnect />` in your onboarding quest page
+- Trigger fallback badge minting via smanky-node if wallet is unavailable
+- Use MeeBot reactions to guide retry, preview, or quest progression
