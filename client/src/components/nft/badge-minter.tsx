@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,7 +15,9 @@ import {
   Bot,
   Trophy,
   Target,
-  Zap
+  Zap,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -251,7 +252,7 @@ export function BadgeMinter() {
                     <span className="ml-1 text-xs">{form.rarity}</span>
                   </Badge>
                 </div>
-                
+
                 <div className="text-4xl mb-3">
                   {form.imageUrl ? (
                     <img src={form.imageUrl} alt="Badge" className="w-16 h-16 mx-auto rounded-full" />
@@ -259,15 +260,15 @@ export function BadgeMinter() {
                     "🏆"
                   )}
                 </div>
-                
+
                 <h3 className="font-bold text-lg mb-2">
                   {form.name || "Badge Name"}
                 </h3>
-                
+
                 <p className="text-sm opacity-90 mb-4">
                   {form.description || "Badge description will appear here..."}
                 </p>
-                
+
                 <div className="flex items-center justify-center gap-2 text-xs">
                   <span className="px-2 py-1 bg-white/20 rounded">
                     {form.badgeType}

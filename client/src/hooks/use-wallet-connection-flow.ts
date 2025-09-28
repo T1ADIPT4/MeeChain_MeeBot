@@ -39,6 +39,9 @@ interface WalletConnectionFlowState {
 
 export function useWalletConnectionFlow() {
   const { toast } = useToast();
+  const [rejectionCount, setRejectionCount] = useState(0);
+  const [requestTimeout, setRequestTimeout] = useState<NodeJS.Timeout | null>(null);
+  
   const [flowState, setFlowState] = useState<WalletConnectionFlowState>({
     state: 'idle',
     provider: null,
@@ -56,15 +59,15 @@ export function useWalletConnectionFlow() {
   const meeBotReactions = {
     welcome: {
       emoji: '🎯',
-      message: 'สวัสดีครับ! เพื่อเริ่มภารกิจแรก เราต้องเชื่อมต่อ wallet ของคุณนะครับ',
+      message: '🎮 Quest #1: Connect Wallet to Unlock Your First Badge! เชื่อมต่อ wallet เพื่อปลดล็อก badge แรกของคุณครับ!',
       actions: [
         {
-          label: 'เชื่อมต่อเลย',
+          label: '🚀 เริ่มภารกิจ',
           action: () => requestWalletAccess(),
           variant: 'default' as const
         },
         {
-          label: 'ดูตัวอย่างก่อน',
+          label: '👀 ดูตัวอย่างก่อน',
           action: () => enablePreviewMode(),
           variant: 'secondary' as const
         }
@@ -72,15 +75,21 @@ export function useWalletConnectionFlow() {
     },
     requesting: {
       emoji: '🔄',
-      message: 'กำลังเชื่อมต่อ wallet ของคุณ... โปรดตรวจสอบใน wallet app ครับ',
-      actions: []
-    },
-    connected: {
-      emoji: '🎉',
-      message: 'เยี่ยมมาก! เชื่อมต่อสำเร็จแล้ว ตอนนี้คุณได้รับ badge แรกของคุณแล้ว!',
+      message: 'กำลังรอการอนุญาตจาก wallet... กรุณาตรวจสอบ popup หรือ wallet app และกดยอมรับครับ 🔐',
       actions: [
         {
-          label: 'ไปขั้นต่อไป',
+          label: 'ยกเลิก',
+          action: () => cancelWalletRequest(),
+          variant: 'secondary' as const
+        }
+      ]
+    },
+    connected: {
+      emoji: '🏆',
+      message: '🎉 Quest Complete! เชื่อมต่อสำเร็จแล้ว! คุณได้รับ badge "Wallet Master" และ 100 MEE tokens!',
+      actions: [
+        {
+          label: '✨ รับรางวัล',
           action: () => completeQuest(),
           variant: 'default' as const
         }
@@ -88,44 +97,76 @@ export function useWalletConnectionFlow() {
     },
     rejected: {
       emoji: '😅',
-      message: 'คุณปฏิเสธคำขอเชื่อมต่อ ไม่เป็นไร ลองใหม่อีกครั้งไหมครับ?',
+      message: 'ดูเหมือนคุณปฏิเสธคำขอ ไม่เป็นไรครับ! มาลองใหม่กันเพื่อปลดล็อก badge แรกไหม?',
       actions: [
         {
-          label: 'ลองใหม่',
+          label: '🔄 ขออนุญาตเชื่อมต่อ wallet อีกครั้ง',
           action: () => requestWalletAccess(),
           variant: 'default' as const
         },
         {
-          label: 'ใช้โหมดตัวอย่าง',
+          label: '👀 ใช้โหมดตัวอย่าง',
           action: () => enablePreviewMode(),
           variant: 'secondary' as const
+        }
+      ]
+    },
+    multipleRejects: {
+      emoji: '🤔',
+      message: 'MeeBot เข้าใจแล้วครับ บางทีคุณอาจยังไม่พร้อม ลองดูตัวอย่าง flow ก่อนไหม? หรือตรวจสอบว่า wallet พร้อมใช้งานแล้ว',
+      actions: [
+        {
+          label: '🛠️ ตรวจสอบ wallet',
+          action: () => showWalletTroubleshooting(),
+          variant: 'secondary' as const
+        },
+        {
+          label: '👀 โหมดตัวอย่าง',
+          action: () => enablePreviewMode(),
+          variant: 'default' as const
         }
       ]
     },
     error: {
       emoji: '🚨',
-      message: 'เกิดข้อผิดพลาดในการเชื่อมต่อ wallet ลองใช้โหมดตัวอย่างไหมครับ?',
+      message: 'MeeBot ล้มเหลวในการเชื่อมต่อ wallet 😔 อาจเป็นเพราะ wallet ยังไม่พร้อม หรือเครือข่ายมีปัญหา ลองตัวอย่างก่อนไหมครับ?',
       actions: [
         {
-          label: 'ลองใหม่',
-          action: () => requestWalletAccess(),
-          variant: 'default' as const
+          label: '🔧 แนะนำวิธีแก้ไข',
+          action: () => showTroubleshooting(),
+          variant: 'secondary' as const
         },
         {
-          label: 'โหมดตัวอย่าง',
+          label: '👀 โหมดตัวอย่าง',
           action: () => enablePreviewMode(),
-          variant: 'secondary' as const
+          variant: 'default' as const
         }
       ]
     },
     preview: {
-      emoji: '👀',
-      message: 'คุณอยู่ในโหมดตัวอย่าง สามารถดู flow ทั้งหมดได้โดยไม่ต้องเชื่อม wallet จริง',
+      emoji: '🎮',
+      message: 'คุณอยู่ในโหมดตัวอย่าง! สามารถสำรวจทุกฟีเจอร์ได้โดยไม่ต้องเชื่อม wallet จริง เมื่อไหร่พร้อมก็กลับมาเชื่อมได้นะครับ',
       actions: [
         {
-          label: 'เชื่อม wallet จริง',
+          label: '🔗 เชื่อม wallet จริง',
           action: () => requestWalletAccess(),
           variant: 'default' as const
+        }
+      ]
+    },
+    troubleshooting: {
+      emoji: '🔧',
+      message: 'วิธีแก้ปัญหา wallet: 1) ตรวจสอบว่าติดตั้ง MetaMask แล้ว 2) ปลดล็อค wallet 3) อนุญาต popup 4) เชื่อมต่ออินเทอร์เน็ตแล้ว',
+      actions: [
+        {
+          label: '✅ ลองเชื่อมต่อใหม่',
+          action: () => requestWalletAccess(),
+          variant: 'default' as const
+        },
+        {
+          label: '👀 โหมดตัวอย่าง',
+          action: () => enablePreviewMode(),
+          variant: 'secondary' as const
         }
       ]
     }
@@ -178,22 +219,53 @@ export function useWalletConnectionFlow() {
   };
 
   const requestWalletAccess = async () => {
+    // Clear any existing timeout
+    if (requestTimeout) {
+      clearTimeout(requestTimeout);
+      setRequestTimeout(null);
+    }
+
     setFlowState(prev => ({
       ...prev,
       state: 'requesting',
       meeBotReaction: meeBotReactions.requesting
     }));
 
+    // Set timeout for wallet request (30 seconds)
+    const timeout = setTimeout(() => {
+      setFlowState(prev => ({
+        ...prev,
+        state: 'error',
+        meeBotReaction: {
+          ...meeBotReactions.error,
+          message: 'คำขอเชื่อมต่อ wallet หมดเวลา อาจเป็นเพราะ popup ถูกบล็อค หรือ wallet ไม่ตอบสนอง'
+        }
+      }));
+    }, 30000);
+
+    setRequestTimeout(timeout);
+
     try {
       if (typeof window.ethereum === 'undefined') {
-        throw new Error('MetaMask not installed');
+        throw new Error('MetaMask หรือ wallet อื่นๆ ยังไม่ได้ติดตั้ง กรุณาติดตั้ง MetaMask ก่อนครับ');
       }
 
       const provider = new ethers.BrowserProvider(window.ethereum);
+      
+      // Add a small delay to prevent rapid-fire requests
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       await provider.send("eth_requestAccounts", []);
+      
+      // Clear timeout on success
+      clearTimeout(timeout);
+      setRequestTimeout(null);
       
       const signer = await provider.getSigner();
       const address = await signer.getAddress();
+
+      // Reset rejection counter on successful connection
+      setRejectionCount(0);
 
       setFlowState(prev => ({
         ...prev,
@@ -206,20 +278,42 @@ export function useWalletConnectionFlow() {
       }));
 
       toast({
-        title: "🎉 MeeBot แจ้ง",
-        description: "เชื่อมต่อ wallet สำเร็จ! รับ badge แรกแล้ว",
+        title: "🏆 Quest Complete!",
+        description: "เชื่อมต่อ wallet สำเร็จ! รับ badge 'Wallet Master' และ 100 MEE tokens",
       });
 
     } catch (error: any) {
+      // Clear timeout on error
+      clearTimeout(timeout);
+      setRequestTimeout(null);
+      
       console.error('Wallet connection error:', error);
       
       if (error.code === 4001) {
         // User rejected request
-        setFlowState(prev => ({
-          ...prev,
-          state: 'rejected',
-          meeBotReaction: meeBotReactions.rejected
-        }));
+        const newRejectionCount = rejectionCount + 1;
+        setRejectionCount(newRejectionCount);
+        
+        // Show different message after multiple rejections
+        if (newRejectionCount >= 3) {
+          setFlowState(prev => ({
+            ...prev,
+            state: 'rejected',
+            meeBotReaction: meeBotReactions.multipleRejects
+          }));
+        } else {
+          setFlowState(prev => ({
+            ...prev,
+            state: 'rejected',
+            meeBotReaction: meeBotReactions.rejected
+          }));
+        }
+
+        toast({
+          title: "😅 MeeBot เข้าใจ",
+          description: `คำขอถูกปฏิเสธ (${newRejectionCount}/3) - ลองใหม่หรือใช้โหมดตัวอย่างได้ครับ`,
+        });
+        
       } else {
         // Other errors
         setFlowState(prev => ({
@@ -229,8 +323,8 @@ export function useWalletConnectionFlow() {
         }));
 
         toast({
-          title: "❌ MeeBot เสียใจ",
-          description: `ไม่สามารถเชื่อมต่อได้: ${error.message}`,
+          title: "🚨 MeeBot พบปัญหา",
+          description: error.message || "เกิดข้อผิดพลาดในการเชื่อมต่อ wallet",
           variant: "destructive",
         });
       }
@@ -302,19 +396,91 @@ export function useWalletConnectionFlow() {
     setTimeout(() => showIntentPrompt(), 500);
   };
 
+  const cancelWalletRequest = () => {
+    if (requestTimeout) {
+      clearTimeout(requestTimeout);
+      setRequestTimeout(null);
+    }
+    
+    setFlowState(prev => ({
+      ...prev,
+      state: 'idle',
+      meeBotReaction: {
+        emoji: '🤖',
+        message: 'ยกเลิกคำขอเชื่อมต่อแล้ว พร้อมลองใหม่เมื่อไหร่ก็ได้ครับ',
+        actions: [
+          {
+            label: '🔄 ลองใหม่',
+            action: () => requestWalletAccess(),
+            variant: 'default' as const
+          },
+          {
+            label: '👀 โหมดตัวอย่าง',
+            action: () => enablePreviewMode(),
+            variant: 'secondary' as const
+          }
+        ]
+      }
+    }));
+  };
+
+  const showWalletTroubleshooting = () => {
+    setFlowState(prev => ({
+      ...prev,
+      state: 'error',
+      meeBotReaction: {
+        emoji: '🛠️',
+        message: 'เช็คลิสต์ wallet: ✅ ติดตั้ง MetaMask แล้ว ✅ ปลดล็อค wallet ✅ อนุญาต popup ✅ เชื่อมอินเทอร์เน็ต ✅ รีเฟรชหน้าเว็บ',
+        actions: [
+          {
+            label: '✅ พร้อมแล้ว ลองใหม่',
+            action: () => requestWalletAccess(),
+            variant: 'default' as const
+          },
+          {
+            label: '👀 โหมดตัวอย่าง',
+            action: () => enablePreviewMode(),
+            variant: 'secondary' as const
+          }
+        ]
+      }
+    }));
+  };
+
+  const showTroubleshooting = () => {
+    setFlowState(prev => ({
+      ...prev,
+      state: 'error',
+      meeBotReaction: meeBotReactions.troubleshooting
+    }));
+  };
+
   const retry = () => {
     requestWalletAccess();
   };
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (requestTimeout) {
+        clearTimeout(requestTimeout);
+      }
+    };
+  }, [requestTimeout]);
+
   return {
     ...flowState,
+    rejectionCount,
     actions: {
       requestWalletAccess,
       enablePreviewMode,
       completeQuest,
       disconnect,
       retry,
-      showIntentPrompt
+      showIntentPrompt,
+      cancelWalletRequest,
+      showWalletTroubleshooting,
+      showTroubleshooting
     }
   };
 }
