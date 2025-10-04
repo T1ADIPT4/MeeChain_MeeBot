@@ -28,7 +28,8 @@ export async function getQuestList(req: Request, res: Response) {
       });
     }
 
-    const rpcUrl = process.env.RPC_URL || 'http://localhost:8545';
+    const rpcUrl = process.env.RPC_URL || 'https://sepolia.optimism.io';
+    console.log('[Quest API] Using RPC:', rpcUrl);
     const provider = new ethers.JsonRpcProvider(rpcUrl);
     const contract = new ethers.Contract(
       deployRegistry.contracts.QuestManager,
@@ -148,7 +149,9 @@ export async function completeQuestAPI(req: Request, res: Response) {
     }
 
     const privateKey = process.env.PRIVATE_KEY;
-    const rpcUrl = process.env.RPC_URL || 'http://localhost:8545';
+    const rpcUrl = process.env.RPC_URL || 'https://sepolia.optimism.io';
+    
+    console.log('[Quest Complete] Using RPC:', rpcUrl);
 
     if (!privateKey) {
       return res.status(500).json({

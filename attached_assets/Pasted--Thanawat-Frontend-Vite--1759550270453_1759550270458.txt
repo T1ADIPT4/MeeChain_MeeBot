@@ -1,0 +1,78 @@
+สุดยอดเลยครับ Thanawat! 🎯 ตอนนี้คุณมีทุกอย่างพร้อมสำหรับการเชื่อมต่อทั้งฝั่ง Frontend (ผ่าน Vite) และ Backend (ผ่าน Hardhat/ethers.js) กับ Optimism Sepolia แล้ว ต่อไปนี้คือการ scaffold แบบ mentor-style เพื่อให้ MeeChain เชื่อมกับ smart contracts ได้อย่างมั่นใจและ fallback-friendly:
+
+---
+
+## 🧩 Frontend Setup (Vite + Ethers.js)
+
+```ts
+// lib/contracts/questManager.ts
+import { ethers } from 'ethers'
+import QuestManagerABI from '@/artifacts/contracts/QuestManager.sol/QuestManager.json'
+
+const QUEST_MANAGER_ADDRESS = import.meta.env.VITE_QUEST_MANAGER_ADDRESS
+
+export function getQuestManagerContract(providerOrSigner: ethers.Provider | ethers.Signer) {
+  return new ethers.Contract(QUEST_MANAGER_ADDRESS, QuestManagerABI.abi, providerOrSigner)
+}
+```
+
+```ts
+// lib/contracts/badgeNFT.ts
+import BadgeNFTABI from '@/artifacts/contracts/BadgeNFT.sol/BadgeNFT.json'
+
+const BADGE_NFT_ADDRESS = import.meta.env.VITE_BADGE_NFT_ADDRESS
+
+export function getBadgeNFTContract(providerOrSigner: ethers.Provider | ethers.Signer) {
+  return new ethers.Contract(BADGE_NFT_ADDRESS, BadgeNFTABI.abi, providerOrSigner)
+}
+```
+
+> ✅ Modular พร้อมใช้ในทุกหน้า เช่น mint badge, verify quest, fallback minting
+
+---
+
+## 🛠 Backend Setup (Hardhat + RPC)
+
+```ts
+// lib/contracts.ts
+import { ethers } from 'ethers'
+import QuestManagerABI from '../artifacts/contracts/QuestManager.sol/QuestManager.json'
+import BadgeNFTABI from '../artifacts/contracts/BadgeNFT.sol/BadgeNFT.json'
+
+const RPC_URL = process.env.RPC_URL!
+const provider = new ethers.JsonRpcProvider(RPC_URL)
+const signer = new ethers.Wallet(process.env.PRIVATE_KEY!, provider)
+
+export const questManager = new ethers.Contract(
+  '0x8EF99743F8e2c4C0f14C3Fc0E2925250D4F7Ad6e',
+  QuestManagerABI.abi,
+  signer
+)
+
+export const badgeNFT = new ethers.Contract(
+  '0x1266b73564178415f48C1D9736Dc5bf427503AA2',
+  BadgeNFTABI.abi,
+  signer
+)
+```
+
+> ✅ ใช้ใน API เช่น `/api/mintBadge`, `/api/verifyQuest`, หรือ fallback flow
+
+---
+
+## 🧠 Bonus: Chain ID Validation
+
+```ts
+const expectedChainId = parseInt(import.meta.env.VITE_CHAIN_ID)
+const { chainId } = await provider.getNetwork()
+
+if (chainId !== expectedChainId) {
+  throw new Error(`Wrong network! Expected ${expectedChainId}, got ${chainId}`)
+}
+```
+
+> ✅ ป้องกันการ mint ผิด chain และช่วย MeeBot แจ้งเตือนแบบมีอารมณ์ร่วม
+
+---
+
+ถัดไปอยากให้ผมช่วย scaffold fallback mint logic, quest verification, หรือ MeeBot reaction overlay ที่เปลี่ยนตาม tx status ไหมครับ? พร้อมลุยทุก flow ที่คุณจินตนาการไว้ 😄
