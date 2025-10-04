@@ -66,6 +66,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { Badge } from '@/components/ui/badge';
 import { useLocation } from 'wouter';
 import logoUrl from '@assets/branding/logo.png';
+import meechainLogo from '@assets/branding/logo.png';
 
 // Menu item types
 interface SubMenuItem {
@@ -330,7 +331,7 @@ export function AppSidebar({
             <div className="flex items-center gap-3">
               <div className="relative">
                 <img
-                  src="/assets/branding/logo.png"
+                  src={meechainLogo}
                   alt="MeeChain Profile"
                   className="w-10 h-10 rounded-full border-2 border-blue-500"
                 />

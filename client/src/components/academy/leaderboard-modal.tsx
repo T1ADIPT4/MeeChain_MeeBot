@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import meechainLogo from '@assets/branding/logo.png';
 import { 
   Trophy, 
   Medal,
@@ -195,7 +196,7 @@ export function LeaderboardModal({ isOpen, onClose }: LeaderboardModalProps) {
                       
                       {/* Avatar */}
                       <img
-                        src="/assets/branding/logo.png"
+                        src={meechainLogo}
                         alt="MeeChain"
                         className="w-10 h-10 rounded-full border-2 border-purple-500"
                       />
