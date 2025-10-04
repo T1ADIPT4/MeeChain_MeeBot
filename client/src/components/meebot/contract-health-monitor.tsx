@@ -27,9 +27,9 @@ export default function ContractHealthMonitor({ compact = false }: ContractHealt
 
   const StatusIcon = ({ isHealthy }: { isHealthy: boolean }) => 
     isHealthy ? (
-      <CheckCircle className="w-4 h-4 text-green-400" />
+      <CheckCircle className="w-6 h-6 text-green-400 drop-shadow-lg" />
     ) : (
-      <XCircle className="w-4 h-4 text-red-400" />
+      <XCircle className="w-6 h-6 text-red-500 drop-shadow-lg" />
     );
 
   if (compact) {
@@ -51,30 +51,32 @@ export default function ContractHealthMonitor({ compact = false }: ContractHealt
   }
 
   return (
-    <Card className="bg-slate-800/80 border-slate-600/50">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-blue-300 flex items-center gap-2">
-          <Wifi className="w-5 h-5" />
-          Contract Health Monitor
+    <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-slate-600 shadow-xl">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-lg font-bold text-white flex items-center gap-2">
+          <Wifi className="w-6 h-6 text-cyan-400" />
+          <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+            Contract Health Monitor
+          </span>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleRefresh}
             disabled={isLoading}
-            className="ml-auto h-6 w-6 p-0"
+            className="ml-auto h-8 w-8 p-0 hover:bg-slate-700 text-cyan-400"
           >
-            <RefreshCw className={`w-3 h-3 ${isLoading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
           </Button>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-5">
         {/* MeeBot Status Message */}
-        <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+        <div className="p-4 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border-2 border-cyan-500/40 rounded-xl shadow-lg">
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold text-base shadow-md">
               🤖
             </div>
-            <p className="text-blue-100 text-sm italic leading-relaxed">
+            <p className="text-white text-base font-medium leading-relaxed">
               {meeBotMessage}
             </p>
           </div>
@@ -82,36 +84,36 @@ export default function ContractHealthMonitor({ compact = false }: ContractHealt
 
         {/* Contract Status Grid */}
         {contractsHealth && (
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex items-center gap-2 p-2 bg-slate-700/30 rounded-lg">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex items-center gap-3 p-4 bg-slate-700/60 hover:bg-slate-700/80 rounded-xl border-2 border-slate-600/50 transition-all shadow-md">
               <StatusIcon isHealthy={contractsHealth.rpcConnected} />
               <div>
-                <div className="text-sm text-white font-medium">RPC Connection</div>
-                <div className="text-xs text-gray-400">Fuse Network</div>
+                <div className="text-base text-white font-bold">RPC Connection</div>
+                <div className="text-sm text-slate-300 font-medium">Fuse Network</div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 p-2 bg-slate-700/30 rounded-lg">
+            <div className="flex items-center gap-3 p-4 bg-slate-700/60 hover:bg-slate-700/80 rounded-xl border-2 border-slate-600/50 transition-all shadow-md">
               <StatusIcon isHealthy={contractsHealth.badgeNFT} />
               <div>
-                <div className="text-sm text-white font-medium">Badge NFT</div>
-                <div className="text-xs text-gray-400">MeeBadgeNFT</div>
+                <div className="text-base text-white font-bold">Badge NFT</div>
+                <div className="text-sm text-slate-300 font-medium">MeeBadgeNFT</div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 p-2 bg-slate-700/30 rounded-lg">
+            <div className="flex items-center gap-3 p-4 bg-slate-700/60 hover:bg-slate-700/80 rounded-xl border-2 border-slate-600/50 transition-all shadow-md">
               <StatusIcon isHealthy={contractsHealth.tokenContract} />
               <div>
-                <div className="text-sm text-white font-medium">MEE Token</div>
-                <div className="text-xs text-gray-400">ERC-20</div>
+                <div className="text-base text-white font-bold">MEE Token</div>
+                <div className="text-sm text-slate-300 font-medium">ERC-20</div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 p-2 bg-slate-700/30 rounded-lg">
+            <div className="flex items-center gap-3 p-4 bg-slate-700/60 hover:bg-slate-700/80 rounded-xl border-2 border-slate-600/50 transition-all shadow-md">
               <StatusIcon isHealthy={contractsHealth.membershipNFT} />
               <div>
-                <div className="text-sm text-white font-medium">Membership</div>
-                <div className="text-xs text-gray-400">NFT Contract</div>
+                <div className="text-base text-white font-bold">Membership</div>
+                <div className="text-sm text-slate-300 font-medium">NFT Contract</div>
               </div>
             </div>
           </div>
@@ -119,26 +121,26 @@ export default function ContractHealthMonitor({ compact = false }: ContractHealt
 
         {/* Overall Status Badge */}
         {contractsHealth && (
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between p-3 bg-slate-700/40 rounded-lg">
             <Badge 
               variant={contractsHealth.rpcConnected && contractsHealth.badgeNFT ? "default" : "destructive"}
-              className="flex items-center gap-1"
+              className="flex items-center gap-2 text-base font-bold px-4 py-2"
             >
               {contractsHealth.rpcConnected && contractsHealth.badgeNFT ? (
                 <>
-                  <CheckCircle className="w-3 h-3" />
+                  <CheckCircle className="w-5 h-5" />
                   Ready for Action
                 </>
               ) : (
                 <>
-                  <AlertTriangle className="w-3 h-3" />
+                  <AlertTriangle className="w-5 h-5" />
                   Needs Attention
                 </>
               )}
             </Badge>
             
             {lastChecked && (
-              <div className="text-xs text-gray-400">
+              <div className="text-sm text-slate-200 font-medium">
                 Last checked: {lastChecked.toLocaleTimeString()}
               </div>
             )}

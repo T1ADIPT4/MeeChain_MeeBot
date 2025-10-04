@@ -80,40 +80,40 @@ body {
 
 .dark {
   --background: hsl(220 13% 7%);
-  --foreground: hsl(200 6.6667% 91.1765%);
-  --card: hsl(228 12% 15%);
-  --card-foreground: hsl(0 0% 92%);
-  --popover: hsl(220 13% 9%);
-  --popover-foreground: hsl(200 6.6667% 91.1765%);
-  --primary: hsl(9, 75%, 61%);
-  --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(30, 15%, 52%);
-  --secondary-foreground: hsl(0, 0%, 100%);
-  --muted: hsl(20, 14%, 15%);
-  --muted-foreground: hsl(45, 15%, 46%);
-  --accent: hsl(25, 45%, 20%);
-  --accent-foreground: hsl(45, 25%, 85%);
-  --destructive: hsl(356.3033, 90.5579%, 54.3137%);
-  --destructive-foreground: hsl(0, 0%, 100%);
-  --border: hsl(210 8% 35%);
-  --input: hsl(207.6923 25% 32%);
+  --foreground: hsl(0 0% 98%);
+  --card: hsl(228 12% 18%);
+  --card-foreground: hsl(0 0% 98%);
+  --popover: hsl(220 13% 12%);
+  --popover-foreground: hsl(0 0% 98%);
+  --primary: hsl(180 100% 60%);
+  --primary-foreground: hsl(0 0% 0%);
+  --secondary: hsl(200 20% 55%);
+  --secondary-foreground: hsl(0 0% 100%);
+  --muted: hsl(220 14% 20%);
+  --muted-foreground: hsl(0 0% 75%);
+  --accent: hsl(180 60% 35%);
+  --accent-foreground: hsl(0 0% 100%);
+  --destructive: hsl(0 85% 60%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(210 15% 45%);
+  --input: hsl(207 25% 40%);
   --ring: hsl(180 100% 70%);
   --chart-1: hsl(180 100% 70%);
   --chart-2: hsl(159.7826, 100%, 56.0784%);
   --chart-3: hsl(42.0290, 92.8251%, 66.2745%);
   --chart-4: hsl(147.1429, 78.5047%, 51.9608%);
   --chart-5: hsl(341.4894, 75.2000%, 60.9804%);
-  --sidebar: hsl(228 12% 15%);
-  --sidebar-foreground: hsl(0 0% 92%);
+  --sidebar: hsl(228 12% 18%);
+  --sidebar-foreground: hsl(0 0% 98%);
   --sidebar-primary: hsl(180 100% 70%);
   --sidebar-primary-foreground: hsl(0 0% 0%);
-  --sidebar-accent: hsl(180 50% 25%);
-  --sidebar-accent-foreground: hsl(180 100% 80%);
-  --sidebar-border: hsl(210 15% 35%);
+  --sidebar-accent: hsl(180 50% 35%);
+  --sidebar-accent-foreground: hsl(0 0% 100%);
+  --sidebar-border: hsl(210 15% 45%);
   --sidebar-ring: hsl(180 100% 70%);
-  --font-sans: Open Sans, sans-serif;
+  --font-sans: 'Inter', 'Open Sans', sans-serif;
   --font-serif: Georgia, serif;
-  --font-mono: Menlo, monospace;
+  --font-mono: 'Menlo', 'Monaco', monospace;
   --radius: 1.3rem;
   --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
   --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
@@ -134,6 +134,18 @@ body {
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  strong, b {
+    font-weight: 700;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 }
 
