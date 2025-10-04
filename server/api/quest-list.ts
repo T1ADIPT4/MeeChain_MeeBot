@@ -1,15 +1,6 @@
 import { Request, Response } from 'express';
 import { ethers } from 'ethers';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const deployRegistry = JSON.parse(
-  readFileSync(join(__dirname, '../../deploy-registry.json'), 'utf-8')
-);
+import { getDeployConfig } from '../utils/deploy-config.js';
 
 const QUEST_MANAGER_ABI = [
   "function getQuest(uint256 questId) view returns (string name, string description, uint256 rewardAmount, string rewardType, string badgeName, string badgeDescription, string badgeTokenURI, string playerName, string playerPosition, uint256 playerRating, string playerNationality, bool isLegendary, bool isActive, uint256 completions)",
@@ -20,6 +11,7 @@ const QUEST_MANAGER_ABI = [
 export async function getQuestList(req: Request, res: Response) {
   try {
     const { userAddress } = req.query;
+    const deployRegistry = getDeployConfig();
 
     if (!deployRegistry?.contracts?.QuestManager) {
       return res.status(500).json({
@@ -141,6 +133,7 @@ export async function completeQuestAPI(req: Request, res: Response) {
       });
     }
 
+    const deployRegistry = getDeployConfig();
     if (!deployRegistry?.contracts?.QuestManager) {
       return res.status(500).json({
         success: false,

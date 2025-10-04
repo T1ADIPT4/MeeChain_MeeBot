@@ -1,61 +1,32 @@
 import { Request, Response } from 'express';
-import fs from 'fs';
-import path from 'path';
-
-interface DeployRegistry {
-  contracts: Record<string, string>;
-  authorizations: Record<string, boolean>;
-  metadata: {
-    version: string;
-    environment: string;
-    fallbackEnabled: boolean;
-  };
-}
-
-function loadDeployRegistry(): DeployRegistry | null {
-  try {
-    const registryPath = path.join(process.cwd(), 'deploy-registry.json');
-    const data = fs.readFileSync(registryPath, 'utf-8');
-    return JSON.parse(data);
-  } catch (error) {
-    console.error('Failed to load deploy registry:', error);
-    return null;
-  }
-}
+import { getDeployConfig, saveDeployConfig } from '../utils/deploy-config.js';
 
 export async function checkAuthorizations(req: Request, res: Response) {
   try {
-    const registry = loadDeployRegistry();
-    
-    if (!registry) {
-      return res.status(500).json({
-        success: false,
-        error: 'Failed to load deployment registry'
-      });
-    }
+    const registry = getDeployConfig();
 
-    const { authorizations, contracts } = registry;
+    const { authorizations = {}, contracts } = registry;
     
     const issues: string[] = [];
     const warnings: string[] = [];
 
-    if (!authorizations.questManagerCanMintTokens) {
+    if (!authorizations['questManagerCanMintTokens']) {
       issues.push('QuestManager cannot mint MEE tokens - rewards will fail');
     }
     
-    if (!authorizations.questManagerCanMintBadges) {
+    if (!authorizations['questManagerCanMintBadges']) {
       issues.push('QuestManager cannot mint badges - quest rewards will fail');
     }
     
-    if (!authorizations.questManagerCanMintFootballNFTs) {
+    if (!authorizations['questManagerCanMintFootballNFTs']) {
       warnings.push('QuestManager cannot mint FootballNFTs - some quest rewards unavailable');
     }
     
-    if (!authorizations.badgeUpgradeCanBurnTokens) {
+    if (!authorizations['badgeUpgradeCanBurnTokens']) {
       issues.push('BadgeUpgrade cannot burn tokens - upgrades will fail');
     }
     
-    if (!authorizations.badgeUpgradeCanUpgradeBadges) {
+    if (!authorizations['badgeUpgradeCanUpgradeBadges']) {
       issues.push('BadgeUpgrade cannot upgrade badges - upgrade system non-functional');
     }
 
@@ -68,7 +39,8 @@ export async function checkAuthorizations(req: Request, res: Response) {
       'FootballNFT'
     ];
 
-    const missingContracts = requiredContracts.filter(name => !contracts[name]);
+    const contractKeys = contracts as Record<string, string>;
+    const missingContracts = requiredContracts.filter(name => !contractKeys[name]);
     
     if (missingContracts.length > 0) {
       issues.push(`Missing contract addresses: ${missingContracts.join(', ')}`);
@@ -87,8 +59,8 @@ export async function checkAuthorizations(req: Request, res: Response) {
         },
         authorizations: {
           ...authorizations,
-          total: Object.keys(authorizations).length,
-          enabled: Object.values(authorizations).filter(v => v).length
+          total: Object.keys(authorizations || {}).length,
+          enabled: Object.values(authorizations || {}).filter(v => v).length
         },
         issues,
         warnings,
@@ -115,19 +87,14 @@ export async function updateAuthorizations(req: Request, res: Response) {
       });
     }
 
-    const registry = loadDeployRegistry();
+    const registry = getDeployConfig();
     
-    if (!registry) {
-      return res.status(500).json({
-        success: false,
-        error: 'Failed to load deployment registry'
-      });
+    if (!registry.authorizations) {
+      registry.authorizations = {};
     }
-
+    
     registry.authorizations[authType] = enabled;
-
-    const registryPath = path.join(process.cwd(), 'deploy-registry.json');
-    fs.writeFileSync(registryPath, JSON.stringify(registry, null, 2));
+    saveDeployConfig(registry);
 
     res.json({
       success: true,

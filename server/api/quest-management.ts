@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
 import { ethers } from 'ethers';
 import QUEST_MANAGER_ABI from '../../artifacts/contracts/QuestManager.sol/QuestManager.json';
-import deployRegistry from '../../deploy-registry.json' assert { type: 'json' };
+import { getDeployConfig } from '../utils/deploy-config.js';
 
 export async function createQuest(req: Request, res: Response) {
   try {
+    const deployRegistry = getDeployConfig();
     if (!deployRegistry?.contracts?.QuestManager) {
       return res.status(500).json({
         success: false,
@@ -80,6 +81,7 @@ export async function createQuest(req: Request, res: Response) {
 
 export async function completeQuest(req: Request, res: Response) {
   try {
+    const deployRegistry = getDeployConfig();
     if (!deployRegistry?.contracts?.QuestManager) {
       return res.status(500).json({
         success: false,
@@ -137,6 +139,7 @@ export async function completeQuest(req: Request, res: Response) {
 
 export async function getQuestStatus(req: Request, res: Response) {
   try {
+    const deployRegistry = getDeployConfig();
     if (!deployRegistry?.contracts?.QuestManager) {
       return res.status(500).json({
         success: false,
@@ -184,6 +187,7 @@ export async function getQuestStatus(req: Request, res: Response) {
 
 export async function getAllQuestsWithUserStatus(req: Request, res: Response) {
   try {
+    const deployRegistry = getDeployConfig();
     if (!deployRegistry?.contracts?.QuestManager) {
       return res.status(500).json({
         success: false,
