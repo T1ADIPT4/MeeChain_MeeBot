@@ -191,7 +191,7 @@ export default function AdminPage() {
   const authStatus = authData?.data;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-6">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
@@ -200,17 +200,17 @@ export default function AdminPage() {
               Admin Panel
             </h1>
           </div>
-          <p className="text-slate-400">Manage badges, tokens, and contract authorizations</p>
+          <p className="text-slate-300">Manage badges, tokens, and contract authorizations</p>
         </div>
 
         {authStatus && !authStatus.isReady && (
-          <Card className="mb-6 bg-yellow-500/10 border-yellow-500/30">
+          <Card className="mb-6 bg-yellow-900/30 border-yellow-500/50">
             <CardContent className="p-4">
               <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-yellow-400 mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-yellow-300 mt-0.5" />
                 <div className="flex-1">
-                  <h3 className="font-semibold text-yellow-300 mb-1">⚠️ Authorization Issues Detected</h3>
-                  <ul className="text-sm text-yellow-200 space-y-1">
+                  <h3 className="font-semibold text-yellow-100 mb-1">⚠️ Authorization Issues Detected</h3>
+                  <ul className="text-sm text-yellow-50 space-y-1">
                     {authStatus.issues.map((issue: string, index: number) => (
                       <li key={index}>• {issue}</li>
                     ))}
@@ -222,74 +222,74 @@ export default function AdminPage() {
         )}
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 bg-slate-800">
-            <TabsTrigger value="quest" data-testid="tab-create-quest">
+          <TabsList className="grid w-full grid-cols-4 bg-slate-800 border border-slate-700">
+            <TabsTrigger value="quest" data-testid="tab-create-quest" className="text-slate-200">
               <Sparkles className="w-4 h-4 mr-2" />
               Create Quest
             </TabsTrigger>
-            <TabsTrigger value="badge" data-testid="tab-mint-badge">
+            <TabsTrigger value="badge" data-testid="tab-mint-badge" className="text-slate-200">
               <Award className="w-4 h-4 mr-2" />
               Mint Badge
             </TabsTrigger>
-            <TabsTrigger value="token" data-testid="tab-mint-token">
+            <TabsTrigger value="token" data-testid="tab-mint-token" className="text-slate-200">
               <Coins className="w-4 h-4 mr-2" />
               Mint Tokens
             </TabsTrigger>
-            <TabsTrigger value="auth" data-testid="tab-authorizations">
+            <TabsTrigger value="auth" data-testid="tab-authorizations" className="text-slate-200">
               <Shield className="w-4 h-4 mr-2" />
               Authorizations
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="quest">
-            <Card className="bg-slate-800/80 border-slate-600/50">
+            <Card className="bg-slate-800 border-slate-600">
               <CardHeader>
-                <CardTitle className="text-purple-300 flex items-center gap-2">
+                <CardTitle className="text-purple-200 flex items-center gap-2">
                   <Sparkles className="w-5 h-5" />
                   Create New Quest
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="quest-name">Quest Name *</Label>
+                  <Label htmlFor="quest-name" className="text-slate-200">Quest Name *</Label>
                   <Input
                     id="quest-name"
                     placeholder="Welcome to MeeChain"
                     value={questForm.name}
                     onChange={(e) => setQuestForm({ ...questForm, name: e.target.value })}
-                    className="bg-slate-700 border-slate-600"
+                    className="bg-slate-700 border-slate-500 text-white placeholder:text-slate-400"
                     data-testid="input-quest-name"
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="quest-description">Description *</Label>
+                  <Label htmlFor="quest-description" className="text-slate-200">Description *</Label>
                   <Input
                     id="quest-description"
                     placeholder="Complete your first quest to earn rewards"
                     value={questForm.description}
                     onChange={(e) => setQuestForm({ ...questForm, description: e.target.value })}
-                    className="bg-slate-700 border-slate-600"
+                    className="bg-slate-700 border-slate-500 text-white placeholder:text-slate-400"
                     data-testid="input-quest-description"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="quest-reward-amount">Reward Amount (MEE) *</Label>
+                    <Label htmlFor="quest-reward-amount" className="text-slate-200">Reward Amount (MEE) *</Label>
                     <Input
                       id="quest-reward-amount"
                       type="number"
                       placeholder="100"
                       value={questForm.rewardAmount}
                       onChange={(e) => setQuestForm({ ...questForm, rewardAmount: e.target.value })}
-                      className="bg-slate-700 border-slate-600"
+                      className="bg-slate-700 border-slate-500 text-white placeholder:text-slate-400"
                       data-testid="input-quest-reward-amount"
                     />
                   </div>
 
                   <div>
-                    <Label htmlFor="quest-reward-type">Reward Type</Label>
+                    <Label htmlFor="quest-reward-type" className="text-slate-200">Reward Type</Label>
                     <Select
                       value={questForm.rewardType}
                       onValueChange={(value: 'badge' | 'token') => setQuestForm({ ...questForm, rewardType: value })}
