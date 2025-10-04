@@ -20,12 +20,6 @@ class RPCFallbackService {
       url: 'http://localhost:8545',
       chainId: '31337',
       priority: 1
-    },
-    {
-      name: 'Smanky Testnet',
-      url: 'https://rpc.smanky.dev',
-      chainId: '1337',
-      priority: 2
     }
   ];
 
