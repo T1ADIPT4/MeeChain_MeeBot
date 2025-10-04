@@ -172,18 +172,8 @@ export default function Missions() {
   const progressPercentage = (completedMissions.length / Math.max(missions.length, 1)) * 100;
 
   if (!user) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <Card className="bg-black/50 border-purple-500/30">
-          <CardContent className="p-6 text-center">
-            <p className="text-white mb-4">กรุณาเข้าสู่ระบบก่อนใช้งาน</p>
-            <Link to="/">
-              <Button>กลับหน้าหลัก</Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
+    navigate('/');
+    return null;
   }
 
   return (
