@@ -48,6 +48,8 @@ function Router() {
         <Route path="/scheduled-tasks" component={ScheduledTasks} />
         <Route path="/team-dashboard" component={TeamDashboard} />
         <Route path="/admin" component={AdminPage} />
+        <Route path="/meebot" component={MeeBotPage} />
+        <Route path="/token-actions" component={TokenActions} />
         <Route path="/mission-test-mode" component={lazy(() => import('@/pages/mission-test-mode'))} />
         <Route path="/nft-collection" component={lazy(() => import('./pages/nft-collection'))} />
         <Route component={NotFound} />
