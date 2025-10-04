@@ -620,14 +620,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post('/api/badge/mint', mintBadge);
   app.get('/api/badge/user/:address', getBadgesByUser);
 
-  // Quest API
-  const { completeQuest, getQuestList } = await import('./api/quest-complete');
-  app.post('/api/quest/complete', completeQuest);
-  app.get('/api/quest/list', getQuestList);
-
-  // Badge minting and management
-  app.post('/api/badge/mint', mintBadge);
-  app.get('/api/badge/user/:address', getBadgesByUser);
+  // Quest API (using smart contracts)
+  const { getQuestList: getQuestListFromContract, completeQuestAPI } = await import('./api/quest-list');
+  app.post('/api/quest/complete', completeQuestAPI);
+  app.get('/api/quest/list', getQuestListFromContract);
   
   // Token minting
   const { mintToken } = await import('./api/token-mint');
