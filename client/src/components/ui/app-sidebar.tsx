@@ -63,13 +63,33 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useLocation } from 'wouter';
 import logoUrl from '@assets/branding/logo.png';
 
+// Menu item types
+interface SubMenuItem {
+  title: string;
+  url: string;
+  icon: any;
+}
+
+interface MenuItem {
+  title: string;
+  url: string;
+  icon: any;
+  badge?: string | null;
+  items?: SubMenuItem[];
+}
+
 // Menu items data
-const menuItems = {
+const menuItems: {
+  main: MenuItem[];
+  nft: MenuItem[];
+  quests: MenuItem[];
+  tools: MenuItem[];
+  system: MenuItem[];
+} = {
   main: [
     {
       title: "หน้าหลัก",
@@ -308,12 +328,14 @@ export function AppSidebar({
         <SidebarGroup>
           <div className="px-4 py-3 border-b border-sidebar-border">
             <div className="flex items-center gap-3">
-              <Avatar className="w-10 h-10">
-                <AvatarImage src="/api/placeholder/40/40" alt="Profile" />
-                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white font-bold">
-                  {userName.charAt(0)}
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative">
+                <img
+                  src="/assets/branding/logo.png"
+                  alt="MeeChain Profile"
+                  className="w-10 h-10 rounded-full border-2 border-blue-500"
+                />
+                <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-background ${isConnected ? 'bg-green-500' : 'bg-gray-500'}`}></div>
+              </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-foreground truncate">
                   {userName}

@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
   Trophy, 
   Medal,
@@ -195,11 +194,11 @@ export function LeaderboardModal({ isOpen, onClose }: LeaderboardModalProps) {
                       </div>
                       
                       {/* Avatar */}
-                      <Avatar className="w-10 h-10">
-                        <AvatarFallback className="bg-gradient-to-br from-cyan-400 to-purple-500 text-white">
-                          {entry.username.slice(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
+                      <img
+                        src="/assets/branding/logo.png"
+                        alt="MeeChain"
+                        className="w-10 h-10 rounded-full border-2 border-purple-500"
+                      />
                       
                       {/* User Info */}
                       <div className="flex-1">
