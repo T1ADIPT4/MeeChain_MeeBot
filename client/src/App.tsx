@@ -18,6 +18,7 @@ import SwapBridge from './pages/swap-bridge';
 import MeeBotPage from '@/pages/meebot';
 import Academy from './pages/academy';
 import TeamDashboard from './pages/team-dashboard';
+import AdminPage from './pages/admin';
 
 // Lazy load components
 const Earnings = lazy(() => import('./pages/earnings'));
@@ -46,6 +47,7 @@ function Router() {
         <Route path="/history" component={TransactionHistory} />
         <Route path="/scheduled-tasks" component={ScheduledTasks} />
         <Route path="/team-dashboard" component={TeamDashboard} />
+        <Route path="/admin" component={AdminPage} />
         <Route path="/mission-test-mode" component={lazy(() => import('@/pages/mission-test-mode'))} />
         <Route path="/nft-collection" component={lazy(() => import('./pages/nft-collection'))} />
         <Route component={NotFound} />

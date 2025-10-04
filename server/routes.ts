@@ -628,6 +628,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Badge minting and management
   app.post('/api/badge/mint', mintBadge);
   app.get('/api/badge/user/:address', getBadgesByUser);
+  
+  // Token minting
+  const { mintToken } = await import('./api/token-mint');
+  app.post('/api/token/mint', mintToken);
 
   // CORS preflight for all API routes
   app.options('*', (req: Request, res: Response) => {

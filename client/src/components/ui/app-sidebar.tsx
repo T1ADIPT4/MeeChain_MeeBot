@@ -231,6 +231,12 @@ const menuItems = {
   ],
   system: [
     {
+      title: "Admin Panel",
+      url: "/admin",
+      icon: Crown,
+      badge: "Admin",
+    },
+    {
       title: "การตั้งค่า",
       url: "/settings",
       icon: Settings,
