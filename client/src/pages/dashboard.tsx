@@ -49,6 +49,7 @@ import { MeeBotSecretsAlert } from '@/components/meebot/secrets-alert';
 import { Link } from 'wouter'; // Assuming Link is needed for navigation
 import { LoadingSpinner, LoadingDots } from '@/components/ui/loading-spinner';
 import ContractHealthMonitor from '@/components/meebot/contract-health-monitor';
+import { RPCStatusIndicator, RPCHealthMonitor } from '@/components/meebot/rpc-status-indicator';
 import BadgeViewer from '@/components/nft/badge-viewer';
 import { useSmartContracts } from '@/hooks/use-smart-contracts';
 import { VoiceCoach } from '@/components/meebot/voice-coach';
@@ -704,8 +705,11 @@ export default function DashboardPage() {
             {/* Badge Collection */}
             <BadgeViewer userAddress={userAddress || undefined} />
 
-            {/* Contract Health Monitor */}
-            <ContractHealthMonitor />
+            {/* Network & Contract Status */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <RPCHealthMonitor />
+              <ContractHealthMonitor />
+            </div>
 
             {/* Token Actions Section */}
             <Card className="bg-slate-800/80 border-slate-600/50 backdrop-blur-sm">

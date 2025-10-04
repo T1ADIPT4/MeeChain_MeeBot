@@ -605,6 +605,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // System health and deployment
   app.get('/api/secrets/health', getSecretsHealth);
+  
+  // RPC Health & Fallback
+  const { getRPCHealth, switchRPC } = await import('./api/rpc-health');
+  app.get('/api/rpc/health', getRPCHealth);
+  app.post('/api/rpc/switch', switchRPC);
+  
+  // Contract Authorizations
+  const { checkAuthorizations, updateAuthorizations } = await import('./api/contract-auth');
+  app.get('/api/contracts/authorizations', checkAuthorizations);
+  app.post('/api/contracts/authorizations/update', updateAuthorizations);
   // Badge API
   const { mintBadge, getBadgesByUser } = await import('./api/badge-mint');
   app.post('/api/badge/mint', mintBadge);
