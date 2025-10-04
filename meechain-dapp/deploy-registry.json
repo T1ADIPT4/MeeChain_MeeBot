@@ -1,0 +1,50 @@
+
+{
+  "network": "development",
+  "timestamp": "2024-01-01T00:00:00.000Z",
+  "deployer": "0x0000000000000000000000000000000000000000",
+  "contracts": {
+    "MeeToken": "0x0000000000000000000000000000000000000000",
+    "MembershipNFT": "0x0000000000000000000000000000000000000000",
+    "MeeBadgeNFT": "0x0000000000000000000000000000000000000000",
+    "FootballNFT": "0x0000000000000000000000000000000000000000",
+    "QuestManager": "0x0000000000000000000000000000000000000000",
+    "BadgeNFTUpgrade": "0x0000000000000000000000000000000000000000"
+  },
+  "metadata": {
+    "version": "v1.3.0",
+    "environment": "sandbox",
+    "fallbackEnabled": true,
+    "chainId": "31337",
+    "rpcUrl": "http://localhost:8545",
+    "explorerUrl": "https://explorer.smanky.dev"
+  },
+  "deploymentStatus": {
+    "success": false,
+    "failedContracts": [],
+    "fallbackRequired": false,
+    "lastAttempt": null,
+    "retryCount": 0
+  },
+  "features": {
+    "questSystem": true,
+    "nftMinting": true,
+    "tokenRewards": true,
+    "badgeUpgrades": true,
+    "footballPlayers": true
+  },
+  "authorizations": {
+    "questManagerCanMintTokens": false,
+    "questManagerCanMintBadges": false,
+    "questManagerCanMintFootballNFTs": false,
+    "badgeUpgradeCanBurnTokens": false,
+    "badgeUpgradeCanUpgradeBadges": false
+  },
+  "fallbackConfig": {
+    "enabled": true,
+    "network": "smanky",
+    "rpcUrl": "https://rpc.smanky.dev",
+    "chainId": "1337",
+    "explorerUrl": "https://explorer.smanky.dev"
+  }
+}
