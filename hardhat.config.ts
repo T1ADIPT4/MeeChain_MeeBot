@@ -44,6 +44,12 @@ const config: HardhatUserConfig = {
       url: "https://ethereum-sepolia-rpc.publicnode.com",
       accounts: [configVariable("PRIVATE_KEY")],
     },
+    opSepolia: {
+      type: "http",
+      chainType: "op",
+      url: "https://sepolia.optimism.io",
+      accounts: [configVariable("PRIVATE_KEY")],
+    },
   },
 };
 

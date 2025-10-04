@@ -1,29 +1,28 @@
-
 {
-  "network": "hardhatMainnet",
-  "timestamp": "2025-01-04T00:51:31.000Z",
+  "network": "opSepolia",
+  "timestamp": "2025-10-04T03:28:00.000Z",
   "deployer": "Hardhat Ignition",
   "contracts": {
-    "MeeToken": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-    "MembershipNFT": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-    "MeeBadgeNFT": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-    "FootballNFT": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-    "QuestManager": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
-    "BadgeNFTUpgrade": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+    "MeeToken": "0xB91eb2e634fFf1ed61c292f5A70085E9D902FAb7",
+    "MembershipNFT": "0xdfff0986d1DaDF3C0e078c2cE0C2F16cFE28542e",
+    "MeeBadgeNFT": "0x1266b73564178415f48C1D9736Dc5bf427503AA2",
+    "FootballNFT": "0x9b021EB0eC63A0d2c3BB63Cde2015D66BA3307c5",
+    "QuestManager": "0x8EF99743F8e2c4C0f14C3Fc0E2925250D4F7Ad6e",
+    "BadgeNFTUpgrade": "0x2680295ab7b41E5A931dF06427c30dee47Db37bd"
   },
   "metadata": {
-    "version": "v1.3.0",
-    "environment": "sandbox",
-    "fallbackEnabled": true,
-    "chainId": "31337",
-    "rpcUrl": "http://localhost:8545",
-    "explorerUrl": "https://explorer.smanky.dev"
+    "version": "v1.4.0",
+    "environment": "production",
+    "fallbackEnabled": false,
+    "chainId": "11155420",
+    "rpcUrl": "https://sepolia.optimism.io",
+    "explorerUrl": "https://sepolia-optimism.etherscan.io"
   },
   "deploymentStatus": {
     "success": true,
     "failedContracts": [],
     "fallbackRequired": false,
-    "lastAttempt": "2025-01-04T00:51:31.000Z",
+    "lastAttempt": "2025-10-04T03:28:00.000Z",
     "retryCount": 0
   },
   "features": {
@@ -39,12 +38,5 @@
     "questManagerCanMintFootballNFTs": true,
     "badgeUpgradeCanBurnTokens": false,
     "badgeUpgradeCanUpgradeBadges": false
-  },
-  "fallbackConfig": {
-    "enabled": true,
-    "network": "smanky",
-    "rpcUrl": "https://rpc.smanky.dev",
-    "chainId": "1337",
-    "explorerUrl": "https://explorer.smanky.dev"
   }
 }

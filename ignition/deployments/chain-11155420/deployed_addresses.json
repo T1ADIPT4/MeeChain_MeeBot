@@ -1,0 +1,8 @@
+{
+  "FootballNFTModule#FootballNFT": "0x9b021EB0eC63A0d2c3BB63Cde2015D66BA3307c5",
+  "MeeBadgeNFTModule#MeeBadgeNFT": "0x1266b73564178415f48C1D9736Dc5bf427503AA2",
+  "MeeTokenModule#MeeToken": "0xB91eb2e634fFf1ed61c292f5A70085E9D902FAb7",
+  "MembershipNFTModule#MembershipNFT": "0xdfff0986d1DaDF3C0e078c2cE0C2F16cFE28542e",
+  "BadgeNFTUpgradeModule#BadgeNFTUpgrade": "0x2680295ab7b41E5A931dF06427c30dee47Db37bd",
+  "QuestManagerModule#QuestManager": "0x8EF99743F8e2c4C0f14C3Fc0E2925250D4F7Ad6e"
+}
