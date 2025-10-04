@@ -16,9 +16,9 @@ interface RPCHealthStatus {
 
 const RPC_CONFIGS: RPCConfig[] = [
   {
-    name: 'Hardhat Local',
-    url: 'http://localhost:8545',
-    chainId: '31337',
+    name: 'OP Sepolia',
+    url: process.env.RPC_URL || 'https://sepolia.optimism.io',
+    chainId: process.env.VITE_CHAIN_ID || '11155420',
     priority: 1
   }
 ];

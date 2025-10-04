@@ -16,9 +16,9 @@ export interface RPCHealthStatus {
 class RPCFallbackService {
   private rpcs: RPCConfig[] = [
     {
-      name: 'Hardhat Local',
-      url: 'http://localhost:8545',
-      chainId: '31337',
+      name: 'OP Sepolia',
+      url: import.meta.env.VITE_RPC_URL || 'https://sepolia.optimism.io',
+      chainId: import.meta.env.VITE_CHAIN_ID || '11155420',
       priority: 1
     }
   ];
