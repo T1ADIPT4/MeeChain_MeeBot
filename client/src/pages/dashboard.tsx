@@ -289,7 +289,8 @@ export default function DashboardPage() {
             </div>
           </nav>
 
-          <div className="flex-1 px-6 pb-6 space-y-6 overflow-auto">
+          <div className="flex-1 overflow-auto">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         {/* === ส่วนที่ 1: ส่วนหัว (Profile & Quick Stats) === */}
 
         {/* Profile Header */}
@@ -931,8 +932,8 @@ export default function DashboardPage() {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-cyan-400/10 to-transparent rounded-full -translate-y-6 translate-x-6"></div>
               </CardContent>
             </Card>
-
-      </div>
+            </div>
+          </div>
         </div>
       </div>
     </SidebarProvider>
