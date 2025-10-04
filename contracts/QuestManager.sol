@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 import "./MeeToken.sol";
-import "./BadgeNFT.sol";
-import "./FootballNFT.sol"; // Import FootballNFT contract
+import "./MeeBadgeNFT.sol";
+import "./FootballNFT.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract QuestManager is Ownable {
@@ -30,16 +30,16 @@ contract QuestManager is Ownable {
     uint256 public questCounter;
 
     MeeToken public meeToken;
-    BadgeNFT public badgeNFT;
-    FootballNFT public footballNFT; // Add FootballNFT contract instance
+    MeeBadgeNFT public badgeNFT;
+    FootballNFT public footballNFT;
 
     event QuestCreated(uint256 indexed questId, string name, string rewardType);
     event QuestCompleted(address indexed user, uint256 indexed questId, uint256 rewardAmount);
 
-    constructor(address _meeToken, address _badgeNFT, address _footballNFT) {
+    constructor(address _meeToken, address _badgeNFT, address _footballNFT) Ownable(msg.sender) {
         meeToken = MeeToken(_meeToken);
-        badgeNFT = BadgeNFT(_badgeNFT);
-        footballNFT = FootballNFT(_footballNFT); // Initialize FootballNFT
+        badgeNFT = MeeBadgeNFT(_badgeNFT);
+        footballNFT = FootballNFT(_footballNFT);
         questCounter = 0;
     }
 
@@ -155,11 +155,13 @@ contract QuestManager is Ownable {
                 msg.sender,
                 quest.badgeName,
                 quest.badgeDescription,
-                MeeBadgeNFT.BadgeType.ACHIEVER, // Assuming ACHIEVER for quest badges
-                MeeBadgeNFT.Rarity.COMMON,    // Assuming COMMON rarity
+                "Quest Power",
+                50,
+                MeeBadgeNFT.Rarity.COMMON,
+                MeeBadgeNFT.Category.ACHIEVER,
                 quest.badgeTokenURI,
-                true,                         // isQuestReward
-                uintToString(questId)         // questId as string
+                true,
+                uintToString(questId)
             );
         }
         // Add other reward types as needed

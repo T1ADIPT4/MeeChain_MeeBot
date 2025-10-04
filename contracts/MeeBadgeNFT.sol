@@ -4,13 +4,10 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
 contract MeeBadgeNFT is ERC721URIStorage, Ownable, Pausable {
-    using Counters for Counters.Counter;
-    
-    Counters.Counter private _tokenIdCounter;
+    uint256 private _tokenIdCounter;
     
     // Badge rarity levels
     enum Rarity { COMMON, RARE, EPIC, LEGENDARY, MYTHIC }
@@ -90,7 +87,7 @@ contract MeeBadgeNFT is ERC721URIStorage, Ownable, Pausable {
         uint256 boostValue
     );
     
-    constructor() ERC721("MeeChain Badge NFT", "MEEBADGE") {}
+    constructor() ERC721("MeeChain Badge NFT", "MEEBADGE") Ownable(msg.sender) {}
     
     /**
      * @dev Authorize minter
@@ -172,8 +169,8 @@ contract MeeBadgeNFT is ERC721URIStorage, Ownable, Pausable {
             "Not authorized to mint"
         );
         
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
+        uint256 tokenId = _tokenIdCounter;
+        _tokenIdCounter++;
         
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, tokenURI);
@@ -216,7 +213,7 @@ contract MeeBadgeNFT is ERC721URIStorage, Ownable, Pausable {
      * @dev Upgrade badge level and enhance power
      */
     function upgradeBadge(uint256 tokenId) external {
-        require(_exists(tokenId), "Badge does not exist");
+        require(_ownerOf(tokenId) != address(0), "Badge does not exist");
         require(ownerOf(tokenId) == msg.sender, "Not badge owner");
         
         Badge storage badge = badges[tokenId];
@@ -242,7 +239,7 @@ contract MeeBadgeNFT is ERC721URIStorage, Ownable, Pausable {
      * @dev Activate badge power (for quest system integration)
      */
     function activatePower(uint256 tokenId) external {
-        require(_exists(tokenId), "Badge does not exist");
+        require(_ownerOf(tokenId) != address(0), "Badge does not exist");
         require(ownerOf(tokenId) == msg.sender, "Not badge owner");
         
         Badge memory badge = badges[tokenId];
@@ -257,7 +254,7 @@ contract MeeBadgeNFT is ERC721URIStorage, Ownable, Pausable {
             authorizedMinters[msg.sender] || msg.sender == owner(),
             "Not authorized to upgrade"
         );
-        require(_exists(tokenId), "Badge does not exist");
+        require(_ownerOf(tokenId) != address(0), "Badge does not exist");
         require(newRarity <= 4, "Invalid rarity level");
         
         Badge storage badge = badges[tokenId];
@@ -304,8 +301,8 @@ contract MeeBadgeNFT is ERC721URIStorage, Ownable, Pausable {
                 questSetCompletors[setId].push(user);
                 
                 // Mint quest set reward badge
-                uint256 rewardTokenId = _tokenIdCounter.current();
-                _tokenIdCounter.increment();
+                uint256 rewardTokenId = _tokenIdCounter;
+                _tokenIdCounter++;
                 
                 _safeMint(user, rewardTokenId);
                 _setTokenURI(rewardTokenId, ""); // Set appropriate URI

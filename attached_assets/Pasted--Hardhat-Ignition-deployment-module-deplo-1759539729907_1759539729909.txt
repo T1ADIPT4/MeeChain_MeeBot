@@ -1,0 +1,85 @@
+แน่นอนครับ! ถ้าใช้ **Hardhat Ignition** สำหรับ deployment module ผมจะจัดโครงสร้างสคริปต์ให้คุณ deploy smart contracts ที่อยู่ใน `contracts/` ได้อย่างเป็นระบบ โดยใช้ `ignition/modules/` ตามมาตรฐานใหม่ของ Hardhat Ignition 🔥
+
+---
+
+## 📦 โครงสร้างไฟล์ที่ควรมี
+
+```
+contracts/
+├── MeeToken.sol
+├── MeeBadgeNFT.sol
+├── QuestManager.sol
+├── FootballNFT.sol
+
+ignition/
+└── modules/
+    ├── MeeToken.ts
+    ├── MeeBadgeNFT.ts
+    ├── QuestManager.ts
+    ├── FootballNFT.ts
+```
+
+---
+
+## 🧠 ตัวอย่างสคริปต์ `MeeToken.ts`
+
+```ts
+import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
+
+export default buildModule("MeeTokenModule", (m) => {
+  const meeToken = m.contract("MeeToken", []);
+
+  return { meeToken };
+});
+```
+
+## 🧠 ตัวอย่าง `MeeBadgeNFT.ts`
+
+```ts
+import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
+
+export default buildModule("MeeBadgeNFTModule", (m) => {
+  const badgeNFT = m.contract("MeeBadgeNFT", []);
+
+  return { badgeNFT };
+});
+```
+
+## 🧠 ตัวอย่าง `QuestManager.ts`
+
+```ts
+import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
+
+export default buildModule("QuestManagerModule", (m) => {
+  const questManager = m.contract("QuestManager", []);
+
+  return { questManager };
+});
+```
+
+## 🧠 ตัวอย่าง `FootballNFT.ts`
+
+```ts
+import { buildModule } from "@nomicfoundation/hardhat-ignition/modules";
+
+export default buildModule("FootballNFTModule", (m) => {
+  const footballNFT = m.contract("FootballNFT", []);
+
+  return { footballNFT };
+});
+```
+
+---
+
+## 🚀 วิธี deploy
+
+```bash
+npx hardhat ignition deploy ignition/modules/MeeToken.ts
+npx hardhat ignition deploy ignition/modules/MeeBadgeNFT.ts
+npx hardhat ignition deploy ignition/modules/QuestManager.ts
+npx hardhat ignition deploy ignition/modules/FootballNFT.ts
+```
+
+---
+
+ถ้าสัญญาแต่ละตัวมี constructor parameters เช่น address ของ token หรือ admin address ก็แจ้งผมได้เลยครับ ผมจะเพิ่มให้ในสคริปต์ deployment ได้ทันที 😄 หรือถ้าต้องการ deploy แบบเชื่อมโยงกัน เช่น QuestManager ใช้ MeeToken ก็สามารถจัด dependency chain ให้ได้ด้วย!

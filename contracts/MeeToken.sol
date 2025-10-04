@@ -17,7 +17,7 @@ contract MeeToken is ERC20, Ownable {
         _;
     }
 
-    constructor() ERC20("MeeToken", "MEE") {}
+    constructor() ERC20("MeeToken", "MEE") Ownable(msg.sender) {}
 
     /**
      * @dev Authorize an address to mint tokens

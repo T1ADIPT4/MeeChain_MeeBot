@@ -34,7 +34,7 @@ contract FootballNFT is ERC721, Ownable {
         _;
     }
     
-    constructor(string memory name, string memory symbol) ERC721(name, symbol) {}
+    constructor(string memory name, string memory symbol) ERC721(name, symbol) Ownable(msg.sender) {}
     
     /**
      * @dev Authorize an address to mint NFTs
@@ -139,9 +139,10 @@ contract FootballNFT is ERC721, Ownable {
         return _baseTokenURI;
     }
     
-    /**
-     * @dev Check if token exists
-     */
+    function isAuthorizedMinter(address minter) external view returns (bool) {
+        return authorizedMinters[minter] || minter == owner();
+    }
+    
     function _exists(uint256 tokenId) internal view returns (bool) {
         return tokenId > 0 && tokenId < nextTokenId && _ownerOf(tokenId) != address(0);
     }

@@ -4,13 +4,10 @@ pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 
 contract MeeBadgeNFT is ERC721URIStorage, Ownable, Pausable {
-    using Counters for Counters.Counter;
-    
-    Counters.Counter private _tokenIdCounter;
+    uint256 private _tokenIdCounter;
     
     // Badge categories
     enum BadgeType { PRODUCTIVITY, EXPLORER, SOCIALIZER, ACHIEVER, SPECIAL }
@@ -70,7 +67,7 @@ contract MeeBadgeNFT is ERC721URIStorage, Ownable, Pausable {
     );
     event QuestCreated(string questId, string title);
     
-    constructor() ERC721("MeeChain Badge NFT", "MEEBADGE") {}
+    constructor() ERC721("MeeChain Badge NFT", "MEEBADGE") Ownable(msg.sender) {}
     
     /**
      * @dev Authorize minter
@@ -127,8 +124,8 @@ contract MeeBadgeNFT is ERC721URIStorage, Ownable, Pausable {
             "Not authorized to mint"
         );
         
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
+        uint256 tokenId = _tokenIdCounter;
+        _tokenIdCounter++;
         
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, tokenURI);
@@ -186,8 +183,8 @@ contract MeeBadgeNFT is ERC721URIStorage, Ownable, Pausable {
                 questCompletors[questId].push(user);
                 
                 // Mint quest reward badge
-                uint256 rewardTokenId = _tokenIdCounter.current();
-                _tokenIdCounter.increment();
+                uint256 rewardTokenId = _tokenIdCounter;
+                _tokenIdCounter++;
                 
                 _safeMint(user, rewardTokenId);
                 _setTokenURI(rewardTokenId, quest.rewardTokenURI);

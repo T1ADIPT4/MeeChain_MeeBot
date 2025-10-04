@@ -5,14 +5,11 @@ pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 import "./interfaces/IERC721Mintable.sol";
 
 contract MembershipNFT is ERC721, ERC721URIStorage, Ownable, Pausable, IERC721Mintable {
-    using Counters for Counters.Counter;
-    
-    Counters.Counter private _tokenIdCounter;
+    uint256 private _tokenIdCounter;
     
     // Tier names and metadata
     mapping(uint8 => string) public tierNames;
@@ -32,8 +29,7 @@ contract MembershipNFT is ERC721, ERC721URIStorage, Ownable, Pausable, IERC721Mi
     event MinterRevoked(address indexed minter);
     event TierMetadataUpdated(uint8 tier, string name, string uri);
     
-    constructor() ERC721("MeeChain Membership", "MEEM") {
-        // Initialize tier metadata
+    constructor() ERC721("MeeChain Membership", "MEEM") Ownable(msg.sender) {
         _initializeTiers();
     }
     
@@ -158,27 +154,6 @@ contract MembershipNFT is ERC721, ERC721URIStorage, Ownable, Pausable, IERC721Mi
         _unpause();
     }
     
-    /**
-     * @dev Override required by Solidity
-     */
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
-        internal
-        whenNotPaused
-        override
-    {
-        super._beforeTokenTransfer(from, to, tokenId, batchSize);
-    }
-    
-    /**
-     * @dev Override required by Solidity
-     */
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-        super._burn(tokenId);
-    }
-    
-    /**
-     * @dev Override required by Solidity
-     */
     function tokenURI(uint256 tokenId)
         public
         view
@@ -188,10 +163,25 @@ contract MembershipNFT is ERC721, ERC721URIStorage, Ownable, Pausable, IERC721Mi
         return super.tokenURI(tokenId);
     }
     
-    /**
-     * @dev Override to prevent transfers (soulbound NFTs)
-     */
-    function _transfer(address from, address to, uint256 tokenId) internal pure override {
-        revert("Membership NFTs are non-transferable");
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+    
+    function _update(address to, uint256 tokenId, address auth)
+        internal
+        override
+        whenNotPaused
+        returns (address)
+    {
+        address from = _ownerOf(tokenId);
+        if (from != address(0) && to != address(0)) {
+            revert("Membership NFTs are non-transferable");
+        }
+        return super._update(to, tokenId, auth);
     }
 }

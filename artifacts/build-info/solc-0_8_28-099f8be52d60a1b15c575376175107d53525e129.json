@@ -1,0 +1,40 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-099f8be52d60a1b15c575376175107d53525e129",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "userSourceNameMap": {
+    "contracts/interfaces/IERC721Mintable.sol": "project/contracts/interfaces/IERC721Mintable.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": [],
+      "viaIR": true
+    },
+    "sources": {
+      "project/contracts/interfaces/IERC721Mintable.sol": {
+        "content": "\n// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ninterface IERC721Mintable {\n    /**\n     * @dev Mint NFT to specified address\n     * @param to Address to mint NFT to\n     * @param tokenId Token ID to mint\n     * @param tier Membership tier (1=Bronze, 2=Silver, 3=Gold, 4=Platinum)\n     */\n    function mintReward(address to, uint256 tokenId, uint8 tier) external;\n    \n    /**\n     * @dev Check if address has minted NFT for specific tier\n     * @param user User address to check\n     * @param tier Tier to check (1-4)\n     */\n    function hasTierNFT(address user, uint8 tier) external view returns (bool);\n    \n    /**\n     * @dev Get user's highest tier\n     * @param user User address\n     */\n    function getUserHighestTier(address user) external view returns (uint8);\n}\n"
+      }
+    }
+  }
+}

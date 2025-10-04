@@ -5,8 +5,8 @@ pragma solidity ^0.8.19;
 import "./MeeToken.sol";
 import "./MeeBadgeNFT.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 contract BadgeNFTUpgrade is Ownable, Pausable, ReentrancyGuard {
     MeeToken public meeToken;
@@ -29,7 +29,7 @@ contract BadgeNFTUpgrade is Ownable, Pausable, ReentrancyGuard {
     event UpgradeCostUpdated(uint8 rarity, uint256 newCost);
     event RarityProgressionUpdated(uint8 fromRarity, uint8 toRarity);
     
-    constructor(address _meeToken, address _badgeNFT) {
+    constructor(address _meeToken, address _badgeNFT) Ownable(msg.sender) {
         meeToken = MeeToken(_meeToken);
         badgeNFT = MeeBadgeNFT(_badgeNFT);
         
@@ -52,23 +52,9 @@ contract BadgeNFTUpgrade is Ownable, Pausable, ReentrancyGuard {
     function upgradeBadge(uint256 tokenId) external nonReentrant whenNotPaused {
         require(badgeNFT.ownerOf(tokenId) == msg.sender, "Not badge owner");
         
-        // Get current badge info
-        (
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-            uint8 currentRarity,
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-            bool isUpgradeable
-        ) = badgeNFT.badges(tokenId);
+        MeeBadgeNFT.Badge memory badge = getBadgeInfo(tokenId);
+        uint8 currentRarity = uint8(badge.rarity);
+        bool isUpgradeable = badge.isUpgradeable;
         
         require(isUpgradeable, "Badge not upgradeable");
         require(currentRarity < 4, "Badge already at maximum rarity");
@@ -91,56 +77,59 @@ contract BadgeNFTUpgrade is Ownable, Pausable, ReentrancyGuard {
         emit BadgeUpgraded(msg.sender, tokenId, currentRarity, nextRarity, cost);
     }
     
-    /**
-     * @dev Get upgrade cost for current badge rarity
-     */
-    function getUpgradeCost(uint256 tokenId) external view returns (uint256) {
+    function getBadgeInfo(uint256 tokenId) internal view returns (MeeBadgeNFT.Badge memory) {
         (
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-            uint8 currentRarity,
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
+            uint256 _tokenId,
+            string memory name,
+            string memory description,
+            string memory power,
+            uint256 level,
+            uint256 maxLevel,
+            MeeBadgeNFT.Rarity rarity,
+            MeeBadgeNFT.Category category,
+            uint256 mintedAt,
+            address originalOwner,
+            bool isQuestReward,
+            string memory questId,
+            uint256 powerBoost,
+            bool isUpgradeable
         ) = badgeNFT.badges(tokenId);
+        
+        return MeeBadgeNFT.Badge({
+            tokenId: _tokenId,
+            name: name,
+            description: description,
+            power: power,
+            level: level,
+            maxLevel: maxLevel,
+            rarity: rarity,
+            category: category,
+            mintedAt: mintedAt,
+            originalOwner: originalOwner,
+            isQuestReward: isQuestReward,
+            questId: questId,
+            powerBoost: powerBoost,
+            isUpgradeable: isUpgradeable
+        });
+    }
+    
+    function getUpgradeCost(uint256 tokenId) external view returns (uint256) {
+        MeeBadgeNFT.Badge memory badge = getBadgeInfo(tokenId);
+        uint8 currentRarity = uint8(badge.rarity);
         
         require(currentRarity < 4, "Badge already at maximum rarity");
         return upgradeCosts[currentRarity];
     }
     
-    /**
-     * @dev Check if a badge can be upgraded
-     */
     function canUpgradeBadge(uint256 tokenId, address user) external view returns (bool, string memory) {
         if (badgeNFT.ownerOf(tokenId) != user) {
             return (false, "Not badge owner");
         }
         
-        (
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-            uint8 currentRarity,
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-            bool isUpgradeable
-        ) = badgeNFT.badges(tokenId);
+        MeeBadgeNFT.Badge memory badge = getBadgeInfo(tokenId);
+        uint8 currentRarity = uint8(badge.rarity);
         
-        if (!isUpgradeable) {
+        if (!badge.isUpgradeable) {
             return (false, "Badge not upgradeable");
         }
         
@@ -156,25 +145,9 @@ contract BadgeNFTUpgrade is Ownable, Pausable, ReentrancyGuard {
         return (true, "Badge can be upgraded");
     }
     
-    /**
-     * @dev Get next rarity level for a badge
-     */
     function getNextRarity(uint256 tokenId) external view returns (uint8) {
-        (
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-            uint8 currentRarity,
-            ,
-            ,
-            ,
-            ,
-            ,
-            ,
-        ) = badgeNFT.badges(tokenId);
+        MeeBadgeNFT.Badge memory badge = getBadgeInfo(tokenId);
+        uint8 currentRarity = uint8(badge.rarity);
         
         require(currentRarity < 4, "Badge already at maximum rarity");
         return rarityProgression[currentRarity];
