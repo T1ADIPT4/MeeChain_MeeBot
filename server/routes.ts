@@ -16,6 +16,7 @@ import { createWallet, getWallet, getWalletBalances, connectWallet, getMyWallet 
 import { getSwapBridgeConfig, executeSwap, getQuote } from './api/swap-bridge';
 import { checkDeploymentReadiness } from './api/deployment-check';
 import { mintBadge, getBadgesByUser } from './api/badge-mint';
+import { createQuest, completeQuest, getQuestStatus, getAllQuestsWithUserStatus } from './api/quest-management';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth endpoints
@@ -624,6 +625,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const { getQuestList: getQuestListFromContract, completeQuestAPI } = await import('./api/quest-list');
   app.post('/api/quest/complete', completeQuestAPI);
   app.get('/api/quest/list', getQuestListFromContract);
+  
+  // Quest Management API (admin + user)
+  app.post('/api/quest/create', createQuest);
+  app.post('/api/quest/:questId/complete', completeQuest);
+  app.get('/api/quest/:questId/status/:userAddress', getQuestStatus);
+  app.get('/api/quests/all', getAllQuestsWithUserStatus);
   
   // Token minting
   const { mintToken } = await import('./api/token-mint');

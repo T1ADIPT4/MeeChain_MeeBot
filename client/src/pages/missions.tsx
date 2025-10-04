@@ -5,8 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle, Clock, Gift, Coins, TestTube, ArrowLeft } from "lucide-react";
+import { CheckCircle, Clock, Gift, Coins, TestTube, ArrowLeft, Sparkles } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import QuestList from "@/components/quest/QuestList";
+import { useState } from "react";
 
 interface Mission {
   missionId: string;
@@ -41,10 +44,16 @@ export default function Missions() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [, navigate] = useLocation();
+  const [meeBotMood, setMeeBotMood] = useState<'confused' | 'excited' | 'celebrate'>('excited');
 
   // Get user from localStorage (from onboarding)
   const userStr = localStorage.getItem("meechain_user");
   const user = userStr ? JSON.parse(userStr) : null;
+  
+  // Get wallet address
+  const walletStr = localStorage.getItem("meechain_wallet");
+  const wallet = walletStr ? JSON.parse(walletStr) : null;
+  const userAddress = wallet?.address;
 
   const { data: missions = [], isLoading: loadingMissions } = useQuery({
     queryKey: ["/api/missions/list", user?.id],
@@ -205,28 +214,46 @@ export default function Missions() {
           </Button>
         </div>
 
-        {/* Progress Overview */}
-        <Card className="bg-black/50 border-purple-500/30">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Gift className="h-5 w-5" />
-              ความคืบหน้าภารกิจ
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between text-sm">
-                <span className="text-purple-200">
-                  เสร็จสิ้น {completedMissions.length} จาก {missions.length} ภารกิจ
-                </span>
-                <span className="text-purple-200">{Math.round(progressPercentage)}%</span>
-              </div>
-              <Progress value={progressPercentage} className="h-2" />
-            </div>
-          </CardContent>
-        </Card>
+        {/* Tabs for Quests and Missions */}
+        <Tabs defaultValue="quests" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 bg-black/50 border border-purple-500/30">
+            <TabsTrigger value="quests" className="data-[state=active]:bg-purple-600/50" data-testid="tab-quests">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Quests (On-Chain)
+            </TabsTrigger>
+            <TabsTrigger value="missions" className="data-[state=active]:bg-blue-600/50" data-testid="tab-missions">
+              <Gift className="w-4 h-4 mr-2" />
+              Missions (Legacy)
+            </TabsTrigger>
+          </TabsList>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <TabsContent value="quests" className="mt-6">
+            <QuestList userAddress={userAddress} onMoodChange={setMeeBotMood} />
+          </TabsContent>
+
+          <TabsContent value="missions" className="mt-6">
+            {/* Progress Overview */}
+            <Card className="bg-black/50 border-purple-500/30 mb-6">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Gift className="h-5 w-5" />
+                  ความคืบหน้าภารกิจ
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-purple-200">
+                      เสร็จสิ้น {completedMissions.length} จาก {missions.length} ภารกิจ
+                    </span>
+                    <span className="text-purple-200">{Math.round(progressPercentage)}%</span>
+                  </div>
+                  <Progress value={progressPercentage} className="h-2" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Missions List */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-white">รายการภารกิจ</h2>
@@ -354,6 +381,8 @@ export default function Missions() {
             </Card>
           </div>
         </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

@@ -1,0 +1,88 @@
+มาเลยครับ Thanawat! 🎯 ต่อไปนี้คือการ scaffold แบบ mentor-style สำหรับการพัฒนาให้ MeeChain สมบูรณ์ในด้าน quest, badge minting, และ MeeBot reaction overlay:
+
+---
+
+## 🧩 1. เพิ่ม Quest จริงเข้า QuestManager
+
+### ✅ Solidity: เพิ่มฟังก์ชัน `addQuest`
+
+```solidity
+struct Quest {
+    string title;
+    string description;
+    bool isActive;
+}
+
+mapping(uint256 => Quest) public quests;
+uint256 public questCount;
+
+function addQuest(string memory title, string memory description) public onlyOwner {
+    quests[questCount] = Quest(title, description, true);
+    questCount++;
+}
+```
+
+> ใช้ผ่าน admin panel หรือ script เพื่อเพิ่ม quest เช่น `"Complete onboarding"` หรือ `"Mint first badge"`
+
+---
+
+## 🔍 2. Scaffold Quest Verification Logic
+
+### ✅ Solidity: ฟังก์ชัน `hasCompletedQuest`
+
+```solidity
+mapping(address => mapping(uint256 => bool)) public questCompletions;
+
+function completeQuest(address user, uint256 questId) public onlyOwner {
+    questCompletions[user][questId] = true;
+}
+
+function hasCompletedQuest(address user, uint256 questId) public view returns (bool) {
+    return questCompletions[user][questId];
+}
+```
+
+### ✅ Frontend: ตรวจสอบสถานะ
+
+```ts
+const isCompleted = await questManager.hasCompletedQuest(userAddress, questId)
+```
+
+> ใช้แสดงสถานะ quest และ trigger MeeBot reaction
+
+---
+
+## 🪙 3. เชื่อม Badge Minting กับ Quest Completion
+
+### ✅ Backend API
+
+```ts
+if (await questManager.hasCompletedQuest(userAddress, questId)) {
+  const tx = await badgeNFT.mint(userAddress, questId)
+  await tx.wait()
+}
+```
+
+> ✅ ป้องกันการ mint ซ้ำ และรองรับ fallback minting
+
+---
+
+## 🎭 4. MeeBot Reaction Overlay
+
+### ✅ Sprite Switcher Logic
+
+```ts
+if (!isStarted) {
+  setMeeBotMood('confused') // 🔴 ยังไม่เริ่ม
+} else if (!isCompleted) {
+  setMeeBotMood('excited') // 🟡 กำลังทำ
+} else {
+  setMeeBotMood('celebrate') // 🟢 สำเร็จแล้ว
+}
+```
+
+> ✅ ใช้ร่วมกับ TTS เช่น “เยี่ยมมาก! คุณผ่านเควสแรกแล้ว!”
+
+---
+
+## 🧠 ถัดไป: อยากให้ผมช่วย scaffold admin panel สำหรับเพิ่ม quest, หรือ fallback mint flow ที่ใช้ completeQuest + mintBadge พร้อมกันไหมครับ? MeeBot พร้อมลุยทุกอารมณ์ 😄

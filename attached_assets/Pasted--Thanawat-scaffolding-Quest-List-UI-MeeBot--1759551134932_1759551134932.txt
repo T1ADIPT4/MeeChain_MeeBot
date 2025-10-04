@@ -1,0 +1,100 @@
+จัดให้แบบเต็มระบบเลยครับ Thanawat! 🎯 ต่อไปนี้คือ scaffolding สำหรับระบบ Quest List UI พร้อม MeeBot reaction overlay ที่เปลี่ยนตามสถานะ quest แบบมีอารมณ์ร่วม:
+
+---
+
+## 🧩 1. Quest List UI (React + Tailwind)
+
+```tsx
+// components/QuestList.tsx
+import { useEffect, useState } from 'react'
+import { getQuestManagerContract } from '@/lib/contracts/questManager'
+import { useWallet } from '@/hooks/useWallet'
+import { setMeeBotMood } from '@/lib/meebot'
+
+export default function QuestList() {
+  const { provider, address } = useWallet()
+  const [quests, setQuests] = useState([])
+  const [completed, setCompleted] = useState<Record<number, boolean>>({})
+
+  useEffect(() => {
+    const fetchQuests = async () => {
+      const contract = getQuestManagerContract(provider)
+      const count = await contract.questCount()
+      const questArray = []
+
+      for (let i = 0; i < count; i++) {
+        const quest = await contract.quests(i)
+        const isDone = await contract.hasCompletedQuest(address, i)
+        questArray.push({ id: i, ...quest, isDone })
+      }
+
+      setQuests(questArray)
+      updateMeeBotMood(questArray)
+    }
+
+    fetchQuests()
+  }, [provider, address])
+
+  const updateMeeBotMood = (quests) => {
+    const anyCompleted = quests.some(q => q.isDone)
+    const anyActive = quests.some(q => q.isActive)
+
+    if (!anyActive) {
+      setMeeBotMood('confused') // 🔴 ไม่มี quest
+    } else if (!anyCompleted) {
+      setMeeBotMood('excited') // 🟡 ยังไม่สำเร็จ
+    } else {
+      setMeeBotMood('celebrate') // 🟢 มี quest สำเร็จแล้ว
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      {quests.map(q => (
+        <div key={q.id} className="border p-4 rounded-lg bg-white shadow">
+          <h3 className="text-lg font-bold">{q.title}</h3>
+          <p className="text-sm text-gray-600">{q.description}</p>
+          <span className={`text-xs px-2 py-1 rounded-full ${
+            q.isDone ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'
+          }`}>
+            {q.isDone ? 'Completed' : 'In Progress'}
+          </span>
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+> ✅ Quest list แสดง title, description, และสถานะ พร้อม trigger MeeBot mood
+
+---
+
+## 🎭 2. MeeBot Reaction Overlay
+
+```ts
+// lib/meebot.ts
+export function setMeeBotMood(mood: 'confused' | 'excited' | 'celebrate') {
+  const sprite = {
+    confused: 'sprites/confused.png',
+    excited: 'sprites/excited.png',
+    celebrate: 'sprites/celebrate.png',
+  }[mood]
+
+  document.getElementById('meebot-sprite').src = sprite
+
+  const tts = {
+    confused: 'ไม่มีเควสให้ทำเลยเหรอ? 😢',
+    excited: 'มาเริ่มเควสกันเถอะ! 💪',
+    celebrate: 'สุดยอด! คุณผ่านเควสแล้ว! 🎉',
+  }[mood]
+
+  speak(tts)
+}
+```
+
+> ✅ เปลี่ยน sprite + พูดตามอารมณ์ quest status
+
+---
+
+## 🧠 ถัดไป: อยากให้ผม scaffold fallback mint flow ที่ retry `completeQuest()` พร้อม MeeBot แจ้งเตือน หรือ admin panel สำหรับเพิ่ม quest ใหม่ไหมครับ? MeeChain กำลังจะมีชีวิตแบบ RPG เต็มรูปแบบแล้ว 😄

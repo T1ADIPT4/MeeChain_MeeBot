@@ -27,6 +27,16 @@ interface MintTokenForm {
   amount: number;
 }
 
+interface CreateQuestForm {
+  name: string;
+  description: string;
+  rewardAmount: string;
+  rewardType: 'badge' | 'token';
+  badgeName: string;
+  badgeDescription: string;
+  badgeTokenURI: string;
+}
+
 export default function AdminPage() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('badge');
@@ -45,6 +55,16 @@ export default function AdminPage() {
   const [tokenForm, setTokenForm] = useState<MintTokenForm>({
     recipientAddress: '',
     amount: 100
+  });
+
+  const [questForm, setQuestForm] = useState<CreateQuestForm>({
+    name: '',
+    description: '',
+    rewardAmount: '100',
+    rewardType: 'badge',
+    badgeName: '',
+    badgeDescription: '',
+    badgeTokenURI: ''
   });
 
   const { data: authData } = useQuery<{ success: boolean; data: any }>({
@@ -103,6 +123,35 @@ export default function AdminPage() {
     }
   });
 
+  const createQuestMutation = useMutation({
+    mutationFn: async (data: CreateQuestForm) => {
+      return apiRequest('POST', '/api/quest/create', data);
+    },
+    onSuccess: (response: any) => {
+      toast({
+        title: '✅ Quest Created!',
+        description: `Quest "${questForm.name}" created with ID ${response.data?.questId}`
+      });
+      setQuestForm({
+        name: '',
+        description: '',
+        rewardAmount: '100',
+        rewardType: 'badge',
+        badgeName: '',
+        badgeDescription: '',
+        badgeTokenURI: ''
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/quest/list'] });
+    },
+    onError: (error) => {
+      toast({
+        title: '❌ Quest Creation Failed',
+        description: error instanceof Error ? error.message : 'Failed to create quest',
+        variant: 'destructive'
+      });
+    }
+  });
+
   const handleMintBadge = () => {
     if (!badgeForm.recipientAddress || !badgeForm.badgeName) {
       toast({
@@ -125,6 +174,18 @@ export default function AdminPage() {
       return;
     }
     mintTokenMutation.mutate(tokenForm);
+  };
+
+  const handleCreateQuest = () => {
+    if (!questForm.name || !questForm.description || !questForm.rewardAmount) {
+      toast({
+        title: '⚠️ Missing Information',
+        description: 'Please provide quest name, description, and reward amount',
+        variant: 'destructive'
+      });
+      return;
+    }
+    createQuestMutation.mutate(questForm);
   };
 
   const authStatus = authData?.data;
@@ -161,7 +222,11 @@ export default function AdminPage() {
         )}
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-slate-800">
+          <TabsList className="grid w-full grid-cols-4 bg-slate-800">
+            <TabsTrigger value="quest" data-testid="tab-create-quest">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Create Quest
+            </TabsTrigger>
             <TabsTrigger value="badge" data-testid="tab-mint-badge">
               <Award className="w-4 h-4 mr-2" />
               Mint Badge
@@ -175,6 +240,122 @@ export default function AdminPage() {
               Authorizations
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="quest">
+            <Card className="bg-slate-800/80 border-slate-600/50">
+              <CardHeader>
+                <CardTitle className="text-purple-300 flex items-center gap-2">
+                  <Sparkles className="w-5 h-5" />
+                  Create New Quest
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="quest-name">Quest Name *</Label>
+                  <Input
+                    id="quest-name"
+                    placeholder="Welcome to MeeChain"
+                    value={questForm.name}
+                    onChange={(e) => setQuestForm({ ...questForm, name: e.target.value })}
+                    className="bg-slate-700 border-slate-600"
+                    data-testid="input-quest-name"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="quest-description">Description *</Label>
+                  <Input
+                    id="quest-description"
+                    placeholder="Complete your first quest to earn rewards"
+                    value={questForm.description}
+                    onChange={(e) => setQuestForm({ ...questForm, description: e.target.value })}
+                    className="bg-slate-700 border-slate-600"
+                    data-testid="input-quest-description"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="quest-reward-amount">Reward Amount (MEE) *</Label>
+                    <Input
+                      id="quest-reward-amount"
+                      type="number"
+                      placeholder="100"
+                      value={questForm.rewardAmount}
+                      onChange={(e) => setQuestForm({ ...questForm, rewardAmount: e.target.value })}
+                      className="bg-slate-700 border-slate-600"
+                      data-testid="input-quest-reward-amount"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="quest-reward-type">Reward Type</Label>
+                    <Select
+                      value={questForm.rewardType}
+                      onValueChange={(value: 'badge' | 'token') => setQuestForm({ ...questForm, rewardType: value })}
+                    >
+                      <SelectTrigger className="bg-slate-700 border-slate-600" data-testid="select-quest-reward-type">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="badge">Badge NFT</SelectItem>
+                        <SelectItem value="token">Token Only</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {questForm.rewardType === 'badge' && (
+                  <>
+                    <div>
+                      <Label htmlFor="quest-badge-name">Badge Name</Label>
+                      <Input
+                        id="quest-badge-name"
+                        placeholder="First Steps"
+                        value={questForm.badgeName}
+                        onChange={(e) => setQuestForm({ ...questForm, badgeName: e.target.value })}
+                        className="bg-slate-700 border-slate-600"
+                        data-testid="input-quest-badge-name"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="quest-badge-description">Badge Description</Label>
+                      <Input
+                        id="quest-badge-description"
+                        placeholder="Completed first quest"
+                        value={questForm.badgeDescription}
+                        onChange={(e) => setQuestForm({ ...questForm, badgeDescription: e.target.value })}
+                        className="bg-slate-700 border-slate-600"
+                        data-testid="input-quest-badge-description"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="quest-badge-uri">Badge Token URI (optional)</Label>
+                      <Input
+                        id="quest-badge-uri"
+                        placeholder="ipfs://..."
+                        value={questForm.badgeTokenURI}
+                        onChange={(e) => setQuestForm({ ...questForm, badgeTokenURI: e.target.value })}
+                        className="bg-slate-700 border-slate-600"
+                        data-testid="input-quest-badge-uri"
+                      />
+                    </div>
+                  </>
+                )}
+
+                <Button
+                  onClick={handleCreateQuest}
+                  disabled={createQuestMutation.isPending}
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                  data-testid="button-create-quest"
+                >
+                  {createQuestMutation.isPending ? 'Creating Quest...' : 'Create Quest'}
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
           <TabsContent value="badge">
             <Card className="bg-slate-800/80 border-slate-600/50">
