@@ -1,0 +1,27 @@
+import { useFallbackStatus } from './hooks/useFallbackStatus'
+import MeeBotReaction from './components/MeeBotReaction'
+
+export default function FallbackWrapper({ children }: { children: React.ReactNode }) {
+  const { status, message } = useFallbackStatus()
+
+  if (status === 'error') {
+    return (
+      <div className="fallback-ui">
+        <MeeBotReaction mood="panic" />
+        <p className="text-red-500">{message}</p>
+        <button onClick={() => window.location.reload()} className="btn-retry">ลองใหม่อีกครั้ง</button>
+      </div>
+    )
+  }
+
+  if (status === 'loading') {
+    return (
+      <div className="fallback-ui">
+        <MeeBotReaction mood="thinking" />
+        <p className="text-gray-500">กำลังโหลดข้อมูล... รอสักครู่นะครับ</p>
+      </div>
+    )
+  }
+
+  return <>{children}</>
+}

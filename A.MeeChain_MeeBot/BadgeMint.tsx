@@ -1,0 +1,3 @@
+<FallbackWrapper>
+  <BadgeMintForm />
+</FallbackWrapper>

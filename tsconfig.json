@@ -18,6 +18,11 @@
     "paths": {
       "@/*": ["./client/src/*"],
       "@shared/*": ["./shared/*"]
+      "paths": {
+        "@components/*": ["src/components/*"],
+        "@hooks/*": ["src/hooks/*"],
+        "@modules/*": ["src/modules/*"]
+      }
     }
   }
 }
