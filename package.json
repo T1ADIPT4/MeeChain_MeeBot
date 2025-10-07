@@ -90,7 +90,8 @@
     "ws": "^8.18.0",
     "zod": "^3.24.2",
     "zod-validation-error": "^3.4.0",
-    "zustand": "^5.0.8"
+    "zustand": "^5.0.8",
+    "next": "^13.4.0"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ignition": "^3.0.3",

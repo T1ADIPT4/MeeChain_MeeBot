@@ -31,6 +31,24 @@ export default function Home() {
         setMeeBotSprite('error');
       }
     }
+    async function mintBadge(questId) {
+      try {
+        const res = await fetch(`${contractMintUrl}`, {
+          method: 'POST',
+          body: JSON.stringify({ questId })
+        });
+        const result = await res.json();
+        if (!result.success) throw new Error('Contract mint failed');
+        return result;
+      } catch (err) {
+        console.warn('Fallback to API minting...');
+        const fallbackRes = await fetch(`${fallbackMintUrl}`, {
+          method: 'POST',
+          body: JSON.stringify({ questId })
+        });
+        return await fallbackRes.json();
+      }
+    }
 
     async function mintBadge() {
       try {
