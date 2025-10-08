@@ -12,7 +12,8 @@
     "example": "npm run build && node dist/example.js",
     "demo:settings": "npm run build && node dist/examples/settings-support-demo.js",
     "demo:tts-quest": "npm run build && node dist/examples/tts-quest-demo.js",
-    "demo:deploy-registry": "npm run build && node dist/examples/deploy-registry-demo.js"
+    "demo:deploy-registry": "npm run build && node dist/examples/deploy-registry-demo.js",
+    "demo:dashboard": "npm run build && node dist/examples/dashboard-integration-demo.js"
   },
   "keywords": [
     "meechain",

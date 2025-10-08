@@ -10,6 +10,7 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 - 🏆 Quest tracker & badge system
 - 🎨 NFT Football & Productivity collections
 - 🛡️ Admin panel for contract authorization
+- 📊 Dashboard with badge provenance & fallback logs
 - ⚙️ Settings page with modular toggles
 - 🆘 Support page with FAQ system
 
@@ -55,7 +56,10 @@ npm run demo:settings
 # Run Deploy Registry demo
 npm run demo:deploy-registry
 
-# Run tests (33 comprehensive tests)
+# Run Dashboard Integration demo
+npm run demo:dashboard
+
+# Run tests (46 comprehensive tests)
 npm test
 ```
 
@@ -63,6 +67,7 @@ npm test
 
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
 - 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
+- 📊 [Dashboard Integration](DASHBOARD_INTEGRATION.md) - Dashboard and Admin page integration
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
@@ -92,13 +97,16 @@ if (result.success) {
 
 ## 🧪 Testing
 
-All 10 tests passing with 100% success rate:
+All 46 tests passing with 100% success rate:
 - ✅ Quest verification
 - ✅ Primary chain minting
 - ✅ Automatic fallback
 - ✅ Error handling
 - ✅ Progress tracking
 - ✅ Event logging
+- ✅ TTS quest system (14 tests)
+- ✅ Deploy registry (9 tests)
+- ✅ Dashboard utilities (13 tests)
 
 ## 📁 Project Structure
 
@@ -124,21 +132,29 @@ MeeChain_MeeBot/
 │   └── deployRegistry.test.ts   # Deploy registry tests
 ├── pages/
 │   ├── Settings.tsx             # Settings page
-│   └── Support.tsx              # Support/FAQ page
+│   ├── Support.tsx              # Support/FAQ page
+│   ├── dashboard.tsx            # Dashboard page (badges & logs)
+│   └── admin.tsx                # Admin override page
 ├── components/
 │   ├── MeeBot.tsx               # MeeBot sprite/TTS stub
-│   └── SettingToggle.tsx        # Toggle component
+│   ├── SettingToggle.tsx        # Toggle component
+│   ├── BadgeList.tsx            # Badge list with provenance
+│   └── FallbackLog.tsx          # Fallback log display
 ├── hooks/
 │   ├── useSettings.ts           # Settings hook
 │   └── useFAQ.ts               # FAQ hook
 ├── utils/
 │   ├── settingsLoader.ts        # Fallback-aware settings loader
-│   └── fallbackFAQ.ts           # Fallback-aware FAQ loader
+│   ├── fallbackFAQ.ts           # Fallback-aware FAQ loader
+│   ├── registry.ts              # Registry utility for UI
+│   └── mockData.ts              # Mock data utilities
 ├── examples/
 │   ├── settings-support-demo.ts # Settings/Support demo
-│   └── deploy-registry-demo.ts  # Deploy registry demo
+│   ├── deploy-registry-demo.ts  # Deploy registry demo
+│   └── dashboard-integration-demo.ts  # Dashboard demo
 ├── QUEST_SYSTEM.md              # Quest system documentation
 ├── DEPLOY_REGISTRY.md           # Deploy registry documentation
+├── DASHBOARD_INTEGRATION.md     # Dashboard integration documentation
 ├── INTEGRATION.md               # Integration guide
 ├── ARCHITECTURE.md              # Architecture diagrams
 ├── SETTINGS_SUPPORT.md          # Settings/Support documentation
