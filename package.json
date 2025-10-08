@@ -15,7 +15,7 @@
     "demo:deploy-registry": "npm run build && node dist/examples/deploy-registry-demo.js",
     "demo:deploy-automation": "npm run build && node dist/examples/deploy-automation-demo.js",
     "deploy": "npm run build && node dist/scripts/deploy.js",
-    "validate-registry": "npm run build && node dist/scripts/validateRegistry.js",
+    "validate-registry": "npm run build && node dist/scripts/validateRegistryCLI.js",
     "export-logs": "npm run build && node dist/scripts/exportLogs.js"
   },
   "keywords": [

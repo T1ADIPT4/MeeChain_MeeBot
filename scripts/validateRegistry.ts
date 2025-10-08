@@ -168,8 +168,3 @@ export function validateRegistryOrExit(): void {
     process.exit(1)
   }
 }
-
-// CLI mode - run validation if this file is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  validateRegistryOrExit()
-}
