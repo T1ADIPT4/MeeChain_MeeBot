@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "test": "node --test dist/**/*.test.js",
+    "test": "npm run build && node dist/test.js",
     "dev": "tsc --watch",
-    "example": "node dist/example.js"
+    "example": "npm run build && node dist/example.js"
   },
   "keywords": [
     "meechain",
