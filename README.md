@@ -7,10 +7,12 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 - ✅ Fallback-aware multi-chain minting
 - 🤖 MeeBot sprite + TTS feedback
 - 🏆 Quest tracker & badge system
+- 🎖️ **Reward Tracker** - Track and display badge rewards with analytics
 - 🎨 NFT Football & Productivity collections
 - 🛡️ Admin panel for contract authorization
 - ⚙️ Settings page with modular toggles
 - 🆘 Support page with FAQ system
+- 📊 System telemetry and health monitoring
 
 ## 📦 Tech Stack
 
@@ -51,8 +53,18 @@ npm run example
 # Run Settings/Support demo
 npm run demo:settings
 
-# Run tests (10 comprehensive tests)
+# Run TTS Quest demo
+npm run demo:tts-quest
+
+# Run Reward Tracker demo
+npm run demo:reward-tracker
+
+# Run tests (36 comprehensive tests)
 npm test
+
+# Run specific test suites
+npm run copilot-test-tts-badge
+npm run copilot-test-reward-tracker
 ```
 
 ### Documentation
@@ -61,6 +73,7 @@ npm test
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
+- 🎖️ [Reward Tracker System](REWARD_TRACKER.md) - Badge tracking, analytics, and telemetry
 
 ### Example Usage
 
@@ -87,28 +100,71 @@ if (result.success) {
 
 ## 🧪 Testing
 
-All 10 tests passing with 100% success rate:
+All 36 tests passing with 100% success rate:
 - ✅ Quest verification
 - ✅ Primary chain minting
 - ✅ Automatic fallback
 - ✅ Error handling
 - ✅ Progress tracking
 - ✅ Event logging
+- ✅ Reward tracking
+- ✅ Reward analytics
+- ✅ System telemetry
+- ✅ Export functionality
+
+## 🎖️ Reward Tracker System
+
+The Reward Tracker provides comprehensive badge tracking with analytics and MeeBot integration:
+
+```typescript
+import { trackReward, getUserRewards } from './tracker/RewardTracker'
+import { getRewardStatistics, generateTelemetryReport } from './tracker/RewardLog'
+
+// Automatically tracked when quest completes
+const result = await handleQuestCompletion('user-123', 'quest-tts-001')
+
+// View user's badges
+const rewards = getUserRewards('user-123')
+console.log(`User has ${rewards.length} badges`)
+
+// Get system statistics
+const stats = getRewardStatistics()
+console.log(`Fallback rate: ${stats.fallbackPercentage}%`)
+
+// Monitor system health
+const report = generateTelemetryReport()
+console.log(`Status: ${report.systemHealth.healthStatus}`)
+```
+
+**Key Features:**
+- 🎯 Automatic tracking on quest completion
+- 📊 Analytics and statistics
+- 📈 System health monitoring (healthy/warning/critical)
+- 💾 Export as JSON or CSV
+- 🤖 MeeBot feedback integration
+- ⚡ Real-time telemetry
+
+See [REWARD_TRACKER.md](REWARD_TRACKER.md) for complete documentation.
 
 ## 📁 Project Structure
 
 ```
 MeeChain_MeeBot/
 ├── src/
-│   ├── QuestManager.ts          # Main orchestrator
+│   ├── QuestManager.ts          # Main orchestrator with reward tracking
 │   ├── verifiers/
-│   │   └── questVerifier.ts     # Quest condition verification
+│   │   ├── questVerifier.ts     # Quest condition verification
+│   │   └── TTSQuestVerifier.ts  # TTS quest verification
 │   ├── minting/
 │   │   └── badgeMinter.ts       # Badge minting with fallback
 │   ├── utils/
 │   │   └── logger.ts            # Event logging system
 │   ├── example.ts               # Usage examples
 │   └── test.ts                  # Test suite
+├── tracker/                      # NEW: Reward tracking system
+│   ├── RewardTracker.ts         # Core tracking functionality
+│   ├── RewardDashboard.tsx      # UI component for rewards
+│   └── RewardLog.ts             # Analytics and export
 ├── pages/
 │   ├── Settings.tsx             # Settings page
 │   └── Support.tsx              # Support/FAQ page
@@ -122,11 +178,18 @@ MeeChain_MeeBot/
 │   ├── settingsLoader.ts        # Fallback-aware settings loader
 │   └── fallbackFAQ.ts           # Fallback-aware FAQ loader
 ├── examples/
-│   └── settings-support-demo.ts # Settings/Support demo
+│   ├── settings-support-demo.ts # Settings/Support demo
+│   ├── tts-quest-demo.ts        # TTS quest demo
+│   ├── reward-tracker-demo.ts   # Reward tracker demo
+│   └── settings-with-rewards.tsx # Settings page with rewards
+├── tests/
+│   ├── ttsQuest.test.ts         # TTS quest tests
+│   └── rewardTracker.test.ts    # Reward tracker tests
 ├── QUEST_SYSTEM.md              # Quest system documentation
 ├── INTEGRATION.md               # Integration guide
 ├── ARCHITECTURE.md              # Architecture diagrams
 ├── SETTINGS_SUPPORT.md          # Settings/Support documentation
+├── REWARD_TRACKER.md            # Reward tracker documentation
 └── package.json
 ```
 
