@@ -8,7 +8,8 @@
     "build": "tsc",
     "test": "npm run build && node dist/test.js",
     "dev": "tsc --watch",
-    "example": "npm run build && node dist/example.js"
+    "example": "npm run build && node dist/example.js",
+    "demo:settings": "npm run build && node dist/examples/settings-support-demo.js"
   },
   "keywords": [
     "meechain",
