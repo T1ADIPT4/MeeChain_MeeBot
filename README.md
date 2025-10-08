@@ -7,6 +7,7 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 - ✅ Fallback-aware multi-chain minting
 - 🤖 MeeBot sprite + TTS feedback
 - 🏆 Quest tracker & badge system
+- 🎖️ Reward tracking & analytics
 - 🎨 NFT Football & Productivity collections
 - 🛡️ Admin panel for contract authorization
 - ⚙️ Settings page with modular toggles
@@ -51,7 +52,16 @@ npm run example
 # Run Settings/Support demo
 npm run demo:settings
 
-# Run tests (10 comprehensive tests)
+# Run TTS Quest demo
+npm run demo:tts-quest
+
+# Run Reward Tracking demo
+npm run demo:reward-tracking
+
+# Run simple reward usage examples
+npm run demo:reward-simple
+
+# Run tests (25 comprehensive tests)
 npm test
 ```
 
@@ -61,6 +71,7 @@ npm test
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
+- 🎖️ [Reward Tracking System](REWARD_TRACKING.md) - Badge tracking, analytics, and export
 
 ### Example Usage
 
@@ -85,15 +96,39 @@ if (result.success) {
 }
 ```
 
+### Reward Tracking
+
+```typescript
+import { getUserRewards, getAllRewards } from './tracker/RewardTracker'
+import { exportRewardLog } from './tracker/RewardExporter'
+
+// Get user's badges (automatic tracking)
+const userBadges = getUserRewards('user-001')
+console.log(`User has ${userBadges.length} badges`)
+
+// Get all rewards for analytics
+const allRewards = getAllRewards()
+const fallbackRate = allRewards.filter(r => r.fallbackUsed).length / allRewards.length
+
+// Export for backup/audit
+exportRewardLog('./backup-rewards.json')
+```
+
+See [REWARD_TRACKING.md](REWARD_TRACKING.md) for complete documentation.
+
 ## 🧪 Testing
 
-All 10 tests passing with 100% success rate:
+All 25 tests passing with 100% success rate:
 - ✅ Quest verification
+- ✅ TTS quest verification
 - ✅ Primary chain minting
 - ✅ Automatic fallback
 - ✅ Error handling
 - ✅ Progress tracking
 - ✅ Event logging
+- ✅ Reward tracking
+- ✅ Badge analytics
+- ✅ Export functionality
 
 ## 📁 Project Structure
 
@@ -102,13 +137,19 @@ MeeChain_MeeBot/
 ├── src/
 │   ├── QuestManager.ts          # Main orchestrator
 │   ├── verifiers/
-│   │   └── questVerifier.ts     # Quest condition verification
+│   │   ├── questVerifier.ts     # Quest condition verification
+│   │   └── TTSQuestVerifier.ts  # TTS quest verification
 │   ├── minting/
 │   │   └── badgeMinter.ts       # Badge minting with fallback
 │   ├── utils/
 │   │   └── logger.ts            # Event logging system
 │   ├── example.ts               # Usage examples
 │   └── test.ts                  # Test suite
+├── tracker/
+│   ├── RewardTypes.ts           # Reward entry type definitions
+│   ├── RewardTracker.ts         # Badge tracking & retrieval
+│   ├── RewardDashboard.tsx      # User badge display UI
+│   └── RewardExporter.ts        # Export logs to JSON
 ├── pages/
 │   ├── Settings.tsx             # Settings page
 │   └── Support.tsx              # Support/FAQ page
@@ -122,11 +163,18 @@ MeeChain_MeeBot/
 │   ├── settingsLoader.ts        # Fallback-aware settings loader
 │   └── fallbackFAQ.ts           # Fallback-aware FAQ loader
 ├── examples/
-│   └── settings-support-demo.ts # Settings/Support demo
+│   ├── settings-support-demo.ts # Settings/Support demo
+│   ├── tts-quest-demo.ts        # TTS Quest demo
+│   ├── reward-tracking-demo.ts  # Reward tracking demo
+│   └── reward-usage-simple.ts   # Simple reward usage
+├── tests/
+│   ├── ttsQuest.test.ts         # TTS quest tests
+│   └── rewardTracking.test.ts   # Reward tracking tests
 ├── QUEST_SYSTEM.md              # Quest system documentation
 ├── INTEGRATION.md               # Integration guide
 ├── ARCHITECTURE.md              # Architecture diagrams
 ├── SETTINGS_SUPPORT.md          # Settings/Support documentation
+├── REWARD_TRACKING.md           # Reward tracking documentation
 └── package.json
 ```
 
