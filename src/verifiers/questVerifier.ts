@@ -35,6 +35,13 @@ const questDatabase: Record<string, Quest> = {
       { type: 'nft-traded', required: 1, completed: 0 },
     ],
   },
+  'tts-quest': {
+    id: 'tts-quest',
+    name: 'TTS Enabler',
+    conditions: [
+      { type: 'tts-enabled', required: 1, completed: 0 },
+    ],
+  },
 }
 
 // Mock user progress database (replace with actual database in production)

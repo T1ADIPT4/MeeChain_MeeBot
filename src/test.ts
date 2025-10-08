@@ -14,6 +14,8 @@ import {
   setFallbackMintingStatus 
 } from './minting/badgeMinter.js'
 import { clearLogs, getLogs, getLogsByType, getLogsByLevel } from './utils/logger.js'
+import { verifyTTSQuest } from './quests/TTSQuestVerifier.js'
+import { updateTTSSetting, handleTTSQuest } from './pages/Settings.js'
 
 // Test utilities
 function assert(condition: boolean, message: string) {
@@ -293,6 +295,121 @@ async function runTests() {
     
     const mintLogs = getLogsByType('badge-minted')
     assertEquals(mintLogs.length, 3, 'Should have three mint logs')
+    testsPassed++
+  } catch (error) {
+    console.error(error)
+    testsFailed++
+  }
+
+  // Test 11: TTS Quest - verifyTTSQuest function
+  try {
+    console.log('\nTest 11: TTS Quest verification')
+    clearLogs()
+
+    // Test when TTS is disabled
+    const disabledSettings = { ttsEnabled: false }
+    const disabledResult = await verifyTTSQuest(disabledSettings)
+    assert(disabledResult === false, 'Should return false when TTS is disabled')
+
+    // Test when TTS is enabled
+    const enabledSettings = { ttsEnabled: true }
+    const enabledResult = await verifyTTSQuest(enabledSettings)
+    assert(enabledResult === true, 'Should return true when TTS is enabled')
+
+    // Verify logging
+    const logs = getLogsByType('tts-quest-verification')
+    assertEquals(logs.length, 2, 'Should have two verification logs')
+
+    testsPassed++
+  } catch (error) {
+    console.error(error)
+    testsFailed++
+  }
+
+  // Test 12: TTS Quest - handleTTSQuest with successful minting
+  try {
+    console.log('\nTest 12: TTS Quest with successful badge minting')
+    clearLogs()
+    setPrimaryMintingStatus(true)
+
+    const userId = 'test-user-11'
+    const settings = { ttsEnabled: true }
+
+    await handleTTSQuest(userId, settings)
+
+    const mintLogs = getLogsByType('tts-quest-completed')
+    assertEquals(mintLogs.length, 1, 'Should have one completion log')
+
+    const progressLogs = getLogsByType('user-progress-updated')
+    assert(progressLogs.length > 0, 'Should have progress update logs')
+
+    testsPassed++
+  } catch (error) {
+    console.error(error)
+    testsFailed++
+  }
+
+  // Test 13: TTS Quest - handleTTSQuest with fallback minting
+  try {
+    console.log('\nTest 13: TTS Quest with fallback badge minting')
+    clearLogs()
+    setPrimaryMintingStatus(false)
+    setFallbackMintingStatus(true)
+
+    const userId = 'test-user-12'
+    const settings = { ttsEnabled: true }
+
+    await handleTTSQuest(userId, settings)
+
+    const fallbackLogs = getLogsByType('tts-quest-completed-fallback')
+    assertEquals(fallbackLogs.length, 1, 'Should have one fallback completion log')
+
+    // Reset for next test
+    setPrimaryMintingStatus(true)
+
+    testsPassed++
+  } catch (error) {
+    console.error(error)
+    testsFailed++
+  }
+
+  // Test 14: TTS Quest - updateTTSSetting integration
+  try {
+    console.log('\nTest 14: TTS Quest setting update integration')
+    clearLogs()
+
+    const userId = 'test-user-13'
+    const initialSettings = { ttsEnabled: false }
+
+    // Enable TTS (should trigger quest)
+    await updateTTSSetting(userId, initialSettings, true)
+
+    const settingsLogs = getLogsByType('settings-updated')
+    assertEquals(settingsLogs.length, 1, 'Should have one settings update log')
+
+    const completionLogs = getLogsByType('tts-quest-completed')
+    assertEquals(completionLogs.length, 1, 'Should have completed the quest')
+
+    testsPassed++
+  } catch (error) {
+    console.error(error)
+    testsFailed++
+  }
+
+  // Test 15: TTS Quest - no quest trigger when already enabled
+  try {
+    console.log('\nTest 15: TTS Quest should not trigger when already enabled')
+    clearLogs()
+
+    const userId = 'test-user-14'
+    const alreadyEnabledSettings = { ttsEnabled: true }
+
+    // Keep TTS enabled (should NOT trigger quest)
+    await updateTTSSetting(userId, alreadyEnabledSettings, true)
+
+    const completionLogs = getLogsByType('tts-quest-completed')
+    assertEquals(completionLogs.length, 0, 'Should NOT trigger quest when already enabled')
+
     testsPassed++
   } catch (error) {
     console.error(error)

@@ -7,6 +7,7 @@ import { handleQuestCompletion, getQuestStatus } from './QuestManager.js'
 import { updateUserProgress } from './verifiers/questVerifier.js'
 import { setPrimaryMintingStatus } from './minting/badgeMinter.js'
 import { getLogs, clearLogs } from './utils/logger.js'
+import { updateTTSSetting } from './pages/Settings.js'
 
 // Mock MeeBot and TTS interfaces (replace with actual implementation)
 const MeeBot = {
@@ -118,6 +119,22 @@ async function example4_ViewLogs() {
   })
 }
 
+/**
+ * Example 5: TTS Quest - Enable TTS to receive badge
+ */
+async function example5_TTSQuest() {
+  console.log('\n=== Example 5: TTS Quest ===\n')
+  clearLogs()
+
+  const userId = 'user-005'
+  
+  // User initially has TTS disabled
+  console.log('User enables TTS in Settings...')
+  await updateTTSSetting(userId, { ttsEnabled: false }, true)
+  
+  console.log('\n✅ TTS Quest example completed!')
+}
+
 // Run all examples
 async function runExamples() {
   console.log('🚀 MeeChain Quest Manager - Example Demonstrations\n')
@@ -126,6 +143,7 @@ async function runExamples() {
   await example2_FallbackMinting()
   await example3_ConditionsNotMet()
   await example4_ViewLogs()
+  await example5_TTSQuest()
 
   console.log('\n✅ All examples completed!\n')
 }
