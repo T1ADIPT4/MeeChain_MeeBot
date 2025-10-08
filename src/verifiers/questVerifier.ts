@@ -35,6 +35,22 @@ const questDatabase: Record<string, Quest> = {
       { type: 'nft-traded', required: 1, completed: 0 },
     ],
   },
+  'quest-003': {
+    id: 'quest-003',
+    name: 'TTS Badge',
+    conditions: [
+      { type: 'tts-enabled', required: 1, completed: 0 },
+      { type: 'tts-used', required: 5, completed: 0 },
+    ],
+  },
+  'quest-004': {
+    id: 'quest-004',
+    name: 'NFT Football',
+    conditions: [
+      { type: 'football-nft-minted', required: 1, completed: 0 },
+      { type: 'football-vote-cast', required: 3, completed: 0 },
+    ],
+  },
 }
 
 // Mock user progress database (replace with actual database in production)
