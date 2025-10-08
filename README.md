@@ -11,6 +11,8 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 - 🛡️ Admin panel for contract authorization
 - ⚙️ Settings page with modular toggles
 - 🆘 Support page with FAQ system
+- 📊 **Leaderboard & Admin Dashboard** (NEW)
+- 📤 **Reward tracking & export system** (NEW)
 
 ## 📦 Tech Stack
 
@@ -51,7 +53,13 @@ npm run example
 # Run Settings/Support demo
 npm run demo:settings
 
-# Run tests (10 comprehensive tests)
+# Run TTS Quest demo
+npm run demo:tts-quest
+
+# Run Admin Panel demo (NEW)
+npm run demo:admin-panel
+
+# Run tests (38 comprehensive tests)
 npm test
 ```
 
@@ -61,6 +69,7 @@ npm test
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
+- 🛡️ [Admin Panel & Leaderboard](ADMIN_PANEL.md) - Admin dashboard and reward tracking (NEW)
 
 ### Example Usage
 
@@ -87,13 +96,16 @@ if (result.success) {
 
 ## 🧪 Testing
 
-All 10 tests passing with 100% success rate:
+All 38 tests passing with 100% success rate:
 - ✅ Quest verification
 - ✅ Primary chain minting
 - ✅ Automatic fallback
 - ✅ Error handling
 - ✅ Progress tracking
 - ✅ Event logging
+- ✅ Reward tracking (NEW)
+- ✅ Admin actions (NEW)
+- ✅ Quest-reward integration (NEW)
 
 ## 📁 Project Structure
 
@@ -102,13 +114,22 @@ MeeChain_MeeBot/
 ├── src/
 │   ├── QuestManager.ts          # Main orchestrator
 │   ├── verifiers/
-│   │   └── questVerifier.ts     # Quest condition verification
+│   │   ├── questVerifier.ts     # Quest condition verification
+│   │   └── TTSQuestVerifier.ts  # TTS quest verification
 │   ├── minting/
 │   │   └── badgeMinter.ts       # Badge minting with fallback
 │   ├── utils/
 │   │   └── logger.ts            # Event logging system
 │   ├── example.ts               # Usage examples
 │   └── test.ts                  # Test suite
+├── tracker/                     # NEW: Reward tracking system
+│   ├── RewardTracker.ts         # Track badge rewards
+│   └── RewardExporter.ts        # Export reward logs
+├── admin/                       # NEW: Admin panel system
+│   ├── AdminTypes.ts            # Type definitions
+│   ├── AdminActions.ts          # Admin badge management
+│   ├── Leaderboard.tsx          # User rankings display
+│   └── AdminPanel.tsx           # Admin dashboard
 ├── pages/
 │   ├── Settings.tsx             # Settings page
 │   └── Support.tsx              # Support/FAQ page
@@ -122,11 +143,19 @@ MeeChain_MeeBot/
 │   ├── settingsLoader.ts        # Fallback-aware settings loader
 │   └── fallbackFAQ.ts           # Fallback-aware FAQ loader
 ├── examples/
-│   └── settings-support-demo.ts # Settings/Support demo
+│   ├── settings-support-demo.ts # Settings/Support demo
+│   ├── tts-quest-demo.ts        # TTS quest demo
+│   └── admin-panel-demo.ts      # Admin panel demo (NEW)
+├── tests/                       # Test suites
+│   ├── ttsQuest.test.ts         # TTS quest tests
+│   ├── rewardTracker.test.ts    # Reward tracking tests (NEW)
+│   ├── adminActions.test.ts     # Admin actions tests (NEW)
+│   └── questRewardIntegration.test.ts  # Integration tests (NEW)
 ├── QUEST_SYSTEM.md              # Quest system documentation
 ├── INTEGRATION.md               # Integration guide
 ├── ARCHITECTURE.md              # Architecture diagrams
 ├── SETTINGS_SUPPORT.md          # Settings/Support documentation
+├── ADMIN_PANEL.md               # Admin panel documentation (NEW)
 └── package.json
 ```
 
