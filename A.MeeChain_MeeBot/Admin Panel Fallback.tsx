@@ -1,6 +1,8 @@
+import { useEffect } form 'react'
 import FallbackWrapper from '@/components/FallbackWrapper'
 import AuthorizationStatus from '@/components/AuthorizationStatus'
-import { useEffect } from 'react'
+import { speak } from '@/modules/speech'
+import BadgeMintFormWrapper from '@/components/BadgeMintFormWrapper'
 
 const { status } = useFallbackStatus()
 useEffect(() => {

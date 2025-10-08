@@ -19,5 +19,4 @@ export default function AcademyPageWrapper() {  { mood }: { mood: 'happy' | 'thi
 </FallbackWrapper>
   }
  }
-}
  
