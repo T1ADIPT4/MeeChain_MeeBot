@@ -4,6 +4,8 @@
  */
 
 import { logEvent } from '../utils/logger.js'
+import { getBadgeContract, getFallbackContract } from '../config/registryLoader.js'
+import type { SupportedNetwork } from '../config/registryTypes.js'
 
 export interface BadgeTransaction {
   txHash: string
@@ -12,24 +14,41 @@ export interface BadgeTransaction {
   badgeId: string
   timestamp: Date
   chain: 'primary' | 'fallback'
+  contractAddress?: string
+  network?: SupportedNetwork
 }
 
 // Simulated blockchain state
 let mintingSuccess = true
 let fallbackMintingSuccess = true
 
+// Default network for badge minting (can be configured)
+let primaryNetwork: SupportedNetwork = 'polygon'
+let fallbackNetwork: SupportedNetwork = 'ethereum'
+
 /**
  * Mint a badge on the primary chain
  * @param userId - User ID receiving the badge
  * @param questId - Quest ID that was completed
+ * @param network - Optional network to use (defaults to primaryNetwork)
  * @returns Badge transaction details
  * @throws Error if minting fails
  */
 export async function mintBadge(
   userId: string,
-  questId: string
+  questId: string,
+  network?: SupportedNetwork
 ): Promise<BadgeTransaction> {
-  logEvent('badge-mint-start', { userId, questId, chain: 'primary' }, 'debug')
+  const chainNetwork = network || primaryNetwork
+  const contractAddress = getBadgeContract(chainNetwork)
+  
+  logEvent('badge-mint-start', { 
+    userId, 
+    questId, 
+    chain: 'primary',
+    network: chainNetwork,
+    contractAddress 
+  }, 'debug')
 
   // Simulate primary chain minting
   await new Promise((resolve) => setTimeout(resolve, 100))
@@ -45,6 +64,8 @@ export async function mintBadge(
     badgeId: `badge-${questId}`,
     timestamp: new Date(),
     chain: 'primary',
+    contractAddress,
+    network: chainNetwork,
   }
 
   logEvent('badge-mint-success', {
@@ -52,6 +73,8 @@ export async function mintBadge(
     questId,
     tx: transaction.txHash,
     chain: 'primary',
+    network: chainNetwork,
+    contractAddress,
   })
 
   return transaction
@@ -61,14 +84,25 @@ export async function mintBadge(
  * Mint a badge on the fallback chain
  * @param userId - User ID receiving the badge
  * @param questId - Quest ID that was completed
+ * @param network - Optional network to use (defaults to fallbackNetwork)
  * @returns Badge transaction details
  * @throws Error if fallback minting also fails
  */
 export async function fallbackMintBadge(
   userId: string,
-  questId: string
+  questId: string,
+  network?: SupportedNetwork
 ): Promise<BadgeTransaction> {
-  logEvent('badge-fallback-mint-start', { userId, questId, chain: 'fallback' }, 'debug')
+  const chainNetwork = network || fallbackNetwork
+  const contractAddress = getFallbackContract(chainNetwork)
+  
+  logEvent('badge-fallback-mint-start', { 
+    userId, 
+    questId, 
+    chain: 'fallback',
+    network: chainNetwork,
+    contractAddress 
+  }, 'debug')
 
   // Simulate fallback chain minting (usually more reliable)
   await new Promise((resolve) => setTimeout(resolve, 150))
@@ -84,6 +118,8 @@ export async function fallbackMintBadge(
     badgeId: `badge-${questId}-fallback`,
     timestamp: new Date(),
     chain: 'fallback',
+    contractAddress,
+    network: chainNetwork,
   }
 
   logEvent('badge-fallback-mint-success', {
@@ -91,6 +127,8 @@ export async function fallbackMintBadge(
     questId,
     tx: transaction.txHash,
     chain: 'fallback',
+    network: chainNetwork,
+    contractAddress,
   })
 
   return transaction
@@ -125,4 +163,36 @@ export function setPrimaryMintingStatus(success: boolean): void {
  */
 export function setFallbackMintingStatus(success: boolean): void {
   fallbackMintingSuccess = success
+}
+
+/**
+ * Set primary network for minting
+ * @param network - Network to use for primary minting
+ */
+export function setPrimaryNetwork(network: SupportedNetwork): void {
+  primaryNetwork = network
+}
+
+/**
+ * Set fallback network for minting
+ * @param network - Network to use for fallback minting
+ */
+export function setFallbackNetwork(network: SupportedNetwork): void {
+  fallbackNetwork = network
+}
+
+/**
+ * Get current primary network
+ * @returns Current primary network
+ */
+export function getPrimaryNetwork(): SupportedNetwork {
+  return primaryNetwork
+}
+
+/**
+ * Get current fallback network
+ * @returns Current fallback network
+ */
+export function getFallbackNetwork(): SupportedNetwork {
+  return fallbackNetwork
 }
