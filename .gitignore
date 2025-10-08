@@ -38,4 +38,6 @@ temp/
 
 # Reward tracking logs
 *-reward-log.json
+*-rewards.json
 reward-log.json
+backup-rewards.json
