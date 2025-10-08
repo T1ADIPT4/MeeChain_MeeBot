@@ -51,6 +51,9 @@ npm run example
 # Run Settings/Support demo
 npm run demo:settings
 
+# Run fallback telemetry demo
+npm run demo:telemetry
+
 # Run all tests (40+ comprehensive tests with Jest)
 npm test
 

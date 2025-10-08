@@ -12,7 +12,8 @@
     "copilot-test-tts-badge": "jest --testPathPatterns=tts-badge",
     "dev": "tsc --watch",
     "example": "npm run build && node dist/src/example.js",
-    "demo:settings": "npm run build && node dist/examples/settings-support-demo.js"
+    "demo:settings": "npm run build && node dist/examples/settings-support-demo.js",
+    "demo:telemetry": "npm run build && node dist/examples/fallback-telemetry-demo.js"
   },
   "keywords": [
     "meechain",
