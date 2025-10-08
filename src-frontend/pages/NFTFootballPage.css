@@ -1,0 +1,138 @@
+.nft-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.nft-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.nft-card:hover {
+  transform: translateY(-5px);
+}
+
+.nft-card.rarity-legendary {
+  border-color: #ffd700;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.nft-card.rarity-legendary:hover {
+  box-shadow: 0 5px 30px rgba(255, 215, 0, 0.5);
+}
+
+.nft-card.rarity-epic {
+  border-color: #a855f7;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+.nft-card.rarity-epic:hover {
+  box-shadow: 0 5px 30px rgba(168, 85, 247, 0.5);
+}
+
+.nft-card.rarity-rare {
+  border-color: #3b82f6;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.nft-card.rarity-rare:hover {
+  box-shadow: 0 5px 30px rgba(59, 130, 246, 0.5);
+}
+
+.nft-image {
+  font-size: 5rem;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.nft-info {
+  text-align: center;
+  width: 100%;
+}
+
+.nft-info h3 {
+  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.nft-rarity {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.nft-card.rarity-legendary .nft-rarity {
+  background: rgba(255, 215, 0, 0.2);
+  color: #ffd700;
+}
+
+.nft-card.rarity-epic .nft-rarity {
+  background: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+}
+
+.nft-card.rarity-rare .nft-rarity {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}
+
+.mint-nft-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: #646cff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.mint-nft-button:hover {
+  background: #535bf2;
+}
+
+@media (max-width: 768px) {
+  .nft-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .nft-card {
+    background: rgba(0, 0, 0, 0.02);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .nft-info h3 {
+    color: #213547;
+  }
+
+  .nft-image {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .mint-nft-button {
+    background: #535bf2;
+  }
+
+  .mint-nft-button:hover {
+    background: #4248c4;
+  }
+}
