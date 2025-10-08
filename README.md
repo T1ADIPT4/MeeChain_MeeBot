@@ -5,6 +5,7 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 ## 🔧 Features
 
 - ✅ Fallback-aware multi-chain minting
+- 🌐 Multi-chain contract registry (Ethereum, Polygon, Arbitrum)
 - 🤖 MeeBot sprite + TTS feedback
 - 🏆 Quest tracker & badge system
 - 🎨 NFT Football & Productivity collections
@@ -51,13 +52,17 @@ npm run example
 # Run Settings/Support demo
 npm run demo:settings
 
-# Run tests (10 comprehensive tests)
+# Run Deploy Registry demo
+npm run demo:deploy-registry
+
+# Run tests (33 comprehensive tests)
 npm test
 ```
 
 ### Documentation
 
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
+- 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
@@ -99,8 +104,13 @@ All 10 tests passing with 100% success rate:
 
 ```
 MeeChain_MeeBot/
+├── config/
+│   └── deploy-registry.json     # Multi-chain contract addresses
 ├── src/
 │   ├── QuestManager.ts          # Main orchestrator
+│   ├── config/
+│   │   ├── registryTypes.ts     # Deploy registry types
+│   │   └── registryLoader.ts    # Registry loader utilities
 │   ├── verifiers/
 │   │   └── questVerifier.ts     # Quest condition verification
 │   ├── minting/
@@ -109,6 +119,9 @@ MeeChain_MeeBot/
 │   │   └── logger.ts            # Event logging system
 │   ├── example.ts               # Usage examples
 │   └── test.ts                  # Test suite
+├── tests/
+│   ├── ttsQuest.test.ts         # TTS quest tests
+│   └── deployRegistry.test.ts   # Deploy registry tests
 ├── pages/
 │   ├── Settings.tsx             # Settings page
 │   └── Support.tsx              # Support/FAQ page
@@ -122,8 +135,10 @@ MeeChain_MeeBot/
 │   ├── settingsLoader.ts        # Fallback-aware settings loader
 │   └── fallbackFAQ.ts           # Fallback-aware FAQ loader
 ├── examples/
-│   └── settings-support-demo.ts # Settings/Support demo
+│   ├── settings-support-demo.ts # Settings/Support demo
+│   └── deploy-registry-demo.ts  # Deploy registry demo
 ├── QUEST_SYSTEM.md              # Quest system documentation
+├── DEPLOY_REGISTRY.md           # Deploy registry documentation
 ├── INTEGRATION.md               # Integration guide
 ├── ARCHITECTURE.md              # Architecture diagrams
 ├── SETTINGS_SUPPORT.md          # Settings/Support documentation

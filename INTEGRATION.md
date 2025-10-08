@@ -224,21 +224,27 @@ export const AdminQuestMonitor: React.FC = () => {
 // minting/web3BadgeMinter.ts
 import { ethers } from 'ethers'
 import { logEvent } from '../utils/logger'
+import { getBadgeContract, getFallbackContract, type SupportedNetwork } from '../config/registryLoader'
 
 const BADGE_CONTRACT_ABI = [/* your ABI */]
-const PRIMARY_CHAIN = 'https://rpc.meechain.io'
-const FALLBACK_CHAIN = 'https://fallback.meechain.io'
+const PRIMARY_CHAIN_RPC = 'https://rpc.meechain.io'
+const FALLBACK_CHAIN_RPC = 'https://fallback.meechain.io'
+
+// Default networks
+const DEFAULT_PRIMARY_NETWORK: SupportedNetwork = 'polygon'
+const DEFAULT_FALLBACK_NETWORK: SupportedNetwork = 'ethereum'
 
 export async function mintBadgeOnChain(
   userId: string,
   questId: string,
-  chainUrl: string
+  chainUrl: string,
+  contractAddress: string
 ): Promise<string> {
   try {
     const provider = new ethers.JsonRpcProvider(chainUrl)
     const signer = await provider.getSigner()
     const contract = new ethers.Contract(
-      process.env.BADGE_CONTRACT_ADDRESS!,
+      contractAddress,
       BADGE_CONTRACT_ABI,
       signer
     )
@@ -250,7 +256,8 @@ export async function mintBadgeOnChain(
       userId,
       questId,
       txHash: tx.hash,
-      chain: chainUrl
+      chain: chainUrl,
+      contractAddress
     })
 
     return tx.hash
@@ -259,19 +266,24 @@ export async function mintBadgeOnChain(
       userId,
       questId,
       error: String(error),
-      chain: chainUrl
+      chain: chainUrl,
+      contractAddress
     }, 'error')
     throw error
   }
 }
 
 // Replace the mock implementations in badgeMinter.ts:
-export async function mintBadge(userId: string, questId: string) {
-  return mintBadgeOnChain(userId, questId, PRIMARY_CHAIN)
+export async function mintBadge(userId: string, questId: string, network?: SupportedNetwork) {
+  const targetNetwork = network || DEFAULT_PRIMARY_NETWORK
+  const contractAddress = getBadgeContract(targetNetwork)
+  return mintBadgeOnChain(userId, questId, PRIMARY_CHAIN_RPC, contractAddress)
 }
 
-export async function fallbackMintBadge(userId: string, questId: string) {
-  return mintBadgeOnChain(userId, questId, FALLBACK_CHAIN)
+export async function fallbackMintBadge(userId: string, questId: string, network?: SupportedNetwork) {
+  const targetNetwork = network || DEFAULT_FALLBACK_NETWORK
+  const contractAddress = getFallbackContract(targetNetwork)
+  return mintBadgeOnChain(userId, questId, FALLBACK_CHAIN_RPC, contractAddress)
 }
 ```
 
@@ -410,12 +422,15 @@ export async function verifyQuestConditionsFromDB(
 
 ```bash
 # .env
-BADGE_CONTRACT_ADDRESS=0x...
+# Note: Contract addresses are now centrally managed in config/deploy-registry.json
+# These are only needed for runtime configuration if you want to override defaults
 PRIMARY_CHAIN_RPC=https://rpc.meechain.io
 FALLBACK_CHAIN_RPC=https://fallback.meechain.io
 FIREBASE_PROJECT_ID=your-project-id
 FIREBASE_API_KEY=your-api-key
 ```
+
+**Note**: Contract addresses are now managed via the Deploy Registry (`config/deploy-registry.json`). See [DEPLOY_REGISTRY.md](./DEPLOY_REGISTRY.md) for details.
 
 ## 📱 Mobile/Responsive Considerations
 
