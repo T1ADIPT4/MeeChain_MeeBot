@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "test": "npm run build && node dist/test.js",
+    "test": "npm run build && node dist/src/test.js",
     "dev": "tsc --watch",
-    "example": "npm run build && node dist/example.js",
+    "example": "npm run build && node dist/src/example.js",
     "demo:settings": "npm run build && node dist/examples/settings-support-demo.js"
   },
   "keywords": [
