@@ -143,6 +143,7 @@ npm test
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
+- ⚙️ [Build & Deploy Workflow](WORKFLOW.md) - Complete build and deployment guide
 
 ### Example Usage
 

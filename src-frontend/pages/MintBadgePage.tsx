@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import MeeBot from '../components/MeeBot'
 import StatusMessage from '../components/StatusMessage'
+import { fallbackAwareMint } from '../utils/fallbackAwareMint'
+import { useMeeBotSpeech } from '../hooks/useMeeBotSpeech'
 import './MintBadgePage.css'
 
 const MintBadgePage: React.FC = () => {
@@ -10,36 +12,45 @@ const MintBadgePage: React.FC = () => {
   const [result, setResult] = useState<any>(null)
   const [meeBotEmotion, setMeeBotEmotion] = useState<'neutral' | 'happy' | 'confused'>('neutral')
   const [statusMessage, setStatusMessage] = useState('')
+  const { speak } = useMeeBotSpeech()
 
   const handleMintBadge = async () => {
     if (!userId || !questId) {
       setStatusMessage('⚠️ Please enter both User ID and Quest ID')
       setMeeBotEmotion('confused')
+      speak('กรุณากรอก User ID และ Quest ID ให้ครบถ้วนครับ')
       return
     }
 
     setLoading(true)
     setMeeBotEmotion('neutral')
     setStatusMessage('Processing badge minting...')
+    speak('กำลังดำเนินการ mint badge ให้คุณครับ')
 
     try {
-      // Simulate minting process (replace with actual implementation)
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const mintResult = await fallbackAwareMint(userId, questId)
       
-      // Mock successful result
-      const mockResult = {
-        success: true,
-        tx: { txHash: '0x' + Math.random().toString(16).slice(2, 15) },
-        fallback: false
+      setResult(mintResult)
+      
+      if (mintResult.success) {
+        setMeeBotEmotion('happy')
+        setStatusMessage(mintResult.message)
+        
+        if (mintResult.usedFallback) {
+          speak('ระบบ fallback ทำงานสำเร็จครับ Badge ของคุณพร้อมแล้ว')
+        } else {
+          speak('ยินดีด้วยครับ! Mint badge สำเร็จแล้วครับ')
+        }
+      } else {
+        setMeeBotEmotion('confused')
+        setStatusMessage(mintResult.message)
+        speak('ขออภัยครับ การ mint ล้มเหลว กรุณาลองใหม่อีกครั้ง')
       }
-
-      setResult(mockResult)
-      setMeeBotEmotion('happy')
-      setStatusMessage('✅ Badge minted successfully!')
     } catch (error) {
       setResult({ success: false, error: String(error) })
       setMeeBotEmotion('confused')
       setStatusMessage('❌ Minting failed. Please try again.')
+      speak('เกิดข้อผิดพลาดครับ กรุณาลองใหม่อีกครั้ง')
     } finally {
       setLoading(false)
     }
@@ -97,12 +108,12 @@ const MintBadgePage: React.FC = () => {
                 <>
                   <h3>✅ Success!</h3>
                   <p>Transaction Hash: {result.tx?.txHash}</p>
-                  {result.fallback && <p className="fallback-notice">⚠️ Minted on fallback chain</p>}
+                  {result.usedFallback && <p className="fallback-notice">⚠️ Minted on fallback chain</p>}
                 </>
               ) : (
                 <>
                   <h3>❌ Failed</h3>
-                  <p>{result.error}</p>
+                  <p>{result.message || result.error}</p>
                 </>
               )}
             </div>
