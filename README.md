@@ -7,6 +7,7 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 - ✅ Fallback-aware multi-chain minting
 - 🤖 MeeBot sprite + TTS feedback
 - 🏆 Quest tracker & badge system
+- 💬 Emotional journey microcopy system
 - 🎨 NFT Football & Productivity collections
 - 🛡️ Admin panel for contract authorization
 - ⚙️ Settings page with modular toggles
@@ -51,7 +52,10 @@ npm run example
 # Run Settings/Support demo
 npm run demo:settings
 
-# Run tests (10 comprehensive tests)
+# Run Emotional Microcopy demo
+npm run demo:emotional-microcopy
+
+# Run tests (45 comprehensive tests)
 npm test
 ```
 
@@ -61,6 +65,8 @@ npm test
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
+- 💬 [Emotional Microcopy System](EMOTIONAL_MICROCOPY.md) - Developer emotional journey and contextual messaging
+- 📋 [Emotional Microcopy Quick Reference](EMOTIONAL_MICROCOPY_QUICKREF.md) - Quick usage guide
 
 ### Example Usage
 
@@ -87,13 +93,15 @@ if (result.success) {
 
 ## 🧪 Testing
 
-All 10 tests passing with 100% success rate:
+All 45 tests passing with 100% success rate:
 - ✅ Quest verification
 - ✅ Primary chain minting
 - ✅ Automatic fallback
 - ✅ Error handling
 - ✅ Progress tracking
 - ✅ Event logging
+- ✅ TTS Quest badge system (14 tests)
+- ✅ Emotional microcopy system (31 tests)
 
 ## 📁 Project Structure
 
@@ -102,11 +110,13 @@ MeeChain_MeeBot/
 ├── src/
 │   ├── QuestManager.ts          # Main orchestrator
 │   ├── verifiers/
-│   │   └── questVerifier.ts     # Quest condition verification
+│   │   ├── questVerifier.ts     # Quest condition verification
+│   │   └── TTSQuestVerifier.ts  # TTS quest verification
 │   ├── minting/
 │   │   └── badgeMinter.ts       # Badge minting with fallback
 │   ├── utils/
-│   │   └── logger.ts            # Event logging system
+│   │   ├── logger.ts            # Event logging system
+│   │   └── emotionalMicrocopy.ts # Emotional journey microcopy
 │   ├── example.ts               # Usage examples
 │   └── test.ts                  # Test suite
 ├── pages/
@@ -122,11 +132,18 @@ MeeChain_MeeBot/
 │   ├── settingsLoader.ts        # Fallback-aware settings loader
 │   └── fallbackFAQ.ts           # Fallback-aware FAQ loader
 ├── examples/
-│   └── settings-support-demo.ts # Settings/Support demo
+│   ├── settings-support-demo.ts # Settings/Support demo
+│   ├── tts-quest-demo.ts        # TTS Quest demo
+│   └── emotional-microcopy-demo.ts # Emotional microcopy demo
+├── tests/
+│   ├── ttsQuest.test.ts         # TTS Quest tests (14 tests)
+│   └── emotionalMicrocopy.test.ts # Emotional microcopy tests (31 tests)
 ├── QUEST_SYSTEM.md              # Quest system documentation
 ├── INTEGRATION.md               # Integration guide
 ├── ARCHITECTURE.md              # Architecture diagrams
 ├── SETTINGS_SUPPORT.md          # Settings/Support documentation
+├── EMOTIONAL_MICROCOPY.md       # Emotional microcopy documentation
+├── EMOTIONAL_MICROCOPY_QUICKREF.md # Quick reference guide
 └── package.json
 ```
 
