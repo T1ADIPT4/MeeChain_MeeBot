@@ -4,14 +4,17 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 
 ## 🔧 Features
 
+- ✅ **Automated Deploy-Registry System** - Multi-chain contract deployment automation
 - ✅ Fallback-aware multi-chain minting
 - 🌐 Multi-chain contract registry (Ethereum, Polygon, Arbitrum)
 - 🤖 MeeBot sprite + TTS feedback
 - 🏆 Quest tracker & badge system
 - 🎨 NFT Football & Productivity collections
-- 🛡️ Admin panel for contract authorization
-- ⚙️ Settings page with modular toggles
+- 📊 **Dashboard** - View badges, networks, and fallback logs
+- ⚙️ **Admin Panel** - Contract management and log export
+- 🛡️ Settings page with modular toggles
 - 🆘 Support page with FAQ system
+- 📤 **Log Export** - JSON/CSV export with provenance
 
 ## 📦 Tech Stack
 
@@ -49,23 +52,56 @@ npm run build
 # Run examples
 npm run example
 
-# Run Settings/Support demo
-npm run demo:settings
+# Run demos
+npm run demo:settings              # Settings/Support demo
+npm run demo:deploy-registry       # Deploy Registry demo
+npm run demo:deploy-automation     # Automated deployment demo
 
-# Run Deploy Registry demo
-npm run demo:deploy-registry
+# Deploy contracts (automated)
+npm run deploy <network>           # Deploy to specific network
+npm run validate-registry          # Validate registry integrity
 
-# Run tests (33 comprehensive tests)
+# Run tests (47 comprehensive tests)
 npm test
 ```
+
+### 🚀 Automated Deploy-Registry System
+
+The new automated system manages contract deployments across multiple chains:
+
+```bash
+# Deploy contracts to a network
+npm run deploy arbitrum
+
+# Validate the registry
+npm run validate-registry
+
+# Export logs with provenance
+npm run export-logs
+
+# Run the automation demo
+npm run demo:deploy-automation
+```
+
+**Features:**
+- 🔄 Automatic registry updates after deployment
+- ✅ Built-in validation system
+- 💾 Automatic backups before changes
+- 📤 Export logs to JSON/CSV
+- 📊 Dashboard integration
+- ⚙️ Admin panel for management
+
+See [DEPLOY_AUTOMATION.md](DEPLOY_AUTOMATION.md) for complete documentation.
 
 ### Documentation
 
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
 - 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
+- 🤖 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment system guide
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
+- ✅ [Implementation Summary](IMPLEMENTATION_COMPLETE.md) - Complete implementation metrics
 
 ### Example Usage
 
