@@ -446,6 +446,215 @@ export function useResponsiveMeeBot() {
 }
 ```
 
+## 🔊 TTS Quest Integration
+
+### 1. Settings Page with TTS Quest
+
+```tsx
+// pages/Settings.tsx
+import React, { useState } from 'react'
+import { updateTTSSetting } from '../src/pages/Settings'
+import { MeeBot } from '../src/components/MeeBot'
+
+interface Props {
+  userId: string
+}
+
+export const SettingsPage: React.FC<Props> = ({ userId }) => {
+  const [ttsEnabled, setTtsEnabled] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  const handleTTSToggle = async (newValue: boolean) => {
+    setLoading(true)
+    
+    try {
+      await updateTTSSetting(
+        userId,
+        { ttsEnabled },
+        newValue
+      )
+      setTtsEnabled(newValue)
+    } catch (error) {
+      console.error('Failed to update TTS setting:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="settings-page">
+      <h2>การตั้งค่า</h2>
+      
+      <div className="setting-item">
+        <label>
+          <input
+            type="checkbox"
+            checked={ttsEnabled}
+            onChange={(e) => handleTTSToggle(e.target.checked)}
+            disabled={loading}
+          />
+          <span>เปิดเสียง TTS</span>
+        </label>
+        <p className="hint">
+          เปิด TTS เพื่อรับ badge พิเศษ!
+        </p>
+      </div>
+    </div>
+  )
+}
+```
+
+### 2. MeeBot Component Integration
+
+```tsx
+// components/MeeBotDisplay.tsx
+import React, { useState, useEffect } from 'react'
+import { MeeBotSprite } from '../src/components/MeeBot'
+
+interface Props {
+  emotion?: MeeBotSprite
+  message?: string
+}
+
+export const MeeBotDisplay: React.FC<Props> = ({ 
+  emotion = 'neutral',
+  message 
+}) => {
+  const [currentEmotion, setCurrentEmotion] = useState(emotion)
+  const [currentMessage, setCurrentMessage] = useState(message)
+  const [speaking, setSpeaking] = useState(false)
+
+  useEffect(() => {
+    if (message) {
+      setSpeaking(true)
+      speakMessage(message)
+      setTimeout(() => setSpeaking(false), 3000)
+    }
+  }, [message])
+
+  const speakMessage = (text: string) => {
+    // Use browser's SpeechSynthesis API
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.lang = 'th-TH'
+      window.speechSynthesis.speak(utterance)
+    }
+  }
+
+  return (
+    <div className={`meebot ${speaking ? 'speaking' : ''}`}>
+      <img 
+        src={`/sprites/meebot-${currentEmotion}.png`} 
+        alt="MeeBot"
+        className="meebot-sprite"
+      />
+      {currentMessage && (
+        <div className="speech-bubble">
+          {currentMessage}
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+### 3. Custom TTS Quest Hook
+
+```tsx
+// hooks/useTTSQuest.ts
+import { useState, useCallback } from 'react'
+import { handleTTSQuest } from '../src/pages/Settings'
+import { verifyTTSQuest } from '../src/quests/TTSQuestVerifier'
+
+export function useTTSQuest(userId: string) {
+  const [questCompleted, setQuestCompleted] = useState(false)
+  const [meeBotEmotion, setMeeBotEmotion] = useState<MeeBotSprite>('neutral')
+  const [meeBotMessage, setMeeBotMessage] = useState('')
+
+  const checkAndCompleteTTSQuest = useCallback(async (ttsEnabled: boolean) => {
+    const settings = { ttsEnabled }
+    const verified = await verifyTTSQuest(settings)
+
+    if (!verified) {
+      setMeeBotEmotion('neutral')
+      setMeeBotMessage('เปิด TTS ก่อนนะครับ ถึงจะรับ badge ได้')
+      return false
+    }
+
+    try {
+      await handleTTSQuest(userId, settings)
+      setQuestCompleted(true)
+      setMeeBotEmotion('celebrate')
+      setMeeBotMessage('เยี่ยมมาก! คุณได้รับ badge สำหรับการเปิด TTS แล้ว')
+      return true
+    } catch (error) {
+      setMeeBotEmotion('sad')
+      setMeeBotMessage('ขออภัยครับ มีปัญหาในการมอบ badge')
+      return false
+    }
+  }, [userId])
+
+  return {
+    questCompleted,
+    meeBotEmotion,
+    meeBotMessage,
+    checkAndCompleteTTSQuest
+  }
+}
+```
+
+### 4. Complete Settings Page Example
+
+```tsx
+// pages/CompleteSettings.tsx
+import React, { useState } from 'react'
+import { useTTSQuest } from '../hooks/useTTSQuest'
+import { MeeBotDisplay } from '../components/MeeBotDisplay'
+
+export const CompleteSettings: React.FC<{ userId: string }> = ({ userId }) => {
+  const [ttsEnabled, setTtsEnabled] = useState(false)
+  const { 
+    questCompleted, 
+    meeBotEmotion, 
+    meeBotMessage,
+    checkAndCompleteTTSQuest 
+  } = useTTSQuest(userId)
+
+  const handleToggle = async (newValue: boolean) => {
+    setTtsEnabled(newValue)
+    if (newValue) {
+      await checkAndCompleteTTSQuest(newValue)
+    }
+  }
+
+  return (
+    <div className="settings-container">
+      <MeeBotDisplay 
+        emotion={meeBotEmotion}
+        message={meeBotMessage}
+      />
+      
+      <div className="settings-content">
+        <h2>การตั้งค่า</h2>
+        
+        <div className="setting-group">
+          <label className="setting-toggle">
+            <input
+              type="checkbox"
+              checked={ttsEnabled}
+              onChange={(e) => handleToggle(e.target.checked)}
+            />
+            <span>เปิดเสียง TTS</span>
+            {questCompleted && <span className="badge">✅ Badge Earned!</span>}
+          </label>
+        </div>
+      </div>
+    </div>
+  )
+}
+```
+
+
 ## 🧪 Testing Integration
 
 ```typescript

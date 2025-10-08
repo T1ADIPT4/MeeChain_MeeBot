@@ -36,6 +36,7 @@ The MeeChain Quest System is a production-ready, fallback-aware quest verificati
 - **Automatic Fallback**: Switches to backup chain if primary minting fails
 - **Full Auditability**: Comprehensive event logging for all operations
 - **Type-Safe**: Complete TypeScript implementation
+- **🎉 TTS Quest Feature**: Reward users with badges for enabling TTS in settings
 
 ### Quick Start
 
@@ -43,10 +44,10 @@ The MeeChain Quest System is a production-ready, fallback-aware quest verificati
 # Build the project
 npm run build
 
-# Run examples
+# Run examples (including TTS quest)
 npm run example
 
-# Run tests (10 comprehensive tests)
+# Run tests (15 comprehensive tests)
 npm test
 ```
 
@@ -55,6 +56,7 @@ npm test
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
+- 🔊 [TTS Quest Guide](TTS_QUEST.md) - TTS quest implementation and usage
 
 ### Example Usage
 
@@ -81,13 +83,16 @@ if (result.success) {
 
 ## 🧪 Testing
 
-All 10 tests passing with 100% success rate:
+All 15 tests passing with 100% success rate:
 - ✅ Quest verification
 - ✅ Primary chain minting
 - ✅ Automatic fallback
 - ✅ Error handling
 - ✅ Progress tracking
 - ✅ Event logging
+- ✅ TTS quest verification
+- ✅ TTS quest badge minting
+- ✅ Settings integration
 
 ## 📁 Project Structure
 
@@ -99,6 +104,12 @@ MeeChain_MeeBot/
 │   │   └── questVerifier.ts     # Quest condition verification
 │   ├── minting/
 │   │   └── badgeMinter.ts       # Badge minting with fallback
+│   ├── quests/
+│   │   └── TTSQuestVerifier.ts  # TTS quest verification
+│   ├── pages/
+│   │   └── Settings.ts          # Settings page integration
+│   ├── components/
+│   │   └── MeeBot.ts            # MeeBot interface
 │   ├── utils/
 │   │   └── logger.ts            # Event logging system
 │   ├── example.ts               # Usage examples
@@ -106,6 +117,7 @@ MeeChain_MeeBot/
 ├── QUEST_SYSTEM.md              # Complete documentation
 ├── INTEGRATION.md               # Integration guide
 ├── ARCHITECTURE.md              # Architecture diagrams
+├── TTS_QUEST.md                 # TTS quest guide
 └── package.json
 ```
 
