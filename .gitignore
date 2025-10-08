@@ -35,3 +35,7 @@ coverage/
 tmp/
 temp/
 *.tmp
+
+# Reward tracking logs
+*-reward-log.json
+reward-log.json
