@@ -11,7 +11,8 @@
     "dev": "tsc --watch",
     "example": "npm run build && node dist/example.js",
     "demo:settings": "npm run build && node dist/examples/settings-support-demo.js",
-    "demo:tts-quest": "npm run build && node dist/examples/tts-quest-demo.js"
+    "demo:tts-quest": "npm run build && node dist/examples/tts-quest-demo.js",
+    "demo:admin": "npm run build && node dist/examples/admin-demo.js"
   },
   "keywords": [
     "meechain",
