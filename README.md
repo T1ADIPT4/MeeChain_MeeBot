@@ -51,8 +51,14 @@ npm run example
 # Run Settings/Support demo
 npm run demo:settings
 
-# Run tests (10 comprehensive tests)
+# Run all tests (40+ comprehensive tests with Jest)
 npm test
+
+# Run TTS Badge quest tests only
+npm run copilot-test-tts-badge
+
+# Run legacy test suite
+npm run test:legacy
 ```
 
 ### Documentation
@@ -87,28 +93,57 @@ if (result.success) {
 
 ## 🧪 Testing
 
-All 10 tests passing with 100% success rate:
-- ✅ Quest verification
-- ✅ Primary chain minting
-- ✅ Automatic fallback
-- ✅ Error handling
-- ✅ Progress tracking
-- ✅ Event logging
+**Jest-powered test suite with 40+ tests passing at 100% success rate:**
+
+### Test Categories
+- ✅ **Quest System** (10 tests): Quest verification, completion, and status tracking
+- ✅ **TTS Badge Quest** (8 tests): TTS-specific quest with fallback support
+- ✅ **NFT Football Quest** (13 tests): Voting system with verifier and fallback
+- ✅ **Fallback Telemetry** (9 tests): Comprehensive fallback tracking and analytics
+
+### Test Commands
+```bash
+# Run all tests
+npm test
+
+# Run TTS Badge quest tests only
+npm run copilot-test-tts-badge
+
+# Run legacy test suite (original 10 tests)
+npm run test:legacy
+```
+
+### Quest Types
+1. **quest-001**: First Steps (login + profile-setup)
+2. **quest-002**: NFT Collector (mint 3 NFTs + trade 1)
+3. **quest-003**: TTS Badge (enable TTS + use 5 times)
+4. **quest-004**: NFT Football (mint football NFT + cast 3 votes)
+
+### Fallback Telemetry Features
+- Track fallback usage statistics
+- Monitor primary chain failures
+- Calculate fallback success rates
+- Identify quests using fallback
+- Detailed timestamp logging
 
 ## 📁 Project Structure
 
 ```
 MeeChain_MeeBot/
 ├── src/
-│   ├── QuestManager.ts          # Main orchestrator
+│   ├── QuestManager.ts              # Main orchestrator
 │   ├── verifiers/
-│   │   └── questVerifier.ts     # Quest condition verification
+│   │   └── questVerifier.ts         # Quest condition verification (4 quests)
 │   ├── minting/
-│   │   └── badgeMinter.ts       # Badge minting with fallback
+│   │   └── badgeMinter.ts           # Badge minting with fallback
 │   ├── utils/
-│   │   └── logger.ts            # Event logging system
-│   ├── example.ts               # Usage examples
-│   └── test.ts                  # Test suite
+│   │   └── logger.ts                # Event logging & fallback telemetry
+│   ├── example.ts                   # Usage examples
+│   ├── test.ts                      # Legacy test suite (10 tests)
+│   ├── quest-system.spec.ts         # Jest tests for quest system
+│   ├── tts-badge.spec.ts            # Jest tests for TTS Badge quest
+│   ├── nft-football.spec.ts         # Jest tests for NFT Football quest
+│   └── fallback-telemetry.spec.ts   # Jest tests for telemetry
 ├── pages/
 │   ├── Settings.tsx             # Settings page
 │   └── Support.tsx              # Support/FAQ page
@@ -127,6 +162,7 @@ MeeChain_MeeBot/
 ├── INTEGRATION.md               # Integration guide
 ├── ARCHITECTURE.md              # Architecture diagrams
 ├── SETTINGS_SUPPORT.md          # Settings/Support documentation
+├── jest.config.js               # Jest configuration
 └── package.json
 ```
 
