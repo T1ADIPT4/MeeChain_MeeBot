@@ -1,0 +1,27 @@
+{
+  "name": "meechain-meebot",
+  "version": "1.0.0",
+  "description": "Fallback-aware quest verification and badge minting system for MeeChain",
+  "main": "dist/QuestManager.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "npm run build && node dist/test.js",
+    "dev": "tsc --watch",
+    "example": "npm run build && node dist/example.js"
+  },
+  "keywords": [
+    "meechain",
+    "quest",
+    "badge",
+    "nft",
+    "web3",
+    "fallback-aware"
+  ],
+  "author": "MeeChain Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}
