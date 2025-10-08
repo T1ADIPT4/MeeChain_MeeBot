@@ -8,7 +8,8 @@
     "build": "tsc",
     "test": "npm run build && node dist/test.js",
     "dev": "tsc --watch",
-    "example": "npm run build && node dist/example.js"
+    "example": "npm run build && node dist/example.js",
+    "demo:settings": "npm run build && node dist/examples/settings-support-demo.js"
   },
   "keywords": [
     "meechain",
@@ -22,6 +23,10 @@
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "react": "^18.2.0"
   }
 }
