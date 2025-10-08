@@ -76,3 +76,37 @@ export function getLogsByLevel(level: LogLevel): LogEvent[] {
 export function clearLogs(): void {
   logs.length = 0
 }
+
+/**
+ * Get fallback statistics from logs
+ * Useful for telemetry and dashboard monitoring
+ * @returns Statistics object with fallback metrics
+ */
+export interface TelemetryStats {
+  totalQuestCompletions: number
+  primaryMintSuccesses: number
+  fallbackMintSuccesses: number
+  primaryMintFailures: number
+  fallbackMintFailures: number
+  fallbackUsageRate: number
+  totalErrors: number
+}
+
+export function getFallbackTelemetry(): TelemetryStats {
+  const primarySuccesses = logs.filter(l => l.eventType === 'badge-minted').length
+  const fallbackSuccesses = logs.filter(l => l.eventType === 'badge-fallback-minted').length
+  const primaryFailures = logs.filter(l => l.eventType === 'badge-mint-failed').length
+  const fallbackFailures = logs.filter(l => l.eventType === 'badge-fallback-failed').length
+  const totalCompletions = primarySuccesses + fallbackSuccesses + fallbackFailures
+  const totalErrors = logs.filter(l => l.level === 'error').length
+  
+  return {
+    totalQuestCompletions: totalCompletions,
+    primaryMintSuccesses: primarySuccesses,
+    fallbackMintSuccesses: fallbackSuccesses,
+    primaryMintFailures: primaryFailures,
+    fallbackMintFailures: fallbackFailures,
+    fallbackUsageRate: totalCompletions > 0 ? (fallbackSuccesses / totalCompletions) * 100 : 0,
+    totalErrors
+  }
+}
