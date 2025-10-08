@@ -17,6 +17,7 @@ class MeeBotClass {
   speak(message: string): void {
     this.lastMessage = message
     console.log(`🔊 MeeBot speaks: "${message}"`)
+    // In production, this would trigger actual TTS via Gemini or other TTS service
   }
 
   getCurrentSprite(): string {
@@ -25,6 +26,42 @@ class MeeBotClass {
 
   getLastMessage(): string {
     return this.lastMessage
+  }
+
+  /**
+   * Provide TTS feedback for quest completion
+   * @param questId - The quest that was completed
+   * @param success - Whether the quest was successful
+   * @param fallback - Whether fallback minting was used
+   */
+  questFeedback(questId: string, success: boolean, fallback?: boolean): void {
+    if (!success) {
+      this.setSprite('sad')
+      this.speak('เควสยังไม่สำเร็จนะครับ ลองทำต่อดูนะ')
+      return
+    }
+
+    if (fallback) {
+      this.setSprite('confused')
+      this.speak('ระบบ fallback ทำงานแล้วนะครับ แต่คุณก็ได้ badge แล้ว!')
+    } else {
+      this.setSprite('happy')
+      this.speak('เควสสำเร็จ! ได้รับ badge แล้ว ยินดีด้วยครับ!')
+    }
+  }
+
+  /**
+   * Provide TTS feedback for TTS quest specifically
+   * @param enabled - Whether TTS was enabled or disabled
+   */
+  ttsFeedback(enabled: boolean): void {
+    if (enabled) {
+      this.setSprite('happy')
+      this.speak('เปิด TTS แล้วครับ! ตอนนี้ MeeBot สามารถพูดคุยกับคุณได้แล้ว')
+    } else {
+      this.setSprite('neutral')
+      this.speak('ปิด TTS แล้วครับ')
+    }
   }
 }
 

@@ -6,10 +6,12 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "test": "npm run build && node dist/test.js",
+    "test": "jest",
+    "copilot-test-tts-badge": "jest tests/ttsQuest.test.ts",
     "dev": "tsc --watch",
     "example": "npm run build && node dist/example.js",
-    "demo:settings": "npm run build && node dist/examples/settings-support-demo.js"
+    "demo:settings": "npm run build && node dist/examples/settings-support-demo.js",
+    "demo:tts-quest": "npm run build && node dist/examples/tts-quest-demo.js"
   },
   "keywords": [
     "meechain",
@@ -22,8 +24,11 @@
   "author": "MeeChain Team",
   "license": "MIT",
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.4",
     "typescript": "^5.0.0"
   },
   "dependencies": {
