@@ -7,10 +7,11 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 - ✅ Fallback-aware multi-chain minting
 - 🤖 MeeBot sprite + TTS feedback
 - 🏆 Quest tracker & badge system
-- 🎨 NFT Football & Productivity collections
-- 🛡️ Admin panel for contract authorization
+- 📊 Leaderboard & reward tracking
+- 🛡️ Admin panel for badge management
 - ⚙️ Settings page with modular toggles
 - 🆘 Support page with FAQ system
+- 🎨 NFT Football & Productivity collections
 
 ## 📦 Tech Stack
 
@@ -51,7 +52,13 @@ npm run example
 # Run Settings/Support demo
 npm run demo:settings
 
-# Run tests (10 comprehensive tests)
+# Run TTS Quest demo
+npm run demo:tts-quest
+
+# Run Admin System demo
+npm run demo:admin
+
+# Run tests (26 comprehensive tests)
 npm test
 ```
 
@@ -61,6 +68,7 @@ npm test
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
+- 🛡️ [Admin System & Leaderboard](ADMIN_SYSTEM.md) - Admin panel, leaderboard, and reward tracking
 
 ### Example Usage
 
@@ -87,13 +95,16 @@ if (result.success) {
 
 ## 🧪 Testing
 
-All 10 tests passing with 100% success rate:
-- ✅ Quest verification
-- ✅ Primary chain minting
-- ✅ Automatic fallback
-- ✅ Error handling
-- ✅ Progress tracking
-- ✅ Event logging
+All 26 tests passing with 100% success rate:
+- ✅ Quest verification (3 tests)
+- ✅ Badge minting (4 tests)
+- ✅ Quest status (2 tests)
+- ✅ TTS quest system (5 tests)
+- ✅ Reward tracking (4 tests)
+- ✅ Admin actions (2 tests)
+- ✅ Integration tests (3 tests)
+- ✅ Leaderboard data (1 test)
+- ✅ Event logging (2 tests)
 
 ## 📁 Project Structure
 
@@ -102,13 +113,21 @@ MeeChain_MeeBot/
 ├── src/
 │   ├── QuestManager.ts          # Main orchestrator
 │   ├── verifiers/
-│   │   └── questVerifier.ts     # Quest condition verification
+│   │   ├── questVerifier.ts     # Quest condition verification
+│   │   └── TTSQuestVerifier.ts  # TTS-specific quest verification
 │   ├── minting/
 │   │   └── badgeMinter.ts       # Badge minting with fallback
 │   ├── utils/
 │   │   └── logger.ts            # Event logging system
 │   ├── example.ts               # Usage examples
 │   └── test.ts                  # Test suite
+├── tracker/
+│   ├── RewardTracker.ts         # Reward tracking system
+│   └── RewardExporter.ts        # Reward log export
+├── admin/
+│   ├── AdminPanel.tsx           # Admin interface
+│   ├── Leaderboard.tsx          # Leaderboard component
+│   └── AdminActions.ts          # Manual badge granting
 ├── pages/
 │   ├── Settings.tsx             # Settings page
 │   └── Support.tsx              # Support/FAQ page
@@ -122,11 +141,17 @@ MeeChain_MeeBot/
 │   ├── settingsLoader.ts        # Fallback-aware settings loader
 │   └── fallbackFAQ.ts           # Fallback-aware FAQ loader
 ├── examples/
-│   └── settings-support-demo.ts # Settings/Support demo
+│   ├── settings-support-demo.ts # Settings/Support demo
+│   ├── tts-quest-demo.ts        # TTS quest demo
+│   └── admin-demo.ts            # Admin system demo
+├── tests/
+│   ├── ttsQuest.test.ts         # TTS quest test suite
+│   └── rewardTracking.test.ts   # Reward tracking test suite
 ├── QUEST_SYSTEM.md              # Quest system documentation
 ├── INTEGRATION.md               # Integration guide
 ├── ARCHITECTURE.md              # Architecture diagrams
 ├── SETTINGS_SUPPORT.md          # Settings/Support documentation
+├── ADMIN_SYSTEM.md              # Admin & Leaderboard documentation
 └── package.json
 ```
 
