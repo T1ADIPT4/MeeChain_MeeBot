@@ -7,6 +7,8 @@ import { verifyQuestConditions } from './verifiers/questVerifier.js'
 import { verifyTTSQuestConditions } from './verifiers/TTSQuestVerifier.js'
 import { mintBadge, fallbackMintBadge, BadgeTransaction } from './minting/badgeMinter.js'
 import { logEvent } from './utils/logger.js'
+import { trackReward } from '../tracker/RewardTracker.js'
+import { MeeBot } from '../components/MeeBot.js'
 
 export interface QuestCompletionResult {
   success: boolean
@@ -46,6 +48,20 @@ export async function handleQuestCompletion(
     try {
       const badgeTx = await mintBadge(userId, questId)
       logEvent('badge-minted', { userId, questId, tx: badgeTx.txHash })
+      
+      // Track the reward
+      trackReward({
+        userId,
+        questId,
+        badgeId: badgeTx.badgeId,
+        timestamp: Date.now(),
+        fallbackUsed: false
+      })
+      
+      // MeeBot feedback for successful minting
+      MeeBot.setSprite('celebrate')
+      MeeBot.speak('คุณได้รับ badge แล้ว เยี่ยมมาก!')
+      
       return { success: true, tx: badgeTx }
     } catch (mintError) {
       logEvent('badge-mint-failed', { 
@@ -58,6 +74,20 @@ export async function handleQuestCompletion(
       try {
         const fallbackTx = await fallbackMintBadge(userId, questId)
         logEvent('badge-fallback-minted', { userId, questId, tx: fallbackTx.txHash })
+        
+        // Track the reward with fallback flag
+        trackReward({
+          userId,
+          questId,
+          badgeId: fallbackTx.badgeId,
+          timestamp: Date.now(),
+          fallbackUsed: true
+        })
+        
+        // MeeBot feedback for fallback minting
+        MeeBot.setSprite('confused')
+        MeeBot.speak('ระบบ fallback ทำงานแล้วครับ คุณยังได้รับ badge อยู่นะ')
+        
         return { success: true, tx: fallbackTx, fallback: true }
       } catch (fallbackError) {
         logEvent('badge-fallback-failed', {
