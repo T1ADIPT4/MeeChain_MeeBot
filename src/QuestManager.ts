@@ -7,6 +7,7 @@ import { verifyQuestConditions } from './verifiers/questVerifier.js'
 import { verifyTTSQuestConditions } from './verifiers/TTSQuestVerifier.js'
 import { mintBadge, fallbackMintBadge, BadgeTransaction } from './minting/badgeMinter.js'
 import { logEvent } from './utils/logger.js'
+import { trackReward } from '../tracker/RewardTracker.js'
 
 export interface QuestCompletionResult {
   success: boolean
@@ -46,6 +47,16 @@ export async function handleQuestCompletion(
     try {
       const badgeTx = await mintBadge(userId, questId)
       logEvent('badge-minted', { userId, questId, tx: badgeTx.txHash })
+      
+      // Track the reward
+      trackReward({
+        userId,
+        questId,
+        badgeId: badgeTx.badgeId,
+        timestamp: badgeTx.timestamp.getTime(),
+        fallbackUsed: false
+      })
+      
       return { success: true, tx: badgeTx }
     } catch (mintError) {
       logEvent('badge-mint-failed', { 
@@ -58,6 +69,16 @@ export async function handleQuestCompletion(
       try {
         const fallbackTx = await fallbackMintBadge(userId, questId)
         logEvent('badge-fallback-minted', { userId, questId, tx: fallbackTx.txHash })
+        
+        // Track the fallback reward
+        trackReward({
+          userId,
+          questId,
+          badgeId: fallbackTx.badgeId,
+          timestamp: fallbackTx.timestamp.getTime(),
+          fallbackUsed: true
+        })
+        
         return { success: true, tx: fallbackTx, fallback: true }
       } catch (fallbackError) {
         logEvent('badge-fallback-failed', {
