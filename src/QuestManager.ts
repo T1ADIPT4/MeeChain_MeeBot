@@ -4,6 +4,7 @@
  */
 
 import { verifyQuestConditions } from './verifiers/questVerifier.js'
+import { verifyTTSQuestConditions } from './verifiers/TTSQuestVerifier.js'
 import { mintBadge, fallbackMintBadge, BadgeTransaction } from './minting/badgeMinter.js'
 import { logEvent } from './utils/logger.js'
 
@@ -28,8 +29,13 @@ export async function handleQuestCompletion(
   try {
     logEvent('quest-completion-start', { userId, questId })
 
-    // Step 1: Verify quest conditions
-    const verified = await verifyQuestConditions(userId, questId)
+    // Step 1: Verify quest conditions (support both regular and TTS quests)
+    let verified = false
+    if (questId === 'quest-tts-001') {
+      verified = await verifyTTSQuestConditions(userId)
+    } else {
+      verified = await verifyQuestConditions(userId, questId)
+    }
 
     if (!verified) {
       logEvent('quest-verification-failed', { userId, questId })
@@ -85,7 +91,13 @@ export async function getQuestStatus(
   userId: string,
   questId: string
 ): Promise<string> {
-  const verified = await verifyQuestConditions(userId, questId)
+  let verified = false
+  if (questId === 'quest-tts-001') {
+    verified = await verifyTTSQuestConditions(userId)
+  } else {
+    verified = await verifyQuestConditions(userId, questId)
+  }
+  
   return verified 
     ? 'Quest conditions met - ready to complete' 
     : 'Quest conditions not yet met'
