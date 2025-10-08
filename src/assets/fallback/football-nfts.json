@@ -1,0 +1,47 @@
+[
+  {
+    "id": "nft-football-001",
+    "name": "Legendary Striker",
+    "image": "/images/football/striker-001.png",
+    "position": "Forward",
+    "skill": 95,
+    "rarity": "Legendary",
+    "team": "MeeChain FC"
+  },
+  {
+    "id": "nft-football-002",
+    "name": "Elite Goalkeeper",
+    "image": "/images/football/goalkeeper-001.png",
+    "position": "Goalkeeper",
+    "skill": 92,
+    "rarity": "Epic",
+    "team": "MeeChain United"
+  },
+  {
+    "id": "nft-football-003",
+    "name": "Master Midfielder",
+    "image": "/images/football/midfielder-001.png",
+    "position": "Midfielder",
+    "skill": 88,
+    "rarity": "Rare",
+    "team": "MeeChain FC"
+  },
+  {
+    "id": "nft-football-004",
+    "name": "Solid Defender",
+    "image": "/images/football/defender-001.png",
+    "position": "Defender",
+    "skill": 85,
+    "rarity": "Rare",
+    "team": "MeeChain United"
+  },
+  {
+    "id": "nft-football-005",
+    "name": "Rising Star",
+    "image": "/images/football/forward-002.png",
+    "position": "Forward",
+    "skill": 78,
+    "rarity": "Common",
+    "team": "MeeChain Academy"
+  }
+]

@@ -5,10 +5,12 @@
   "main": "dist/QuestManager.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run copy-assets",
+    "copy-assets": "mkdir -p dist/assets/fallback && cp -r src/assets/fallback/*.json dist/assets/fallback/",
     "test": "npm run build && node dist/test.js",
     "dev": "tsc --watch",
-    "example": "npm run build && node dist/example.js"
+    "example": "npm run build && node dist/example.js",
+    "nft-football": "npm run build && node dist/nftFootballExample.js"
   },
   "keywords": [
     "meechain",
