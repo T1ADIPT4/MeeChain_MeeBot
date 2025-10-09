@@ -38,3 +38,13 @@ coverage/
 tmp/
 temp/
 *.tmp
+
+# Registry backups
+config/deploy-registry.backup.*.json
+
+# Exported logs
+logs-export-*.json
+logs-export-*.csv
+registry-provenance-*.json
+demo-logs.json
+demo-registry-provenance.json
