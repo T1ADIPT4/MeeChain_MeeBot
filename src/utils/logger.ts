@@ -4,6 +4,9 @@
  * for easy traceability and debugging
  */
 
+import * as fs from 'fs'
+import * as path from 'path'
+
 export type LogLevel = 'info' | 'warn' | 'error' | 'debug'
 
 export interface LogEvent {
@@ -15,6 +18,64 @@ export interface LogEvent {
 
 // In-memory log storage (can be replaced with external logging service)
 const logs: LogEvent[] = []
+
+// Path to logs directory
+const LOGS_DIR = path.join(process.cwd(), 'tests', 'logs')
+
+/**
+ * Ensure logs directory exists
+ */
+function ensureLogsDir(): void {
+  try {
+    if (!fs.existsSync(LOGS_DIR)) {
+      fs.mkdirSync(LOGS_DIR, { recursive: true })
+    }
+  } catch (error) {
+    // Silently fail if we can't create directory (e.g., in browser environment)
+    console.warn('Could not create logs directory:', error)
+  }
+}
+
+/**
+ * Write log to file for error and fallback events
+ * @param logEntry - Log entry to write
+ */
+function writeLogToFile(logEntry: LogEvent): void {
+  try {
+    // Only write error and fallback events to disk
+    const shouldWriteToFile = 
+      logEntry.level === 'error' || 
+      logEntry.eventType.includes('fallback') ||
+      logEntry.eventType.includes('failed')
+    
+    if (!shouldWriteToFile) {
+      return
+    }
+
+    ensureLogsDir()
+
+    // Determine file name based on event type
+    const dateStr = new Date().toISOString().split('T')[0]
+    let fileName: string
+    
+    if (logEntry.eventType.includes('fallback')) {
+      fileName = `fallback-${dateStr}.log`
+    } else {
+      fileName = `error-${dateStr}.log`
+    }
+
+    const logFilePath = path.join(LOGS_DIR, fileName)
+    
+    // Format log entry
+    const logLine = `[${logEntry.timestamp.toISOString()}] [${logEntry.level.toUpperCase()}] ${logEntry.eventType}\n${JSON.stringify(logEntry.context, null, 2)}\n\n`
+    
+    // Append to file
+    fs.appendFileSync(logFilePath, logLine, 'utf-8')
+  } catch (error) {
+    // Silently fail if we can't write to file
+    console.warn('Could not write log to file:', error)
+  }
+}
 
 /**
  * Log an event with context
@@ -42,6 +103,9 @@ export function logEvent(
     `${emoji} [${logEntry.timestamp.toISOString()}] ${eventType}:`,
     JSON.stringify(context, null, 2)
   )
+
+  // Write error and fallback logs to file
+  writeLogToFile(logEntry)
 }
 
 /**
