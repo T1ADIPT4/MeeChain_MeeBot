@@ -15,5 +15,16 @@
   "milestone_status": "สถานะ Milestone",
   "file_name": "ชื่อไฟล์",
   "file_size": "ขนาดไฟล์",
-  "mime_type": "ประเภทไฟล์"
+  "mime_type": "ประเภทไฟล์",
+  "registry_status": "สถานะ Registry",
+  "registry_name": "ชื่อ",
+  "registry_url": "URL",
+  "registry_version": "เวอร์ชัน",
+  "registry_hash": "Hash",
+  "milestone_progress": "ความคืบหน้า Milestone",
+  "milestones_completed": "Milestone ที่เสร็จแล้ว",
+  "no_milestones": "ยังไม่มี milestone",
+  "badge_status": "สถานะ Badge",
+  "badge_name": "ชื่อ",
+  "description": "คำอธิบาย"
 }
