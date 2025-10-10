@@ -59,6 +59,9 @@ npm run demo:deploy-registry
 # Run Dashboard Integration demo
 npm run demo:dashboard
 
+# Run Milestone Integration demo
+npm run demo:milestone
+
 # Run tests (46 comprehensive tests)
 npm test
 ```
@@ -66,6 +69,8 @@ npm test
 ### Documentation
 
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
+- 🌿 [Branch Structure Guide](BRANCH_GUIDE.md) - Branch naming conventions and workflow
+- 🎯 [Milestone Guide](MILESTONE_GUIDE.md) - Milestone tracking with sprite feedback
 - 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
 - 📊 [Dashboard Integration](DASHBOARD_INTEGRATION.md) - Dashboard and Admin page integration
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
@@ -147,11 +152,15 @@ MeeChain_MeeBot/
 │   ├── settingsLoader.ts        # Fallback-aware settings loader
 │   ├── fallbackFAQ.ts           # Fallback-aware FAQ loader
 │   ├── registry.ts              # Registry utility for UI
-│   └── mockData.ts              # Mock data utilities
+│   ├── mockData.ts              # Mock data utilities
+│   └── milestoneReader.ts       # Milestone log reader
 ├── examples/
 │   ├── settings-support-demo.ts # Settings/Support demo
 │   ├── deploy-registry-demo.ts  # Deploy registry demo
-│   └── dashboard-integration-demo.ts  # Dashboard demo
+│   ├── dashboard-integration-demo.ts  # Dashboard demo
+│   └── milestone-integration-demo.ts  # Milestone tracking demo
+├── BRANCH_GUIDE.md              # Branch structure guide
+├── MILESTONE_GUIDE.md           # Milestone tracking guide
 ├── QUEST_SYSTEM.md              # Quest system documentation
 ├── DEPLOY_REGISTRY.md           # Deploy registry documentation
 ├── DASHBOARD_INTEGRATION.md     # Dashboard integration documentation
