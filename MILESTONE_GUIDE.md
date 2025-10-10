@@ -264,6 +264,8 @@ export class MeeBotClass {
 🟡 M5 complete: Production ready!
 ```
 
+See [milestone.log.example](milestone.log.example) for more details and usage examples.
+
 ### Reading Milestone Logs
 
 ```typescript
