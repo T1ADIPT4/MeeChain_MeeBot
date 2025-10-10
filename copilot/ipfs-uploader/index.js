@@ -272,7 +272,8 @@ async function uploadBadge(badgeOptions) {
   
   // Upload metadata
   const metadataUpload = await uploadMetadata(metadata, { questId })
-  
+  logMilestone("M6", "อัปโหลด badge สำเร็จและสร้าง metadata แล้ว");
+
   return {
     success: true,
     isFallback: false,
@@ -312,6 +313,11 @@ async function uploadBadges(badges) {
   }
   
   return results
+}
+const fs = require('fs');
+function logMilestone(milestoneId, description) {
+  const logEntry = `\n${milestoneId}: ${description}`;
+  fs.appendFileSync('milestone.log', logEntry);
 }
 
 module.exports = {
