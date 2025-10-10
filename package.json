@@ -22,7 +22,8 @@
     "registry:validate": "node --loader ts-node/esm scripts/validateRegistry.ts",
     "ipfs:generate-metadata": "node copilot/implement-ipfs-uploader/metadata-generator.js",
     "ipfs:test-metadata": "node copilot/implement-ipfs-uploader/test-metadata-generator.js",
-    "ipfs:meebot-demo": "node copilot/implement-ipfs-uploader/meebot-milestone-example.js"
+    "ipfs:meebot-demo": "node copilot/implement-ipfs-uploader/meebot-milestone-example.js",
+    "verify:meebot": "node copilot/verifyMeeBotFlow.js"
   },
   "keywords": [
     "meechain",
