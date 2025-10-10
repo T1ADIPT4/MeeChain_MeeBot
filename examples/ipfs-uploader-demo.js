@@ -207,7 +207,7 @@ function example8_MilestoneTracking() {
   console.log('  M4: Integration Test          🟠 "Uploader tested!"')
   console.log('  M5: Merge to Main             🟡 "Uploader live!"')
   console.log('')
-  console.log('See copilot/milestone.log for detailed tracking')
+  console.log('See copilot/MILESTONES.md for detailed tracking')
   console.log('')
 }
 
@@ -227,7 +227,7 @@ async function runAllExamples() {
     console.log('')
     console.log('📚 For more details, see:')
     console.log('  - copilot/ipfs-uploader/README.md')
-    console.log('  - copilot/milestone.log')
+    console.log('  - copilot/MILESTONES.md')
     console.log('  - copilot/assets/badges/README.md')
   } catch (error) {
     console.error('❌ Error running examples:', error.message)

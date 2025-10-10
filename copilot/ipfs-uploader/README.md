@@ -30,7 +30,7 @@ copilot/
 ├── assets/
 │   ├── badges/               # Badge files to upload
 │   └── fallback/             # Fallback assets
-└── milestone.log             # Milestone tracking with MeeBot feedback
+└── MILESTONES.md             # Milestone tracking with MeeBot feedback
 ```
 
 ## 🛠️ Installation

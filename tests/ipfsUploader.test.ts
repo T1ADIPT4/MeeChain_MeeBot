@@ -109,9 +109,9 @@ describe('IPFS Uploader - Documentation', () => {
 })
 
 describe('IPFS Uploader - Milestone Tracking', () => {
-  const milestonePath = path.join(process.cwd(), 'copilot', 'milestone.log')
+  const milestonePath = path.join(process.cwd(), 'copilot', 'MILESTONES.md')
   
-  test('should have milestone.log file', () => {
+  test('should have MILESTONES.md file', () => {
     expect(fs.existsSync(milestonePath)).toBe(true)
   })
 
