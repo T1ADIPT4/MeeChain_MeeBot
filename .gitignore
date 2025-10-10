@@ -12,6 +12,9 @@ logs/
 *.log
 npm-debug.log*
 
+# Test logs (keep directory structure but ignore log files)
+tests/logs/*.log
+
 # Environment
 .env
 .env.local
@@ -35,3 +38,13 @@ coverage/
 tmp/
 temp/
 *.tmp
+
+# Registry backups
+config/deploy-registry.backup.*.json
+
+# Exported logs
+logs-export-*.json
+logs-export-*.csv
+registry-provenance-*.json
+demo-logs.json
+demo-registry-provenance.json

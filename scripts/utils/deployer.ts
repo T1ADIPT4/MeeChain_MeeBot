@@ -10,110 +10,109 @@ export interface DeploymentResult {
   contractType: string
   network: string
   address: string
+ * Simulates contract deployment across multiple blockchain networks
+ */
+
+import type { SupportedNetwork } from '../../src/config/registryTypes.js'
+
+export interface DeploymentResult {
+  address: string
+  network: SupportedNetwork
+  contractType: string
+  txHash: string
   timestamp: Date
 }
 
 /**
- * Deploy all contracts to a specific network
- * @param network - Network to deploy to
- * @returns Array of deployment results
+ * Deploy a contract to a specific blockchain network
+ * @param contractType - Type of contract to deploy (Badge, Quest, Fallback)
+ * @param network - Target blockchain network
+ * @returns Deployment result with contract address
  */
-export async function deployAllContracts(network: SupportedNetwork): Promise<DeploymentResult[]> {
-  console.log(`🚀 Deploying all contracts to ${network}...\n`)
+export async function deployContract(
+  contractType: string,
+  network: SupportedNetwork
+): Promise<DeploymentResult> {
+  console.log(`🚀 Deploying ${contractType} contract to ${network}...`)
   
-  const results: DeploymentResult[] = []
+  // Simulate deployment delay
+  await new Promise((resolve) => setTimeout(resolve, 500))
   
-  // Deploy Badge contract
-  console.log('📦 Deploying Badge contract...')
-  const badgeAddress = await deployContract('Badge', network)
-  updateRegistryFile(network, 'Badge', badgeAddress)
-  results.push({
-    contractType: 'Badge',
+  // Generate a mock contract address (in production, this would be from actual deployment)
+  const address = generateContractAddress(contractType, network)
+  const txHash = `0x${Math.random().toString(16).substring(2, 66)}`
+  
+  const result: DeploymentResult = {
+    address,
     network,
-    address: badgeAddress,
+    contractType,
+    txHash,
     timestamp: new Date(),
-  })
-  
-  // Deploy Quest contract
-  console.log('\n📦 Deploying Quest contract...')
-  const questAddress = await deployContract('Quest', network)
-  updateRegistryFile(network, 'Quest', questAddress)
-  results.push({
-    contractType: 'Quest',
-    network,
-    address: questAddress,
-    timestamp: new Date(),
-  })
-  
-  // Deploy Fallback contract
-  console.log('\n📦 Deploying Fallback contract...')
-  const fallbackAddress = await deployContract('Fallback', network)
-  updateRegistryFile(network, 'Fallback', fallbackAddress)
-  results.push({
-    contractType: 'Fallback',
-    network,
-    address: fallbackAddress,
-    timestamp: new Date(),
-  })
-  
-  console.log(`\n✨ All contracts deployed to ${network}!`)
-  return results
-}
-
-/**
- * Deploy contracts to multiple networks
- * @param networks - Array of networks to deploy to
- * @returns Map of network to deployment results
- */
-export async function deployToMultipleNetworks(
-  networks: SupportedNetwork[]
-): Promise<Map<SupportedNetwork, DeploymentResult[]>> {
-  console.log(`🌐 Deploying to ${networks.length} network(s): ${networks.join(', ')}\n`)
-  
-  const resultMap = new Map<SupportedNetwork, DeploymentResult[]>()
-  
-  for (const network of networks) {
-    const results = await deployAllContracts(network)
-    resultMap.set(network, results)
-    console.log('')
   }
   
-  console.log('🎉 Multi-network deployment complete!')
-  return resultMap
+  console.log(`✅ ${contractType} deployed at ${address}`)
+  console.log(`   Transaction: ${txHash}`)
+  
+  return result
 }
 
 /**
- * Validate deployment addresses
- * @param address - Contract address to validate
- * @returns True if address is valid
+ * Generate a mock contract address (for demonstration purposes)
+ * In production, this would come from actual blockchain deployment
  */
-export function isValidAddress(address: string): boolean {
-  return /^0x[a-fA-F0-9]+$/.test(address) && address.length > 3
+function generateContractAddress(contractType: string, network: string): string {
+  const prefix = contractType.substring(0, 3)
+  const networkPrefix = network.substring(0, 3).charAt(0).toUpperCase() + network.substring(1, 3)
+  const random = Math.random().toString(16).substring(2, 10) // Shortened to fit 42 chars
+  return `0x${prefix}${networkPrefix}${random}`.substring(0, 42).padEnd(42, '0')
 }
 
 /**
- * Get deployment summary
- * @param results - Array of deployment results
- * @returns Summary object
+ * Verify a deployed contract
+ * @param address - Contract address to verify
+ * @param network - Network where the contract is deployed
+ * @returns true if contract is valid, false otherwise
  */
-export function getDeploymentSummary(results: DeploymentResult[]): {
-  total: number
-  byType: Record<string, number>
-  byNetwork: Record<string, number>
-} {
-  const summary = {
-    total: results.length,
-    byType: {} as Record<string, number>,
-    byNetwork: {} as Record<string, number>,
+export async function verifyContract(
+  address: string,
+  network: SupportedNetwork
+): Promise<boolean> {
+  console.log(`🔍 Verifying contract at ${address} on ${network}...`)
+  
+  // Simulate verification
+  await new Promise((resolve) => setTimeout(resolve, 200))
+  
+  // Basic validation: check if address looks valid
+  const isValid = address.startsWith('0x') && address.length === 42
+  
+  if (isValid) {
+    console.log(`✅ Contract verified successfully`)
+  } else {
+    console.log(`❌ Contract verification failed`)
   }
   
-  results.forEach(result => {
-    // Count by type
-    summary.byType[result.contractType] = (summary.byType[result.contractType] || 0) + 1
-    
-    // Count by network
-    summary.byNetwork[result.network] = (summary.byNetwork[result.network] || 0) + 1
-  })
+  return isValid
+}
+
+/**
+ * Deploy all contracts for a specific network
+ * @param network - Target blockchain network
+ * @returns Object with all deployed contract addresses
+ */
+export async function deployAllContracts(network: SupportedNetwork): Promise<{
+  badgeContract: string
+  questContract: string
+  fallbackContract: string
+}> {
+  console.log(`\n🌐 Deploying all contracts to ${network}...\n`)
   
-  return summary
+  const badge = await deployContract('Badge', network)
+  const quest = await deployContract('Quest', network)
+  const fallback = await deployContract('Fallback', network)
+  
+  return {
+    badgeContract: badge.address,
+    questContract: quest.address,
+    fallbackContract: fallback.address,
+  }
 }

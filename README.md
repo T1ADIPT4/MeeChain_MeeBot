@@ -4,6 +4,7 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 
 ## 🔧 Features
 
+- ✅ **Automated Deploy-Registry System** - Multi-chain contract deployment automation
 - ✅ Fallback-aware multi-chain minting
 - 🌐 Multi-chain contract registry (Ethereum, Polygon, Arbitrum)
 - 🤖 MeeBot sprite + TTS feedback
@@ -12,8 +13,13 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 - 🛡️ Admin panel for contract authorization
 - 📊 Dashboard with badge provenance & fallback logs
 - ⚙️ Settings page with modular toggles
-- 🆘 Support page with FAQ system
-
+=======
+- 📊 **Dashboard** - View badges, networks, and fallback logs
+- ⚙️ **Admin Panel** - Contract management and log export
+- 🛡️ Settings page with modular toggles
+- 🆘
+- 📤 **Log Export** - JSON/CSV export with provenance
+- 
 ## 📦 Tech Stack
 
 - React + TypeScript
@@ -40,6 +46,25 @@ The MeeChain Quest System is a production-ready, fallback-aware quest verificati
 - **Automatic Fallback**: Switches to backup chain if primary minting fails
 - **Full Auditability**: Comprehensive event logging for all operations
 - **Type-Safe**: Complete TypeScript implementation
+- **Milestone Tracking**: Built-in progress tracking with MeeBot sprite feedback
+
+### Branch Structure & Milestones
+
+Follow our structured development workflow:
+- 📖 [Branch Structure Guide](BRANCH_GUIDE.md) - Branch naming conventions and best practices
+- 🎯 [Milestone Guide](MILESTONE_GUIDE.md) - 5-milestone development roadmap with sprite feedback
+
+**Quick Start:**
+```bash
+# Create a feature branch
+git checkout -b feature/my-new-feature
+
+# Work on milestone M1
+git commit -m "M1: Add deploy dashboard with fallback viewer"
+
+# Track milestone completion
+echo "🟢 M1 complete: Deploy dashboard online!" >> milestone.log
+```
 
 ### Quick Start
 
@@ -50,28 +75,67 @@ npm run build
 # Run examples
 npm run example
 
-# Run Settings/Support demo
-npm run demo:settings
+# Run demos
+npm run demo:settings              # Settings/Support demo
+npm run demo:deploy-registry       # Deploy Registry demo
+npm run demo:deploy-automation     # Automated deployment demo
 
-# Run Deploy Registry demo
-npm run demo:deploy-registry
+# Deploy contracts (automated)
+npm run deploy <network>           # Deploy to specific network
+npm run validate-registry          # Validate registry integrity
 
-# Run Dashboard Integration demo
-npm run demo:dashboard
+# Run Milestone Integration demo
+npm run demo:milestone
 
 # Run tests (46 comprehensive tests)
+# Run tests (47 comprehensive tests)
+copilot/automate-deploy-registry-json
 npm test
 ```
+
+### 🚀 Automated Deploy-Registry System
+
+The new automated system manages contract deployments across multiple chains:
+
+```bash
+# Deploy contracts to a network
+npm run deploy arbitrum
+
+# Validate the registry
+npm run validate-registry
+
+# Export logs with provenance
+npm run export-logs
+
+# Run the automation demo
+npm run demo:deploy-automation
+```
+
+**Features:**
+- 🔄 Automatic registry updates after deployment
+- ✅ Built-in validation system
+- 💾 Automatic backups before changes
+- 📤 Export logs to JSON/CSV
+- 📊 Dashboard integration
+- ⚙️ Admin panel for management
+
+See [DEPLOY_AUTOMATION.md](DEPLOY_AUTOMATION.md) for complete documentation.
 
 ### Documentation
 
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
+- 🌿 [Branch Structure Guide](BRANCH_GUIDE.md) - Branch naming conventions and workflow
+- 🎯 [Milestone Guide](MILESTONE_GUIDE.md) - Milestone tracking with sprite feedback
 - 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
 - 🚀 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment and registry management
 - 📊 [Dashboard Integration](DASHBOARD_INTEGRATION.md) - Dashboard and Admin page integration
+
+- 🤖 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment system guide
+      copilot/automate-deploy-registry-json
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
+- ✅ [Implementation Summary](IMPLEMENTATION_COMPLETE.md) - Complete implementation metrics
 
 ### Example Usage
 
@@ -98,7 +162,7 @@ if (result.success) {
 
 ## 🧪 Testing
 
-All 46 tests passing with 100% success rate:
+All 91 tests passing with 100% success rate:
 - ✅ Quest verification
 - ✅ Primary chain minting
 - ✅ Automatic fallback
@@ -108,6 +172,7 @@ All 46 tests passing with 100% success rate:
 - ✅ TTS quest system (14 tests)
 - ✅ Deploy registry (9 tests)
 - ✅ Dashboard utilities (13 tests)
+- ✅ Milestone tracking (25 tests)
 
 ## 📁 Project Structure
 
@@ -130,7 +195,11 @@ MeeChain_MeeBot/
 │   └── test.ts                  # Test suite
 ├── tests/
 │   ├── ttsQuest.test.ts         # TTS quest tests
-│   └── deployRegistry.test.ts   # Deploy registry tests
+│   ├── deployRegistry.test.ts   # Deploy registry tests
+│   ├── milestone.test.ts        # Milestone tracking tests
+│   ├── mockData.test.ts         # Mock data tests
+│   ├── registry.test.ts         # Registry tests
+│   └── autoDeployScripts.test.ts # Deploy automation tests
 ├── pages/
 │   ├── Settings.tsx             # Settings page
 │   ├── Support.tsx              # Support/FAQ page
@@ -148,12 +217,18 @@ MeeChain_MeeBot/
 │   ├── settingsLoader.ts        # Fallback-aware settings loader
 │   ├── fallbackFAQ.ts           # Fallback-aware FAQ loader
 │   ├── registry.ts              # Registry utility for UI
-│   └── mockData.ts              # Mock data utilities
+│   ├── mockData.ts              # Mock data utilities
+│   └── milestoneReader.ts       # Milestone log reader
 ├── examples/
 │   ├── settings-support-demo.ts # Settings/Support demo
 │   ├── deploy-registry-demo.ts  # Deploy registry demo
 │   ├── deploy-automation-demo.ts # Deploy automation demo
 │   └── dashboard-integration-demo.ts  # Dashboard demo
+│   ├── dashboard-integration-demo.ts  # Dashboard demo
+│   └── milestone-integration-demo.ts  # Milestone tracking demo
+├── BRANCH_GUIDE.md              # Branch structure guide
+├── MILESTONE_GUIDE.md           # Milestone tracking guide
+├── milestone.log.example        # Milestone log format example
 ├── QUEST_SYSTEM.md              # Quest system documentation
 ├── DEPLOY_REGISTRY.md           # Deploy registry documentation
 ├── DEPLOY_AUTOMATION.md         # Deploy automation documentation

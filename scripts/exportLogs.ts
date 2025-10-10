@@ -78,18 +78,24 @@ export function exportRegistryWithProvenance(outputPath?: string): string {
   const registry = loadRegistry()
   const logs = getLogs()
   
-  // Get deployment-related logs
+  // Find deployment-related logs
   const deploymentLogs = logs.filter(log => 
     log.eventType.includes('deploy') || 
-    log.eventType.includes('registry')
+    log.eventType.includes('registry') ||
+    log.eventType.includes('badge-mint') ||
+    log.eventType.includes('badge-fallback-mint')
   )
   
   const exportData = {
     exportedAt: new Date().toISOString(),
     registry,
     provenance: {
-      deploymentHistory: deploymentLogs,
+      deploymentLogs,
       totalDeployments: deploymentLogs.length,
+    },
+    statistics: {
+      totalNetworks: Object.keys(registry.networks).length,
+      networks: Object.keys(registry.networks),
     },
   }
   
