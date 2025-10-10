@@ -297,5 +297,6 @@ export function restoreRegistry(backupPath: string): void {
   } catch (error) {
     console.error(`❌ Failed to restore registry:`, error)
     throw error
+    throw new Error(`Failed to restore registry: ${error}`)
   }
 }

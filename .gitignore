@@ -49,6 +49,5 @@ registry-provenance-*.json
 demo-logs.json
 demo-registry-provenance.json
 
-# IPFS uploader generated metadata
-copilot/implement-ipfs-uploader/metadata/*.json
-milestone.log
+# Auto-generated metadata
+copilot/ipfs-uploader/metadata/
