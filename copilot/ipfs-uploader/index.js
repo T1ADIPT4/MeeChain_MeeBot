@@ -217,6 +217,9 @@ async function uploadMetadata(metadata, options = {}) {
  * Upload badge with metadata
  * @param {Object} badgeOptions - Badge upload options
  * @returns {Promise<Object>} Complete upload result
+ * 
+ * Note: For milestone logging integration, see copilot/implement-ipfs-uploader/index.js
+ * which demonstrates how to log milestones after badge upload for MeeBot feedback.
  */
 async function uploadBadge(badgeOptions) {
   const {
