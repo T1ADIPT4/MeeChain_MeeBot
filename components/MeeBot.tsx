@@ -63,6 +63,25 @@ class MeeBotClass {
       this.speak('ปิด TTS แล้วครับ')
     }
   }
+
+  /**
+   * Provide TTS feedback for milestone completion
+   * @param milestone - The milestone that was completed (e.g., 'M2 complete: Metadata generator ready')
+   */
+  milestoneFeedback(milestone: string): void {
+    this.setSprite('happy')
+    
+    // Parse milestone message for Thai feedback
+    if (milestone.includes('Metadata generator ready')) {
+      this.speak('Metadata generator พร้อมแล้วครับ! 🟣')
+    } else if (milestone.includes('IPFS uploader')) {
+      this.speak('IPFS uploader พร้อมใช้งานแล้วครับ! 🟣')
+    } else {
+      this.speak(`Milestone สำเร็จ: ${milestone} 🟣`)
+    }
+    
+    console.log(`🟣 Milestone achieved: ${milestone}`)
+  }
 }
 
 export const MeeBot = new MeeBotClass()

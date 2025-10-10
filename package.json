@@ -19,6 +19,10 @@
     "deploy:quest": "node --loader ts-node/esm scripts/deploy.ts Quest",
     "deploy:fallback": "node --loader ts-node/esm scripts/deploy.ts Fallback",
     "registry:update": "node --loader ts-node/esm scripts/updateRegistry.ts",
+    "registry:validate": "node --loader ts-node/esm scripts/validateRegistry.ts",
+    "ipfs:generate-metadata": "node copilot/implement-ipfs-uploader/metadata-generator.js",
+    "ipfs:test-metadata": "node copilot/implement-ipfs-uploader/test-metadata-generator.js",
+    "ipfs:meebot-demo": "node copilot/implement-ipfs-uploader/meebot-milestone-example.js"
     "registry:validate": "node --loader ts-node/esm scripts/validateRegistry.ts"
   },
   "keywords": [
