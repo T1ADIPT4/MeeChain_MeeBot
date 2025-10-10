@@ -67,6 +67,7 @@ npm test
 
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
 - 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
+- 🚀 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment and registry management
 - 📊 [Dashboard Integration](DASHBOARD_INTEGRATION.md) - Dashboard and Admin page integration
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
@@ -151,9 +152,11 @@ MeeChain_MeeBot/
 ├── examples/
 │   ├── settings-support-demo.ts # Settings/Support demo
 │   ├── deploy-registry-demo.ts  # Deploy registry demo
+│   ├── deploy-automation-demo.ts # Deploy automation demo
 │   └── dashboard-integration-demo.ts  # Dashboard demo
 ├── QUEST_SYSTEM.md              # Quest system documentation
 ├── DEPLOY_REGISTRY.md           # Deploy registry documentation
+├── DEPLOY_AUTOMATION.md         # Deploy automation documentation
 ├── DASHBOARD_INTEGRATION.md     # Dashboard integration documentation
 ├── INTEGRATION.md               # Integration guide
 ├── ARCHITECTURE.md              # Architecture diagrams
