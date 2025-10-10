@@ -15,5 +15,16 @@
   "milestone_status": "Milestone Status",
   "file_name": "File Name",
   "file_size": "File Size",
-  "mime_type": "MIME Type"
+  "mime_type": "MIME Type",
+  "registry_status": "Registry Status",
+  "registry_name": "Name",
+  "registry_url": "URL",
+  "registry_version": "Version",
+  "registry_hash": "Hash",
+  "milestone_progress": "Milestone Progress",
+  "milestones_completed": "Milestones Completed",
+  "no_milestones": "No milestones found",
+  "badge_status": "Badge Status",
+  "badge_name": "Name",
+  "description": "Description"
 }

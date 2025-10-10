@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MeeChain Interactive Viewer - Demo Preview</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    .meebot-sprite {
+      font-size: 64px;
+      margin-bottom: 16px;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    h1 {
+      font-size: 36px;
+      margin: 0 0 12px 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .subtitle {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .language-toggle {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .lang-button {
+      padding: 10px 20px;
+      border: 2px solid #667eea;
+      background: white;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #667eea;
+    }
+
+    .lang-button:hover {
+      background: #f0f4ff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
+    }
+
+    .lang-button.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: #764ba2;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .card h3 {
+      margin: 0 0 16px 0;
+      color: #333;
+      font-size: 20px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      font-weight: 600;
+      color: #666;
+    }
+
+    .value {
+      color: #333;
+    }
+
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 16px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .status-badge.active {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .progress-bar-container {
+      height: 32px;
+      background: #f0f0f0;
+      border-radius: 16px;
+      overflow: hidden;
+      margin: 12px 0 20px 0;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      transition: width 0.6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 12px;
+    }
+
+    .progress-label {
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .milestone-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 8px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .badge-image-container {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    .badge-image {
+      max-width: 200px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .badge-image:hover {
+      transform: scale(1.05);
+    }
+
+    footer {
+      text-align: center;
+      color: white;
+      padding: 20px;
+      opacity: 0.9;
+      margin-top: 40px;
+    }
+
+    footer p {
+      margin: 8px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="meebot-sprite">🟢</div>
+      <h1 id="title">MeeChain Badge Viewer</h1>
+      <p class="subtitle" id="subtitle">
+        Interactive Registry, Milestone, and Badge Viewer
+      </p>
+    </header>
+
+    <div class="language-toggle">
+      <button class="lang-button active" onclick="switchLanguage('th')" id="btn-th">
+        🇹🇭 ไทย
+      </button>
+      <button class="lang-button" onclick="switchLanguage('en')" id="btn-en">
+        🇬🇧 English
+      </button>
+    </div>
+
+    <main>
+      <!-- Registry Card -->
+      <div class="card">
+        <h3>🔍 <span id="registry-title">Registry Status</span></h3>
+        <div>
+          <div class="detail-row">
+            <span class="label" id="label-name">Name:</span>
+            <span class="value">MeeChain Registry</span>
+          </div>
+          <div class="detail-row">
+            <span class="label" id="label-url">URL:</span>
+            <span class="value">https://demo.registry.io</span>
+          </div>
+          <div class="detail-row">
+            <span class="label" id="label-version">Version:</span>
+            <span class="value">1.0.0</span>
+          </div>
+          <div class="detail-row">
+            <span class="label" id="label-hash">Hash:</span>
+            <span class="value">0xBadgePoly123</span>
+          </div>
+          <div class="detail-row">
+            <span class="label" id="label-status">Status:</span>
+            <span class="status-badge active">🟢 active</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Milestone Chart -->
+      <div class="card">
+        <h3>🎯 <span id="milestone-title">Milestone Progress</span></h3>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; color: #666;">
+          <span id="milestone-count">7 / 9 Milestones Completed</span>
+          <span style="font-weight: 700; color: #667eea;">78%</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" style="width: 78%;">
+            <span class="progress-label">78%</span>
+          </div>
+        </div>
+        <div>
+          <div class="milestone-item">
+            <span>✅</span>
+            <span>M1: Uploader Init - Status: ✅ Complete</span>
+          </div>
+          <div class="milestone-item">
+            <span>✅</span>
+            <span>M2: Metadata Generator - Status: ✅ Complete</span>
+          </div>
+          <div class="milestone-item">
+            <span>✅</span>
+            <span>M3: Fallback Validation - Status: ✅ Complete</span>
+          </div>
+          <div class="milestone-item">
+            <span>✅</span>
+            <span>M4: Integration Test - Status: ✅ Complete</span>
+          </div>
+          <div class="milestone-item">
+            <span>✅</span>
+            <span>M5: MeeBot Sprite - Status: ✅ Complete</span>
+          </div>
+          <div class="milestone-item">
+            <span>✅</span>
+            <span>M6: i18n System - Status: ✅ Complete</span>
+          </div>
+          <div class="milestone-item">
+            <span>✅</span>
+            <span>M7: Interactive Viewer - Status: ✅ Complete</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badge Status -->
+      <div class="card">
+        <h3>🟢 <span id="badge-title">Badge Status</span></h3>
+        <div class="badge-image-container">
+          <div style="width: 200px; height: 200px; display: flex; align-items: center; justify-content: center; font-size: 80px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">
+            🏆
+          </div>
+        </div>
+        <div>
+          <div class="detail-row">
+            <span class="label" id="label-quest">Quest ID:</span>
+            <span class="value">quest-001</span>
+          </div>
+          <div class="detail-row">
+            <span class="label" id="label-badge">Badge ID:</span>
+            <span class="value">badge-meechain-001</span>
+          </div>
+          <div class="detail-row">
+            <span class="label" id="label-badge-name">Name:</span>
+            <span class="value">MeeChain Achievement Badge</span>
+          </div>
+          <div class="detail-row">
+            <span class="label" id="label-desc">Description:</span>
+            <span class="value">Successfully completed MeeChain interactive viewer implementation</span>
+          </div>
+          <div class="detail-row">
+            <span class="label" id="label-badge-status">Status:</span>
+            <span class="status-badge active">✅ minted</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p id="footer-text">
+        MeeChain MeeBot © 2025 | Fallback-aware Badge and Quest System
+      </p>
+      <p class="shortcuts" id="shortcuts-text">
+        ⌨️ Shortcuts: Alt+T (Thai) | Alt+E (English)
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    const translations = {
+      th: {
+        title: 'MeeChain Badge Viewer',
+        subtitle: 'ระบบแสดงผล Registry, Milestone และ Badge แบบ Interactive',
+        registry_title: 'สถานะ Registry',
+        milestone_title: 'ความคืบหน้า Milestone',
+        badge_title: 'สถานะ Badge',
+        label_name: 'ชื่อ:',
+        label_url: 'URL:',
+        label_version: 'เวอร์ชัน:',
+        label_hash: 'Hash:',
+        label_status: 'สถานะ:',
+        label_quest: 'รหัสเควส:',
+        label_badge: 'รหัส Badge:',
+        label_badge_name: 'ชื่อ:',
+        label_desc: 'คำอธิบาย:',
+        label_badge_status: 'สถานะ:',
+        milestone_count: '7 / 9 Milestone ที่เสร็จแล้ว',
+        footer_text: 'MeeChain MeeBot © 2025 | ระบบ Badge และ Quest แบบ Fallback-aware',
+        shortcuts_text: '⌨️ ลัดคีย์: Alt+T (ไทย) | Alt+E (English)'
+      },
+      en: {
+        title: 'MeeChain Badge Viewer',
+        subtitle: 'Interactive Registry, Milestone, and Badge Viewer',
+        registry_title: 'Registry Status',
+        milestone_title: 'Milestone Progress',
+        badge_title: 'Badge Status',
+        label_name: 'Name:',
+        label_url: 'URL:',
+        label_version: 'Version:',
+        label_hash: 'Hash:',
+        label_status: 'Status:',
+        label_quest: 'Quest ID:',
+        label_badge: 'Badge ID:',
+        label_badge_name: 'Name:',
+        label_desc: 'Description:',
+        label_badge_status: 'Status:',
+        milestone_count: '7 / 9 Milestones Completed',
+        footer_text: 'MeeChain MeeBot © 2025 | Fallback-aware Badge and Quest System',
+        shortcuts_text: '⌨️ Shortcuts: Alt+T (Thai) | Alt+E (English)'
+      }
+    };
+
+    let currentLang = 'en';
+
+    function switchLanguage(lang) {
+      currentLang = lang;
+      const t = translations[lang];
+
+      // Update all text
+      document.getElementById('title').textContent = t.title;
+      document.getElementById('subtitle').textContent = t.subtitle;
+      document.getElementById('registry-title').textContent = t.registry_title;
+      document.getElementById('milestone-title').textContent = t.milestone_title;
+      document.getElementById('badge-title').textContent = t.badge_title;
+      document.getElementById('label-name').textContent = t.label_name;
+      document.getElementById('label-url').textContent = t.label_url;
+      document.getElementById('label-version').textContent = t.label_version;
+      document.getElementById('label-hash').textContent = t.label_hash;
+      document.getElementById('label-status').textContent = t.label_status;
+      document.getElementById('label-quest').textContent = t.label_quest;
+      document.getElementById('label-badge').textContent = t.label_badge;
+      document.getElementById('label-badge-name').textContent = t.label_badge_name;
+      document.getElementById('label-desc').textContent = t.label_desc;
+      document.getElementById('label-badge-status').textContent = t.label_badge_status;
+      document.getElementById('milestone-count').textContent = t.milestone_count;
+      document.getElementById('footer-text').textContent = t.footer_text;
+      document.getElementById('shortcuts-text').textContent = t.shortcuts_text;
+
+      // Update button states
+      document.getElementById('btn-th').classList.toggle('active', lang === 'th');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.altKey && e.key === 't') {
+        switchLanguage('th');
+      } else if (e.altKey && e.key === 'e') {
+        switchLanguage('en');
+      }
+    });
+
+    // Auto-detect browser language
+    const browserLang = navigator.language || navigator.userLanguage;
+    if (browserLang.startsWith('th')) {
+      switchLanguage('th');
+    }
+
+    console.log('🚀 MeeChain Interactive Viewer Demo loaded');
+    console.log('🌐 i18n support: Thai (ไทย) and English');
+    console.log('⌨️ Keyboard shortcuts: Alt+T (Thai) | Alt+E (English)');
+  </script>
+</body>
+</html>

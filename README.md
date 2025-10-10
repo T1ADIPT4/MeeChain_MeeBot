@@ -3,6 +3,7 @@
 ระบบนี้เชื่อมต่อ MeeBot กับ IPFS เพื่อจัดการ badge, metadata, และ milestone อย่างปลอดภัย พร้อม viewer ที่รองรับหลายภาษา (ไทย/อังกฤษ)
 
 ## 🔧 Features
+copilot/update-readme-with-examples
 - อัปโหลด badge ไปยัง IPFS พร้อม fallback-aware CID
 - สร้าง metadata สำหรับ NFT badge (ERC-721 compliant)
 - บันทึก milestone ใน `milestone.log` เพื่อ trigger MeeBot feedback
@@ -15,6 +16,27 @@
 - `viewer/index.html` – Viewer หน้าหลัก
 - `viewer/viewer.js` – Logic การแสดงผลและ i18n
 - `milestone.log`, `registry.json`, `metadata/*.json` – ข้อมูลหลักของระบบ
+
+- ✅ **Automated Deploy-Registry System** - Multi-chain contract deployment automation
+- ✅ **Interactive Viewer** - React-based viewer with Registry, Milestone & Badge display
+- ✅ Fallback-aware multi-chain minting
+- 🌐 Multi-chain contract registry (Ethereum, Polygon, Arbitrum)
+- 🤖 MeeBot sprite + TTS feedback
+- 🏆 Quest tracker & badge system
+- 🎨 NFT Football & Productivity collections
+- 🛡️ Admin panel for contract authorization
+- 📊 Dashboard with badge provenance & fallback logs
+- ⚙️ Settings page with modular toggles
+- 🌍 **i18n Support** - Full Thai/English translations
+- 📤 **Log Export** - JSON/CSV export with provenance
+## 📦 Tech Stack
+
+- React + TypeScript
+- Smart Contracts (Solidity)
+- Replit + GitHub
+- TailwindCSS
+- Firebase (optional)
+- Gemini TTS API
 
 ## 🚀 Getting Started
 ```bash
@@ -116,6 +138,80 @@ MeeBot จะแสดง sprite feedback ตาม milestone:
 ดูตัวอย่างการใช้งาน:
 ```bash
 npm run ipfs:meebot-demo
+**Features:**
+- 🔄 Automatic registry updates after deployment
+- ✅ Built-in validation system
+- 💾 Automatic backups before changes
+- 📤 Export logs to JSON/CSV
+- 📊 Dashboard integration
+- ⚙️ Admin panel for management
+
+See [DEPLOY_AUTOMATION.md](DEPLOY_AUTOMATION.md) for complete documentation.
+
+### 🎨 Interactive Viewer
+
+A React-based interactive viewer for visualizing Registry status, Milestone progress, and Badge information with full Thai-English i18n support.
+
+```bash
+# View the standalone demo (no build required)
+open viewer/demo-preview.html
+
+# Or serve with HTTP server
+cd viewer
+python3 -m http.server 8080
+# Then open http://localhost:8080/demo-preview.html
+```
+
+**Features:**
+- 🔍 **Registry Card** - Display deployment registry info (URL, Version, Hash, Status)
+- 🎯 **Milestone Chart** - Visual progress bar with completed milestones (M1-M9)
+- 🟢 **Badge Status** - Badge display with fallback-aware asset loading
+- 🌍 **Language Toggle** - Switch between Thai (🇹🇭) and English (🇬🇧)
+- ⌨️ **Keyboard Shortcuts** - Alt+T (Thai) | Alt+E (English)
+- 🤖 **MeeBot Integration** - Sprite changes based on milestone progress
+
+**React Components:**
+- `RegistryCard.jsx` - Registry status display
+- `MilestoneChart.jsx` - Progress visualization
+- `BadgeStatus.jsx` - Badge with fallback support
+- `LanguageToggle.jsx` - i18n switcher
+- `App.jsx` - Main application
+
+See [INTERACTIVE_VIEWER.md](INTERACTIVE_VIEWER.md) for complete documentation.
+
+### Documentation
+
+- 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
+- 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
+
+- 🤖 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment system guide
+      copilot/automate-deploy-registry-json
+- 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
+- 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
+- ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
+- ✅ [Implementation Summary](IMPLEMENTATION_COMPLETE.md) - Complete implementation metrics
+
+### Example Usage
+
+```typescript
+import { handleQuestCompletion } from './src/QuestManager'
+import { updateUserProgress } from './src/verifiers/questVerifier'
+
+// Update user progress
+updateUserProgress('user-001', 'quest-001', 'login', 1)
+updateUserProgress('user-001', 'quest-001', 'profile-setup', 1)
+
+// Complete quest with automatic fallback
+const result = await handleQuestCompletion('user-001', 'quest-001')
+
+if (result.success) {
+  if (result.fallback) {
+    console.log('✅ Badge minted via fallback chain')
+  } else {
+    console.log('✅ Badge minted successfully')
+  }
+  console.log(`Transaction: ${result.tx?.txHash}`)
+}
 ```
 
 ## 🧪 Testing
