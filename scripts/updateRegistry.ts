@@ -295,4 +295,7 @@ export function restoreRegistry(backupPath: string): void {
     fs.copyFileSync(backupPath, registryPath)
     console.log(`♻️ Registry restored from backup`)
   } catch (error) {
- 
+    console.error(`❌ Failed to restore registry:`, error)
+    throw error
+  }
+}
