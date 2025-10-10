@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MeeBot Sprite & Milestone Dashboard Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: #6b7280;
+      font-size: 16px;
+    }
+
+    .lang-toggle {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .lang-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .milestone-chart {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      margin-bottom: 32px;
+    }
+
+    .milestone-chart h2 {
+      font-size: 24px;
+      color: #1f2937;
+      margin-bottom: 24px;
+    }
+
+    .progress-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .stats-text {
+      font-size: 16px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .stats-percentage {
+      font-size: 20px;
+      font-weight: 700;
+      color: #8b5cf6;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: #f3f4f6;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 32px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #8b5cf6 0%, #ec4899 100%);
+      border-radius: 6px;
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 100%;
+    }
+
+    .milestone-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .milestone-item {
+      padding: 16px;
+      background: #f0fdf4;
+      border-radius: 12px;
+      border: 2px solid #86efac;
+    }
+
+    .milestone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .milestone-id {
+      font-size: 18px;
+      font-weight: 700;
+      color: #374151;
+    }
+
+    .milestone-status {
+      font-size: 24px;
+    }
+
+    .meebot-sprite {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #f0fdf4;
+      border-radius: 12px;
+      border: 2px solid #86efac;
+    }
+
+    .sprite {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      font-size: 28px;
+      animation: bounce 0.6s ease infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .sprite-message {
+      flex: 1;
+    }
+
+    .sprite-message p {
+      margin: 0;
+      color: #374151;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .action-card {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .action-card h3 {
+      margin: 0 0 16px 0;
+      color: #1f2937;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 12px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      color: white;
+    }
+
+    .metadata-info {
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: #4b5563;
+    }
+
+    .success-banner {
+      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1>🎯 Milestone Dashboard</h1>
+        <p>ระบบติดตาม Milestone และ Badge Minting</p>
+      </div>
+      <button class="lang-toggle" onclick="toggleLanguage()">
+        🌍 <span id="current-lang">TH</span>
+      </button>
+    </div>
+
+    <div class="success-banner">
+      ✅ 57/57 ตรวจสอบผ่านแล้ว (100%) - All MeeBot Checks Passed!
+    </div>
+
+    <div class="milestone-chart">
+      <h2>🎯 ความคืบหน้า Milestone</h2>
+      
+      <div class="progress-stats">
+        <span class="stats-text">9 / 9 สำเร็จแล้ว</span>
+        <span class="stats-percentage">100%</span>
+      </div>
+      
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+
+      <div class="milestone-list">
+        <div class="milestone-item">
+          <div class="milestone-header">
+            <span class="milestone-id">M1</span>
+            <span class="milestone-status">✅</span>
+          </div>
+          <div class="meebot-sprite">
+            <div class="sprite">🟢</div>
+            <div class="sprite-message">
+              <p>เริ่มต้นระบบสำเร็จแล้ว</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="milestone-item">
+          <div class="milestone-header">
+            <span class="milestone-id">M2</span>
+            <span class="milestone-status">✅</span>
+          </div>
+          <div class="meebot-sprite">
+            <div class="sprite">🟣</div>
+            <div class="sprite-message">
+              <p>สร้าง metadata สำเร็จ</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="milestone-item">
+          <div class="milestone-header">
+            <span class="milestone-id">M3</span>
+            <span class="milestone-status">✅</span>
+          </div>
+          <div class="meebot-sprite">
+            <div class="sprite">🔵</div>
+            <div class="sprite-message">
+              <p>ตรวจสอบ fallback viewer แล้ว</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="milestone-item">
+          <div class="milestone-header">
+            <span class="milestone-id">M4</span>
+            <span class="milestone-status">✅</span>
+          </div>
+          <div class="meebot-sprite">
+            <div class="sprite">🟠</div>
+            <div class="sprite-message">
+              <p>อัปโหลด badge สำเร็จ</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="milestone-item">
+          <div class="milestone-header">
+            <span class="milestone-id">M5</span>
+            <span class="milestone-status">✅</span>
+          </div>
+          <div class="meebot-sprite">
+            <div class="sprite">🟡</div>
+            <div class="sprite-message">
+              <p>MeeBot แสดง sprite แล้ว</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="milestone-item">
+          <div class="milestone-header">
+            <span class="milestone-id">M6</span>
+            <span class="milestone-status">✅</span>
+          </div>
+          <div class="meebot-sprite">
+            <div class="sprite">🟢</div>
+            <div class="sprite-message">
+              <p>ตรวจสอบความถูกต้องของคำตอบ (98%)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="milestone-item">
+          <div class="milestone-header">
+            <span class="milestone-id">M7</span>
+            <span class="milestone-status">✅</span>
+          </div>
+          <div class="meebot-sprite">
+            <div class="sprite">🟣</div>
+            <div class="sprite-message">
+              <p>บันทึก milestone อัตโนมัติสำเร็จ</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="milestone-item">
+          <div class="milestone-header">
+            <span class="milestone-id">M8</span>
+            <span class="milestone-status">✅</span>
+          </div>
+          <div class="meebot-sprite">
+            <div class="sprite">🔵</div>
+            <div class="sprite-message">
+              <p>Mint NFT badge สำเร็จ</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="milestone-item">
+          <div class="milestone-header">
+            <span class="milestone-id">M9</span>
+            <span class="milestone-status">✅</span>
+          </div>
+          <div class="meebot-sprite">
+            <div class="sprite">🟠</div>
+            <div class="sprite-message">
+              <p>Deploy และเชื่อมกับ dashboard สำเร็จ</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions-grid">
+      <div class="action-card">
+        <h3>📝 Metadata Information</h3>
+        <div class="metadata-info">
+          <p><strong>Quest ID:</strong> quest-001</p>
+          <p><strong>Badge ID:</strong> badge-001</p>
+          <p><strong>Status:</strong> Ready for minting</p>
+        </div>
+        <button class="btn btn-primary" onclick="alert('Metadata generation in progress...')">
+          สร้าง Metadata
+        </button>
+      </div>
+
+      <div class="action-card">
+        <h3>🎖️ Badge Status</h3>
+        <div class="meebot-sprite" style="margin-bottom: 16px;">
+          <div class="sprite">🟢</div>
+          <div class="sprite-message">
+            <p>พร้อม mint badge แล้ว!</p>
+          </div>
+        </div>
+        <button class="btn btn-success" onclick="alert('✅ Badge minted successfully!')">
+          Mint Badge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentLang = 'th';
+    
+    function toggleLanguage() {
+      currentLang = currentLang === 'th' ? 'en' : 'th';
+      document.getElementById('current-lang').textContent = currentLang.toUpperCase();
+      
+      if (currentLang === 'en') {
+        document.querySelector('.header h1').textContent = '🎯 Milestone Dashboard';
+        document.querySelector('.header p').textContent = 'Milestone Tracking and Badge Minting System';
+        document.querySelector('.milestone-chart h2').textContent = '🎯 Milestone Progress';
+        document.querySelector('.stats-text').textContent = '9 / 9 Completed';
+        document.querySelectorAll('.btn-primary')[0].textContent = 'Generate Metadata';
+        document.querySelectorAll('.btn-success')[0].textContent = 'Mint Badge';
+      } else {
+        document.querySelector('.header h1').textContent = '🎯 Milestone Dashboard';
+        document.querySelector('.header p').textContent = 'ระบบติดตาม Milestone และ Badge Minting';
+        document.querySelector('.milestone-chart h2').textContent = '🎯 ความคืบหน้า Milestone';
+        document.querySelector('.stats-text').textContent = '9 / 9 สำเร็จแล้ว';
+        document.querySelectorAll('.btn-primary')[0].textContent = 'สร้าง Metadata';
+        document.querySelectorAll('.btn-success')[0].textContent = 'Mint Badge';
+      }
+    }
+  </script>
+</body>
+</html>
