@@ -1,0 +1,13 @@
+{
+    "ชื่อ": "my-project-devcontainer",
+    "รูปภาพ": "mcr.microsoft.com/devcontainers/base:ubuntu", //รูปภาพทั่วไปที่ใช้ debian
+    "คุณสมบัติ": {
+        "ghcr.io/devcontainers/features/go:1": {
+            "เวอร์ชัน": "1.18"
+        },
+        "ghcr.io/devcontainers/features/docker-in-docker:1": {
+            "เวอร์ชัน": "ล่าสุด",
+            "โมบี้": จริง
+        }
+    }
+}
