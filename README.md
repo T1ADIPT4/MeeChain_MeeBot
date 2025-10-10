@@ -4,6 +4,7 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 
 ## 🔧 Features
 
+- ✅ **Automated Deploy-Registry System** - Multi-chain contract deployment automation
 - ✅ Fallback-aware multi-chain minting
 - 🌐 Multi-chain contract registry (Ethereum, Polygon, Arbitrum)
 - 🤖 MeeBot sprite + TTS feedback
@@ -12,8 +13,13 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 - 🛡️ Admin panel for contract authorization
 - 📊 Dashboard with badge provenance & fallback logs
 - ⚙️ Settings page with modular toggles
-- 🆘 Support page with FAQ system
-
+=======
+- 📊 **Dashboard** - View badges, networks, and fallback logs
+- ⚙️ **Admin Panel** - Contract management and log export
+- 🛡️ Settings page with modular toggles
+- 🆘
+- 📤 **Log Export** - JSON/CSV export with provenance
+- 
 ## 📦 Tech Stack
 
 - React + TypeScript
@@ -69,21 +75,51 @@ npm run build
 # Run examples
 npm run example
 
-# Run Settings/Support demo
-npm run demo:settings
+# Run demos
+npm run demo:settings              # Settings/Support demo
+npm run demo:deploy-registry       # Deploy Registry demo
+npm run demo:deploy-automation     # Automated deployment demo
 
-# Run Deploy Registry demo
-npm run demo:deploy-registry
-
-# Run Dashboard Integration demo
-npm run demo:dashboard
+# Deploy contracts (automated)
+npm run deploy <network>           # Deploy to specific network
+npm run validate-registry          # Validate registry integrity
 
 # Run Milestone Integration demo
 npm run demo:milestone
 
 # Run tests (46 comprehensive tests)
+# Run tests (47 comprehensive tests)
+copilot/automate-deploy-registry-json
 npm test
 ```
+
+### 🚀 Automated Deploy-Registry System
+
+The new automated system manages contract deployments across multiple chains:
+
+```bash
+# Deploy contracts to a network
+npm run deploy arbitrum
+
+# Validate the registry
+npm run validate-registry
+
+# Export logs with provenance
+npm run export-logs
+
+# Run the automation demo
+npm run demo:deploy-automation
+```
+
+**Features:**
+- 🔄 Automatic registry updates after deployment
+- ✅ Built-in validation system
+- 💾 Automatic backups before changes
+- 📤 Export logs to JSON/CSV
+- 📊 Dashboard integration
+- ⚙️ Admin panel for management
+
+See [DEPLOY_AUTOMATION.md](DEPLOY_AUTOMATION.md) for complete documentation.
 
 ### Documentation
 
@@ -91,10 +127,13 @@ npm test
 - 🌿 [Branch Structure Guide](BRANCH_GUIDE.md) - Branch naming conventions and workflow
 - 🎯 [Milestone Guide](MILESTONE_GUIDE.md) - Milestone tracking with sprite feedback
 - 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
-- 📊 [Dashboard Integration](DASHBOARD_INTEGRATION.md) - Dashboard and Admin page integration
+
+- 🤖 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment system guide
+      copilot/automate-deploy-registry-json
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
+- ✅ [Implementation Summary](IMPLEMENTATION_COMPLETE.md) - Complete implementation metrics
 
 ### Example Usage
 

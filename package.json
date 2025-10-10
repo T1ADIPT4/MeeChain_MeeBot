@@ -22,6 +22,7 @@
     "deploy:fallback": "node --loader ts-node/esm scripts/deploy.ts Fallback",
     "registry:update": "node --loader ts-node/esm scripts/updateRegistry.ts",
     "registry:validate": "node --loader ts-node/esm scripts/validateRegistry.ts"
+    "demo:tts-quest": "npm run build && node dist/examples/tts-quest-demo.js
   },
   "keywords": [
     "meechain",
@@ -41,6 +42,9 @@
     "ts-jest": "^29.4.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
+    copilot/automate-deploy-registry-json
   },
   "dependencies": {
     "react": "^18.2.0"

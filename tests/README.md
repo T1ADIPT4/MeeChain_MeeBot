@@ -34,6 +34,25 @@ Comprehensive test suite for the TTS Quest badge system. Tests include:
 - Invalid quest ID handling
 - Empty progress for new users
 
+### `logger.test.ts`
+
+Tests for the logger file writing system. Tests include:
+
+#### Fallback Log Writing (2 tests)
+- Fallback logs are written to file
+- Fallback mint success logs are written to file
+
+#### Error Log Writing (3 tests)
+- Error level logs are written to file
+- Failed events are written to file
+- Verification failed events are written to file
+
+#### Selective Logging (1 test)
+- Info level logs are not written to file (memory only)
+
+#### Log Format (1 test)
+- Logs are formatted correctly with timestamp and level
+
 ## Running Tests
 
 ### Run all tests
@@ -58,13 +77,21 @@ npm test -- --coverage
 
 ## Test Results
 
-All 14 tests are currently passing:
-- ✅ TTS Quest Verification: 3/3 passing
-- ✅ TTS Quest Badge Minting: 4/4 passing
-- ✅ TTS Quest Status: 2/2 passing
-- ✅ TTS Quest Definition: 1/1 passing
-- ✅ Logging System Integration: 1/1 passing
-- ✅ Edge Cases: 3/3 passing
+All 73 tests are currently passing:
+- ✅ TTS Quest Tests: 14/14 passing
+- ✅ Logger File Writing Tests: 7/7 passing
+- ✅ Mock Data Tests: passing
+- ✅ Registry Tests: passing
+- ✅ Deploy Registry Tests: passing
+- ✅ Auto Deploy Scripts Tests: passing
+
+## Fallback Logs
+
+Error and fallback logs are automatically written to `tests/logs/`:
+- `fallback-YYYY-MM-DD.log` - Contains fallback minting events
+- `error-YYYY-MM-DD.log` - Contains error and failed events
+
+Check these logs when investigating issues with quest verification or badge minting.
 
 ## Test Configuration
 
