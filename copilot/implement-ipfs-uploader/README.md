@@ -9,16 +9,21 @@ This directory contains the metadata generator for NFT badge minting with IPFS u
 ```
 copilot/implement-ipfs-uploader/
 ├── metadata-generator.js   # Main metadata generator script
+├── index.js               # Fallback-aware upload demo script
+├── meebot-milestone-example.js  # MeeBot milestone integration example
+├── test-metadata-generator.js   # Test script for metadata generator
 ├── metadata/              # Generated metadata files (gitignored)
 └── README.md             # This file
 ```
 
 ## 🚀 Usage
 
+### 1. Generate Metadata
+
 Run the metadata generator from the project root:
 
 ```bash
-node copilot/implement-ipfs-uploader/metadata-generator.js
+npm run ipfs:generate-metadata
 ```
 
 This will:
@@ -27,6 +32,29 @@ This will:
 3. Generate NFT metadata compliant with ERC-721/ERC-1155 standards
 4. Save metadata files to `./copilot/implement-ipfs-uploader/metadata/`
 5. Log milestone completion to `milestone.log` for MeeBot sprite feedback
+
+### 2. Upload Demo (Fallback-Aware)
+
+Run the fallback-aware upload demonstration:
+
+```bash
+npm run ipfs:upload-demo
+```
+
+This demonstrates:
+1. 🔒 **Simulation mode** - Skip actual IPFS upload for testing
+2. 📘 **Milestone logging** - Track progress in `milestone.log`
+3. 🟡 **Blocked log creation** - Create `/home/runner/work/_temp/runtime-logs/blocked.md`
+4. ✅ **Metadata generation** - Generate and save to `./output/metadata.json`
+5. 🧩 **Fallback handling** - Use fallback CID when upload fails
+
+### 3. MeeBot Demo
+
+View MeeBot milestone feedback:
+
+```bash
+npm run ipfs:meebot-demo
+```
 
 ## 📄 Generated Metadata Format
 
@@ -47,6 +75,18 @@ Each badge generates a JSON metadata file with the following structure:
 
 ## 🛡️ Fallback-Aware Features
 
+### Upload Script (`index.js`)
+
+The upload demo script showcases fallback-aware IPFS upload:
+
+- **Simulation Mode**: Controlled via `config.simulationMode` - skips actual IPFS upload
+- **Fallback CID**: Returns `FALLBACK_CID` when upload fails
+- **Milestone Logging**: Automatically logs to `milestone.log`
+- **Blocked Log**: Creates `/home/runner/work/_temp/runtime-logs/blocked.md`
+- **Safe Upload**: Validates files before upload, handles errors gracefully
+
+### Metadata Generator
+
 - **`fallback_image`**: Used when IPFS cannot load the primary image
 - **`milestone.log`**: Triggers MeeBot sprite feedback for milestone completion
 - **`attributes`**: Supports NFT viewers with trait and milestone information
@@ -60,16 +100,27 @@ Each badge generates a JSON metadata file with the following structure:
 
 ## 🤖 MeeBot Integration
 
+### Metadata Generator
+
 When the metadata generator completes successfully, it appends to `milestone.log`:
 
 ```
 M2 complete: Metadata generator ready 🟣
 ```
 
+### Upload Demo (M5)
+
+When the upload demo completes successfully, it appends to `milestone.log`:
+
+```
+M5: อัปโหลด badge และสร้าง metadata สำเร็จ
+```
+
 This triggers MeeBot to:
 - Set sprite to "happy" 😊
-- Display feedback: "Metadata generator พร้อมแล้วครับ!"
-- Show purple milestone indicator 🟣
+- Display feedback: "MeeBot: อัปโหลดและบันทึก milestone สำเร็จ!"
+- Show yellow/gold milestone indicator 🟡
+- Track completion in milestone system
 
 ## 🔗 Related Files
 
