@@ -24,7 +24,9 @@
     "ipfs:test-metadata": "node copilot/implement-ipfs-uploader/test-metadata-generator.js",
     "ipfs:meebot-demo": "node copilot/implement-ipfs-uploader/meebot-milestone-example.js",
     "ipfs:upload-demo": "node copilot/implement-ipfs-uploader/index.js",
-    "verify:meebot": "node copilot/verifyMeeBotFlow.js"
+    "verify:meebot": "node copilot/verifyMeeBotFlow.js",
+    "i18n:demo": "node copilot/meebot-feedback/demo.js",
+    "i18n:integration": "node copilot/meebot-feedback/integration-example.js"
   },
   "keywords": [
     "meechain",

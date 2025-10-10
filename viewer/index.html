@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MeeChain Badge Viewer - i18n Ready</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .badge-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+    }
+
+    .badge-image-container {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0;
+    }
+
+    .badge-image {
+      max-width: 300px;
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .badge-image:hover {
+      transform: scale(1.05);
+    }
+
+    .badge-info {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      font-weight: bold;
+      color: #666;
+    }
+
+    .value {
+      color: #333;
+      text-align: right;
+      max-width: 60%;
+      word-wrap: break-word;
+    }
+
+    .language-switcher {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .language-switcher button {
+      padding: 12px 24px;
+      border: 2px solid #667eea;
+      background: white;
+      color: #667eea;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+
+    .language-switcher button:hover {
+      background: #667eea;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .language-switcher button.active {
+      background: #667eea;
+      color: white;
+    }
+
+    .meebot-sprite {
+      text-align: center;
+      font-size: 48px;
+      margin: 20px 0;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-size: 18px;
+    }
+
+    .loading::after {
+      content: '...';
+      animation: dots 1.5s steps(4, end) infinite;
+    }
+
+    @keyframes dots {
+      0%, 20% {
+        content: '.';
+      }
+      40% {
+        content: '..';
+      }
+      60%, 100% {
+        content: '...';
+      }
+    }
+
+    .error-message {
+      background: #fee;
+      border: 2px solid #fcc;
+      padding: 20px;
+      border-radius: 8px;
+      color: #c33;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .success-message {
+      background: #efe;
+      border: 2px solid #cfc;
+      padding: 20px;
+      border-radius: 8px;
+      color: #3c3;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      color: #999;
+      font-size: 14px;
+    }
+
+    footer a {
+      color: #667eea;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div id="badge-container">
+    <div class="badge-card">
+      <div class="meebot-sprite">🤖</div>
+      <h2 data-i18n="viewer_title">MeeChain Badge Viewer</h2>
+      <div class="loading" data-i18n="loading">Loading</div>
+    </div>
+  </div>
+
+  <script src="./viewer.js"></script>
+  <script>
+    // Initialize viewer when page loads
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        await initViewer();
+      } catch (error) {
+        console.error('Failed to initialize viewer:', error);
+        const container = document.getElementById('badge-container');
+        container.innerHTML = `
+          <div class="badge-card">
+            <div class="error-message">
+              <h2 data-i18n="error">Error</h2>
+              <p>${error.message || 'Failed to load viewer'}</p>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    // Add keyboard shortcut for language switching
+    document.addEventListener('keydown', (e) => {
+      if (e.altKey && e.key === 't') {
+        switchLanguage('th');
+      } else if (e.altKey && e.key === 'e') {
+        switchLanguage('en');
+      }
+    });
+  </script>
+
+  <footer>
+    <p>MeeChain MeeBot © 2025 | <a href="https://github.com/T1ADIPT4/MeeChain_MeeBot">GitHub</a></p>
+    <p>Keyboard shortcuts: Alt+T (ไทย) | Alt+E (English)</p>
+  </footer>
+</body>
+</html>

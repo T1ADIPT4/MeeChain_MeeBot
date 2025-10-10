@@ -1,0 +1,19 @@
+{
+  "milestone_complete": "Milestone completed",
+  "badge_uploaded": "Badge uploaded successfully",
+  "metadata_ready": "Metadata generated",
+  "fallback_message": "No milestone found",
+  "viewer_title": "MeeChain Badge Viewer",
+  "quest_id": "Quest ID",
+  "badge_id": "Badge ID",
+  "status": "Status",
+  "using_fallback": "🟠 Using Fallback Asset",
+  "system_ready": "System Ready",
+  "loading": "Loading...",
+  "error": "Error",
+  "no_badge_found": "No badge found",
+  "milestone_status": "Milestone Status",
+  "file_name": "File Name",
+  "file_size": "File Size",
+  "mime_type": "MIME Type"
+}
