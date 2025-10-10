@@ -43,7 +43,7 @@ export async function generateMetadata(options) {
       : `${config.ipfsGateway}/ipfs/${ipfsHash}`,
     
     // External URL
-    external_url: `https://meechain.io/badge/${questId || 'unknown'}`,
+    external_url: `${config.externalBaseUrl}/badge/${questId || 'unknown'}`,
     
     // File information
     file: {
