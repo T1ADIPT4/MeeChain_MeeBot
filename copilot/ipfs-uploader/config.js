@@ -31,6 +31,8 @@ const defaultConfig = {
   metadataStandard: 'ERC721',
   
   // Testing/simulation flags
+  // The following flags are for testing and simulation purposes only.
+  // Do NOT enable these in production environments as they may cause intentional failures.
   simulateIPFSFailure: process.env.SIMULATE_IPFS_FAILURE === 'true',
   simulateFallbackFailure: process.env.SIMULATE_FALLBACK_FAILURE === 'true',
 }
