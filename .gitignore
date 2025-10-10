@@ -48,3 +48,6 @@ logs-export-*.csv
 registry-provenance-*.json
 demo-logs.json
 demo-registry-provenance.json
+
+# Auto-generated metadata
+copilot/ipfs-uploader/metadata/
