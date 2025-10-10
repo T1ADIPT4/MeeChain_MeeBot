@@ -1,0 +1,26 @@
+{
+  "name": "meechain-interactive-viewer",
+  "version": "1.0.0",
+  "description": "Interactive React viewer for MeeChain Registry, Milestones, and Badges",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'Use a bundler like Vite or serve the standalone viewer/index.html'",
+    "build": "echo 'React components ready - use with Vite/CRA for production builds'",
+    "serve": "npx serve . -p 3000"
+  },
+  "keywords": [
+    "meechain",
+    "viewer",
+    "badge",
+    "milestone",
+    "registry",
+    "i18n"
+  ],
+  "author": "MeeChain Team",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}
