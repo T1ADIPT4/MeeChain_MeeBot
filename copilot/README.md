@@ -207,6 +207,23 @@ Progress tracked in `milestone.log` - triggers MeeBot sprite feedback automatica
 
 ## 🧪 Testing
 
+### Automated Verification
+
+Run the complete MeeBot flow verification:
+
+```bash
+npm run verify:meebot
+```
+
+This automated script checks:
+- 🟡 Milestone log completeness (M1-M5)
+- 🟣 Badge assets matching milestones
+- 🟢 Config with simulation/fallback mode
+- 🔵 Uploader integration with metadata generator
+- 🟠 Viewer and MeeBot integration
+
+**See [VERIFICATION_GUIDE.md](./VERIFICATION_GUIDE.md) for detailed documentation.**
+
 ### Manual Test
 
 ```bash
