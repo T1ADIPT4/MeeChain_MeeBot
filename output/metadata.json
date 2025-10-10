@@ -1,0 +1,36 @@
+{
+  "name": "Badge: milestone-5",
+  "description": "MeeBot badge for Milestone 5 completion",
+  "image": "/assets/fallback/milestone-5.svg",
+  "fallback_image": "fallback:///home/runner/work/MeeChain_MeeBot/MeeChain_MeeBot/copilot/assets/fallback/milestone-5.svg",
+  "attributes": [
+    {
+      "trait_type": "Milestone",
+      "value": "milestone-5"
+    },
+    {
+      "trait_type": "Uploader",
+      "value": "MeeChain"
+    },
+    {
+      "trait_type": "Network",
+      "value": "IPFS"
+    },
+    {
+      "trait_type": "Badge Type",
+      "value": "Milestone"
+    },
+    {
+      "trait_type": "Rarity",
+      "value": "Epic"
+    },
+    {
+      "trait_type": "Chain",
+      "value": "polygon"
+    },
+    {
+      "trait_type": "Quest",
+      "value": "M5"
+    }
+  ]
+}

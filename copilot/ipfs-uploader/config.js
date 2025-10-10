@@ -48,5 +48,8 @@ module.exports = {
   
   // Logging
   enableLogging: process.env.ENABLE_LOGGING !== 'false',
-  logLevel: process.env.LOG_LEVEL || 'info'
+  logLevel: process.env.LOG_LEVEL || 'info',
+  
+  // Simulation mode (skip actual IPFS upload for testing)
+  simulationMode: process.env.SIMULATION_MODE === 'true'
 }
