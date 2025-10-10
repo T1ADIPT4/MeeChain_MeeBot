@@ -26,7 +26,9 @@
     "ipfs:upload-demo": "node copilot/implement-ipfs-uploader/index.js",
     "verify:meebot": "node copilot/verifyMeeBotFlow.js",
     "i18n:demo": "node copilot/meebot-feedback/demo.js",
-    "i18n:integration": "node copilot/meebot-feedback/integration-example.js"
+    "i18n:integration": "node copilot/meebot-feedback/integration-example.js",
+    "viewer:serve": "cd viewer && python3 -m http.server 8080",
+    "viewer:open": "echo 'Open http://localhost:8080/demo-preview.html in your browser'"
   },
   "keywords": [
     "meechain",
