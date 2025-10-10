@@ -127,6 +127,8 @@ See [DEPLOY_AUTOMATION.md](DEPLOY_AUTOMATION.md) for complete documentation.
 - 🌿 [Branch Structure Guide](BRANCH_GUIDE.md) - Branch naming conventions and workflow
 - 🎯 [Milestone Guide](MILESTONE_GUIDE.md) - Milestone tracking with sprite feedback
 - 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
+- 🚀 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment and registry management
+- 📊 [Dashboard Integration](DASHBOARD_INTEGRATION.md) - Dashboard and Admin page integration
 
 - 🤖 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment system guide
       copilot/automate-deploy-registry-json
@@ -220,6 +222,8 @@ MeeChain_MeeBot/
 ├── examples/
 │   ├── settings-support-demo.ts # Settings/Support demo
 │   ├── deploy-registry-demo.ts  # Deploy registry demo
+│   ├── deploy-automation-demo.ts # Deploy automation demo
+│   └── dashboard-integration-demo.ts  # Dashboard demo
 │   ├── dashboard-integration-demo.ts  # Dashboard demo
 │   └── milestone-integration-demo.ts  # Milestone tracking demo
 ├── BRANCH_GUIDE.md              # Branch structure guide
@@ -227,6 +231,7 @@ MeeChain_MeeBot/
 ├── milestone.log.example        # Milestone log format example
 ├── QUEST_SYSTEM.md              # Quest system documentation
 ├── DEPLOY_REGISTRY.md           # Deploy registry documentation
+├── DEPLOY_AUTOMATION.md         # Deploy automation documentation
 ├── DASHBOARD_INTEGRATION.md     # Dashboard integration documentation
 ├── INTEGRATION.md               # Integration guide
 ├── ARCHITECTURE.md              # Architecture diagrams

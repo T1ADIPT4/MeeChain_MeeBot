@@ -1,5 +1,15 @@
 /**
  * Contract Deployment Utilities for MeeChain
+ * Helper functions for deploying contracts to multiple networks
+ */
+
+import { deployContract, updateRegistryFile } from '../deploy.js'
+import type { SupportedNetwork } from '../../src/config/registryTypes.js'
+
+export interface DeploymentResult {
+  contractType: string
+  network: string
+  address: string
  * Simulates contract deployment across multiple blockchain networks
  */
 
