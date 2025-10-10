@@ -1,209 +1,163 @@
-# MeeChain_MeeBot
+# MeeChain MeeBot Viewer & IPFS Integration
 
-MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบบมาเพื่อสร้างประสบการณ์ที่สนุกและปลอดภัยผ่านระบบ NFT, Quest, และ MeeBot ที่มีอารมณ์ตอบสนองแบบเรียลไทม์
+ระบบนี้เชื่อมต่อ MeeBot กับ IPFS เพื่อจัดการ badge, metadata, และ milestone อย่างปลอดภัย พร้อม viewer ที่รองรับหลายภาษา (ไทย/อังกฤษ)
 
 ## 🔧 Features
+- อัปโหลด badge ไปยัง IPFS พร้อม fallback-aware CID
+- สร้าง metadata สำหรับ NFT badge (ERC-721 compliant)
+- บันทึก milestone ใน `milestone.log` เพื่อ trigger MeeBot feedback
+- Viewer แบบ interactive รองรับภาษาไทย–อังกฤษ
+- Deploy viewer ผ่าน Firebase Hosting หรือ GitHub Pages
 
-- ✅ **Automated Deploy-Registry System** - Multi-chain contract deployment automation
-- ✅ Fallback-aware multi-chain minting
-- 🌐 Multi-chain contract registry (Ethereum, Polygon, Arbitrum)
-- 🤖 MeeBot sprite + TTS feedback
-- 🏆 Quest tracker & badge system
-- 🎨 NFT Football & Productivity collections
-- 🛡️ Admin panel for contract authorization
-- 📊 Dashboard with badge provenance & fallback logs
-- ⚙️ Settings page with modular toggles
-=======
-- 📊 **Dashboard** - View badges, networks, and fallback logs
-- ⚙️ **Admin Panel** - Contract management and log export
-- 🛡️ Settings page with modular toggles
-- 🆘
-- 📤 **Log Export** - JSON/CSV export with provenance
-- 
-## 📦 Tech Stack
-
-- React + TypeScript
-- Smart Contracts (Solidity)
-- Replit + GitHub
-- TailwindCSS
-- Firebase (optional)
-- Gemini TTS API
+## 📁 Key Files
+- `copilot/implement-ipfs-uploader/index.js` – สคริปต์อัปโหลด badge
+- `copilot/implement-ipfs-uploader/metadata-generator.js` – สร้าง metadata
+- `viewer/index.html` – Viewer หน้าหลัก
+- `viewer/viewer.js` – Logic การแสดงผลและ i18n
+- `milestone.log`, `registry.json`, `metadata/*.json` – ข้อมูลหลักของระบบ
 
 ## 🚀 Getting Started
-
 ```bash
-git clone https://github.com/TLADPT14/MeeChain_MeeBot.git
-cd MeeChain_MeeBot
 npm install
+npm run ipfs:generate-metadata
+npm run verify:meebot
 npm run dev
 ```
 
-## 🎯 Quest System
+## 🌐 Language Support
+- ภาษาไทย: `viewer/i18n/th.json`
+- ภาษาอังกฤษ: `viewer/i18n/en.json`
+- สลับภาษาได้ผ่าน `LanguageToggle` ใน viewer
 
-The MeeChain Quest System is a production-ready, fallback-aware quest verification and badge minting system featuring:
+## 🟢 Milestone ล่าสุด
+- ✅ M5: Viewer & MeeBot integration complete
+- ✅ M4: Integration test complete  
+- ✅ M3: Fallback validation complete
+- ✅ M2: Metadata generator ready
+- ✅ M1: Uploader scaffolded
 
-- **Modular Architecture**: Separated verification, minting, and logging
-- **Automatic Fallback**: Switches to backup chain if primary minting fails
-- **Full Auditability**: Comprehensive event logging for all operations
-- **Type-Safe**: Complete TypeScript implementation
+## 📊 Commands & Tools
 
-### Quick Start
-
+### IPFS & Metadata
 ```bash
-# Build the project
-npm run build
-
-# Run examples
-npm run example
-
-# Run demos
-npm run demo:settings              # Settings/Support demo
-npm run demo:deploy-registry       # Deploy Registry demo
-npm run demo:deploy-automation     # Automated deployment demo
-
-# Deploy contracts (automated)
-npm run deploy <network>           # Deploy to specific network
-npm run validate-registry          # Validate registry integrity
-
-# Run tests (47 comprehensive tests)
-copilot/automate-deploy-registry-json
-npm test
+npm run ipfs:generate-metadata   # สร้าง metadata สำหรับ badges
+npm run ipfs:upload-demo         # ทดสอบการอัปโหลด IPFS
+npm run ipfs:meebot-demo         # ทดสอบ MeeBot milestone integration
 ```
 
-### 🚀 Automated Deploy-Registry System
-
-The new automated system manages contract deployments across multiple chains:
-
+### Verification
 ```bash
-# Deploy contracts to a network
-npm run deploy arbitrum
-
-# Validate the registry
-npm run validate-registry
-
-# Export logs with provenance
-npm run export-logs
-
-# Run the automation demo
-npm run demo:deploy-automation
+npm run verify:meebot            # ตรวจสอบระบบ MeeBot ทั้งหมด (41 checks)
 ```
 
-**Features:**
-- 🔄 Automatic registry updates after deployment
-- ✅ Built-in validation system
-- 💾 Automatic backups before changes
-- 📤 Export logs to JSON/CSV
-- 📊 Dashboard integration
-- ⚙️ Admin panel for management
+### i18n & Viewer
+```bash
+npm run i18n:demo                # ทดสอบระบบหลายภาษา
+npm run dev                      # รันโหมด development
+```
 
-See [DEPLOY_AUTOMATION.md](DEPLOY_AUTOMATION.md) for complete documentation.
+### Quest System
+```bash
+npm run build                    # Build TypeScript
+npm run test                     # รัน test suite (46 tests)
+npm run example                  # รัน quest system examples
+```
 
-### Documentation
+### Deploy & Registry
+```bash
+npm run deploy:badge             # Deploy badge contract
+npm run registry:validate        # ตรวจสอบ registry integrity
+npm run demo:deploy-registry     # ทดสอบ deploy registry system
+```
 
-- 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
-- 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
+## 📚 Documentation
 
-- 🤖 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment system guide
-      copilot/automate-deploy-registry-json
-- 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
-- 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
-- ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
-- ✅ [Implementation Summary](IMPLEMENTATION_COMPLETE.md) - Complete implementation metrics
+### สำหรับผู้ใช้ทั่วไป
+- [VERIFICATION_GUIDE.md](copilot/VERIFICATION_GUIDE.md) - คู่มือการตรวจสอบระบบ
+- [Viewer README](viewer/README.md) - คู่มือการใช้งาน Viewer
+- [IPFS Uploader](copilot/README.md) - คู่มือการอัปโหลด badge
 
-### Example Usage
+### สำหรับนักพัฒนา
+- [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) - สรุปการพัฒนาเชิงเทคนิค
+- [QUEST_SYSTEM.md](QUEST_SYSTEM.md) - API reference ของ quest system
+- [INTEGRATION.md](INTEGRATION.md) - คู่มือการ integrate กับระบบอื่น
+- [ARCHITECTURE.md](ARCHITECTURE.md) - สถาปัตยกรรมระบบ
 
-```typescript
-import { handleQuestCompletion } from './src/QuestManager'
-import { updateUserProgress } from './src/verifiers/questVerifier'
+## 🎯 Quick Examples
 
-// Update user progress
-updateUserProgress('user-001', 'quest-001', 'login', 1)
-updateUserProgress('user-001', 'quest-001', 'profile-setup', 1)
+### สร้าง Metadata สำหรับ Badge
+```bash
+npm run ipfs:generate-metadata
+```
 
-// Complete quest with automatic fallback
-const result = await handleQuestCompletion('user-001', 'quest-001')
+### ตรวจสอบความครบถ้วนของระบบ
+```bash
+npm run verify:meebot
+```
+Expected output: `40/41 checks passed (98%)`
 
-if (result.success) {
-  if (result.fallback) {
-    console.log('✅ Badge minted via fallback chain')
-  } else {
-    console.log('✅ Badge minted successfully')
-  }
-  console.log(`Transaction: ${result.tx?.txHash}`)
-}
+### ดู Viewer แบบ local
+```bash
+cd viewer
+# เปิด index.html ใน browser หรือใช้ local server
+python -m http.server 8000
+# จากนั้นเปิด http://localhost:8000
+```
+
+## 🤖 MeeBot Integration
+
+MeeBot จะแสดง sprite feedback ตาม milestone:
+- 🟢 M1: "Uploader scaffolded!"
+- 🟣 M2: "Metadata ready!"
+- 🔵 M3: "Fallback validated!"
+- 🟠 M4: "Uploader tested!"
+- 🟡 M5: "Uploader live!"
+
+ดูตัวอย่างการใช้งาน:
+```bash
+npm run ipfs:meebot-demo
 ```
 
 ## 🧪 Testing
 
-All 46 tests passing with 100% success rate:
-- ✅ Quest verification
-- ✅ Primary chain minting
-- ✅ Automatic fallback
-- ✅ Error handling
-- ✅ Progress tracking
-- ✅ Event logging
+รัน tests ทั้งหมด:
+```bash
+npm test
+```
+
+Test categories:
+- ✅ Quest verification (10 tests)
 - ✅ TTS quest system (14 tests)
 - ✅ Deploy registry (9 tests)
 - ✅ Dashboard utilities (13 tests)
+- **Total**: 46 tests, 100% passing
 
-## 📁 Project Structure
+## 🛡️ Fallback Strategy
 
-```
-MeeChain_MeeBot/
-├── config/
-│   └── deploy-registry.json     # Multi-chain contract addresses
-├── src/
-│   ├── QuestManager.ts          # Main orchestrator
-│   ├── config/
-│   │   ├── registryTypes.ts     # Deploy registry types
-│   │   └── registryLoader.ts    # Registry loader utilities
-│   ├── verifiers/
-│   │   └── questVerifier.ts     # Quest condition verification
-│   ├── minting/
-│   │   └── badgeMinter.ts       # Badge minting with fallback
-│   ├── utils/
-│   │   └── logger.ts            # Event logging system
-│   ├── example.ts               # Usage examples
-│   └── test.ts                  # Test suite
-├── tests/
-│   ├── ttsQuest.test.ts         # TTS quest tests
-│   └── deployRegistry.test.ts   # Deploy registry tests
-├── pages/
-│   ├── Settings.tsx             # Settings page
-│   ├── Support.tsx              # Support/FAQ page
-│   ├── dashboard.tsx            # Dashboard page (badges & logs)
-│   └── admin.tsx                # Admin override page
-├── components/
-│   ├── MeeBot.tsx               # MeeBot sprite/TTS stub
-│   ├── SettingToggle.tsx        # Toggle component
-│   ├── BadgeList.tsx            # Badge list with provenance
-│   └── FallbackLog.tsx          # Fallback log display
-├── hooks/
-│   ├── useSettings.ts           # Settings hook
-│   └── useFAQ.ts               # FAQ hook
-├── utils/
-│   ├── settingsLoader.ts        # Fallback-aware settings loader
-│   ├── fallbackFAQ.ts           # Fallback-aware FAQ loader
-│   ├── registry.ts              # Registry utility for UI
-│   └── mockData.ts              # Mock data utilities
-├── examples/
-│   ├── settings-support-demo.ts # Settings/Support demo
-│   ├── deploy-registry-demo.ts  # Deploy registry demo
-│   └── dashboard-integration-demo.ts  # Dashboard demo
-├── QUEST_SYSTEM.md              # Quest system documentation
-├── DEPLOY_REGISTRY.md           # Deploy registry documentation
-├── DASHBOARD_INTEGRATION.md     # Dashboard integration documentation
-├── INTEGRATION.md               # Integration guide
-├── ARCHITECTURE.md              # Architecture diagrams
-├── SETTINGS_SUPPORT.md          # Settings/Support documentation
-└── package.json
-```
+ระบบรองรับ fallback หลายระดับ:
+1. **IPFS Upload**: ลองหลาย endpoints (Infura → Pinata → ipfs.io → dweb.link)
+2. **Asset Loading**: ใช้ `badge-placeholder.svg` เมื่อไม่พบ badge ที่ระบุ
+3. **Metadata**: สร้าง fallback metadata พร้อม local path
+4. **Chain Minting**: สลับจาก primary chain → fallback chain อัตโนมัติ
+
+## 📦 Tech Stack
+
+- **Frontend**: React + TypeScript
+- **Blockchain**: Solidity contracts, ethers.js
+- **Storage**: IPFS (Infura/Pinata), Firebase (optional)
+- **i18n**: JSON-based translation files
+- **MeeBot**: Sprite system + TTS (Gemini API)
+- **Testing**: Jest + ts-jest
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read our contributing guidelines before submitting PRs.
+Contributions are welcome! กรุณา:
+1. อ่านคู่มือใน `VERIFICATION_GUIDE.md` ก่อน
+2. รัน `npm run verify:meebot` เพื่อตรวจสอบ
+3. รัน tests ด้วย `npm test` ให้ผ่านทั้งหมด
+4. Submit PR พร้อมคำอธิบายที่ชัดเจน
 
 ## 📄 License
 
-MIT
+MIT - Part of MeeChain MeeBot project
 
