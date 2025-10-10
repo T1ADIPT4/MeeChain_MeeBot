@@ -63,6 +63,31 @@ class MeeBotClass {
       this.speak('ปิด TTS แล้วครับ')
     }
   }
+
+  /**
+   * Provide sprite feedback for milestone completion
+   * @param milestoneId - The milestone ID (M1, M2, M3, M4, M5)
+   * @param message - Optional custom message
+   */
+  milestoneFeedback(milestoneId: string, message?: string): void {
+    const milestoneConfig: Record<string, { sprite: string; defaultMessage: string }> = {
+      'M1': { sprite: 'happy', defaultMessage: 'Deploy dashboard online!' },
+      'M2': { sprite: 'excited', defaultMessage: 'Minting pipeline ready!' },
+      'M3': { sprite: 'proud', defaultMessage: 'Milestone linked!' },
+      'M4': { sprite: 'confident', defaultMessage: 'Fallback validated!' },
+      'M5': { sprite: 'celebration', defaultMessage: 'Production ready!' }
+    }
+
+    const config = milestoneConfig[milestoneId]
+    if (config) {
+      this.setSprite(config.sprite)
+      this.speak(message || config.defaultMessage)
+    } else {
+      console.warn(`Unknown milestone ID: ${milestoneId}`)
+      this.setSprite('neutral')
+      this.speak(message || 'Milestone completed!')
+    }
+  }
 }
 
 export const MeeBot = new MeeBotClass()

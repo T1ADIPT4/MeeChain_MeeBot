@@ -40,6 +40,25 @@ The MeeChain Quest System is a production-ready, fallback-aware quest verificati
 - **Automatic Fallback**: Switches to backup chain if primary minting fails
 - **Full Auditability**: Comprehensive event logging for all operations
 - **Type-Safe**: Complete TypeScript implementation
+- **Milestone Tracking**: Built-in progress tracking with MeeBot sprite feedback
+
+### Branch Structure & Milestones
+
+Follow our structured development workflow:
+- 📖 [Branch Structure Guide](BRANCH_GUIDE.md) - Branch naming conventions and best practices
+- 🎯 [Milestone Guide](MILESTONE_GUIDE.md) - 5-milestone development roadmap with sprite feedback
+
+**Quick Start:**
+```bash
+# Create a feature branch
+git checkout -b feature/my-new-feature
+
+# Work on milestone M1
+git commit -m "M1: Add deploy dashboard with fallback viewer"
+
+# Track milestone completion
+echo "🟢 M1 complete: Deploy dashboard online!" >> milestone.log
+```
 
 ### Quick Start
 
@@ -59,6 +78,9 @@ npm run demo:deploy-registry
 # Run Dashboard Integration demo
 npm run demo:dashboard
 
+# Run Milestone Integration demo
+npm run demo:milestone
+
 # Run tests (46 comprehensive tests)
 npm test
 ```
@@ -66,6 +88,8 @@ npm test
 ### Documentation
 
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
+- 🌿 [Branch Structure Guide](BRANCH_GUIDE.md) - Branch naming conventions and workflow
+- 🎯 [Milestone Guide](MILESTONE_GUIDE.md) - Milestone tracking with sprite feedback
 - 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
 - 📊 [Dashboard Integration](DASHBOARD_INTEGRATION.md) - Dashboard and Admin page integration
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
@@ -97,7 +121,7 @@ if (result.success) {
 
 ## 🧪 Testing
 
-All 46 tests passing with 100% success rate:
+All 91 tests passing with 100% success rate:
 - ✅ Quest verification
 - ✅ Primary chain minting
 - ✅ Automatic fallback
@@ -107,6 +131,7 @@ All 46 tests passing with 100% success rate:
 - ✅ TTS quest system (14 tests)
 - ✅ Deploy registry (9 tests)
 - ✅ Dashboard utilities (13 tests)
+- ✅ Milestone tracking (25 tests)
 
 ## 📁 Project Structure
 
@@ -129,7 +154,11 @@ MeeChain_MeeBot/
 │   └── test.ts                  # Test suite
 ├── tests/
 │   ├── ttsQuest.test.ts         # TTS quest tests
-│   └── deployRegistry.test.ts   # Deploy registry tests
+│   ├── deployRegistry.test.ts   # Deploy registry tests
+│   ├── milestone.test.ts        # Milestone tracking tests
+│   ├── mockData.test.ts         # Mock data tests
+│   ├── registry.test.ts         # Registry tests
+│   └── autoDeployScripts.test.ts # Deploy automation tests
 ├── pages/
 │   ├── Settings.tsx             # Settings page
 │   ├── Support.tsx              # Support/FAQ page
@@ -147,11 +176,16 @@ MeeChain_MeeBot/
 │   ├── settingsLoader.ts        # Fallback-aware settings loader
 │   ├── fallbackFAQ.ts           # Fallback-aware FAQ loader
 │   ├── registry.ts              # Registry utility for UI
-│   └── mockData.ts              # Mock data utilities
+│   ├── mockData.ts              # Mock data utilities
+│   └── milestoneReader.ts       # Milestone log reader
 ├── examples/
 │   ├── settings-support-demo.ts # Settings/Support demo
 │   ├── deploy-registry-demo.ts  # Deploy registry demo
-│   └── dashboard-integration-demo.ts  # Dashboard demo
+│   ├── dashboard-integration-demo.ts  # Dashboard demo
+│   └── milestone-integration-demo.ts  # Milestone tracking demo
+├── BRANCH_GUIDE.md              # Branch structure guide
+├── MILESTONE_GUIDE.md           # Milestone tracking guide
+├── milestone.log.example        # Milestone log format example
 ├── QUEST_SYSTEM.md              # Quest system documentation
 ├── DEPLOY_REGISTRY.md           # Deploy registry documentation
 ├── DASHBOARD_INTEGRATION.md     # Dashboard integration documentation

@@ -1,0 +1,83 @@
+# Milestone Log Example
+
+This file shows the expected format for `milestone.log` entries.
+
+## Format
+```
+[color emoji] [milestone ID] complete: [message]
+```
+
+## Example Entries
+```
+🟢 M1 complete: Deploy dashboard online!
+🟣 M2 complete: Minting pipeline ready!
+🟠 M3 complete: Milestone linked!
+🔵 M4 complete: Fallback validated!
+🟡 M5 complete: Production ready!
+```
+
+## Color Mapping
+- 🟢 (Green) = M1: Deploy Dashboard
+- 🟣 (Purple) = M2: Minting Pipeline
+- 🟠 (Orange) = M3: Sprite Integration
+- 🔵 (Blue) = M4: Fallback Validation
+- 🟡 (Yellow) = M5: Production Release
+
+## Usage
+
+### Manual Entry
+```bash
+echo "🟢 M1 complete: Deploy dashboard online!" >> milestone.log
+```
+
+### Using the Utility
+```typescript
+import { appendToMilestoneLog } from './utils/milestoneReader'
+
+appendToMilestoneLog('M1', 'Deploy dashboard online!')
+```
+
+### From Git Commits
+When you commit with milestone markers like `M1:`, `M2:`, etc., the system can automatically detect and log them:
+
+```bash
+git commit -m "M1: Add deploy dashboard with fallback viewer"
+```
+
+## Reading Milestones
+
+```typescript
+import { 
+  readMilestoneLog,
+  getLatestMilestone,
+  getMilestoneProgress 
+} from './utils/milestoneReader'
+
+// Get all entries
+const logs = readMilestoneLog()
+
+// Get latest
+const latest = getLatestMilestone()
+
+// Get progress
+const progress = getMilestoneProgress()
+console.log(`${progress.completed}/${progress.total} completed`)
+```
+
+## MeeBot Integration
+
+Each milestone triggers a specific MeeBot sprite:
+
+```typescript
+import { MeeBot } from './components/MeeBot'
+
+MeeBot.milestoneFeedback('M1')  // Shows happy sprite
+MeeBot.milestoneFeedback('M2')  // Shows excited sprite
+MeeBot.milestoneFeedback('M3')  // Shows proud sprite
+MeeBot.milestoneFeedback('M4')  // Shows confident sprite
+MeeBot.milestoneFeedback('M5')  // Shows celebration sprite
+```
+
+---
+
+**Note:** The actual `milestone.log` file is gitignored and should not be committed to the repository.
