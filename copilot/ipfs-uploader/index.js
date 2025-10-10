@@ -12,6 +12,28 @@ const { generateBadgeMetadata, generateFallbackMetadata } = require('./metadata-
 const { getFallbackAssetPath, hasFallbackAsset } = require('./fallback-viewer')
 
 /**
+ * Log milestone completion to milestone.log
+ * @param {string} milestoneId - Milestone identifier (e.g., 'M5')
+ * @param {string} message - Milestone completion message
+ */
+function logMilestone(milestoneId, message) {
+  const logPath = path.join(__dirname, '..', 'milestone.log')
+  const logEntry = `\n${milestoneId}: ${message}`
+  
+  try {
+    fs.appendFileSync(logPath, logEntry)
+    
+    if (config.enableLogging) {
+      console.log(`📝 [Milestone Logged] ${milestoneId}: ${message}`)
+    }
+  } catch (error) {
+    if (config.enableLogging) {
+      console.error(`❌ [Milestone Log Error] ${error.message}`)
+    }
+  }
+}
+
+/**
  * Mock IPFS upload function (replace with actual IPFS client in production)
  * @param {Buffer} fileData - File data to upload
  * @param {Object} options - Upload options
@@ -273,6 +295,15 @@ async function uploadBadge(badgeOptions) {
   // Upload metadata
   const metadataUpload = await uploadMetadata(metadata, { questId })
   
+  // Log milestone completion
+  if (metadataUpload.success) {
+    logMilestone(badgeId || questId, `Badge uploaded and metadata created successfully`)
+    
+    if (config.enableLogging) {
+      console.log(`✅ MeeBot: Badge upload complete for ${questId}!`)
+    }
+  }
+  
   return {
     success: true,
     isFallback: false,
@@ -319,5 +350,6 @@ module.exports = {
   uploadMetadata,
   uploadBadge,
   uploadBadges,
+  logMilestone,
   config
 }
