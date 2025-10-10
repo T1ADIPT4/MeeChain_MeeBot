@@ -1,0 +1,19 @@
+{
+  "milestone_complete": "คุณผ่าน milestone แล้ว",
+  "badge_uploaded": "อัปโหลด badge สำเร็จ",
+  "metadata_ready": "สร้าง metadata สำเร็จ",
+  "fallback_message": "ยังไม่มี milestone ที่บันทึก",
+  "viewer_title": "MeeChain Badge Viewer",
+  "quest_id": "รหัสเควส",
+  "badge_id": "รหัส Badge",
+  "status": "สถานะ",
+  "using_fallback": "🟠 ใช้ระบบ Fallback",
+  "system_ready": "ระบบพร้อมใช้งาน",
+  "loading": "กำลังโหลด...",
+  "error": "เกิดข้อผิดพลาด",
+  "no_badge_found": "ไม่พบ badge",
+  "milestone_status": "สถานะ Milestone",
+  "file_name": "ชื่อไฟล์",
+  "file_size": "ขนาดไฟล์",
+  "mime_type": "ประเภทไฟล์"
+}

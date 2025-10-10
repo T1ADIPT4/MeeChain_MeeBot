@@ -31,7 +31,8 @@ const results = {
   badgeAssets: [],
   config: [],
   uploader: [],
-  viewer: []
+  viewer: [],
+  i18n: []
 };
 
 /**
@@ -318,6 +319,113 @@ function verifyViewer() {
 }
 
 /**
+ * 🌍 6. i18n Dictionary & Viewer Verification
+ */
+function verifyI18n() {
+  printHeader('6. i18n Dictionary & Viewer System Verification', '🌍');
+  
+  // Check MeeBot dictionary files
+  const thDictPath = path.join(__dirname, 'meebot-feedback', 'th.js');
+  const enDictPath = path.join(__dirname, 'meebot-feedback', 'en.js');
+  
+  const thDictExists = fileExists(thDictPath);
+  printCheck(thDictExists, 'Thai dictionary (th.js) exists');
+  results.i18n.push({ check: 'Thai dictionary', passed: thDictExists });
+  
+  const enDictExists = fileExists(enDictPath);
+  printCheck(enDictExists, 'English dictionary (en.js) exists');
+  results.i18n.push({ check: 'English dictionary', passed: enDictExists });
+  
+  // Check dictionary content
+  if (thDictExists && enDictExists) {
+    const thContent = readFile(thDictPath);
+    const enContent = readFile(enDictPath);
+    
+    // Check for milestone keys
+    const milestones = ['M1', 'M2', 'M3', 'M4', 'M5', 'M6'];
+    const thHasMilestones = milestones.every(m => thContent.includes(`${m}:`));
+    const enHasMilestones = milestones.every(m => enContent.includes(`${m}:`));
+    
+    printCheck(thHasMilestones, 'Thai dictionary has all milestone keys');
+    results.i18n.push({ check: 'Thai milestone keys', passed: thHasMilestones });
+    
+    printCheck(enHasMilestones, 'English dictionary has all milestone keys');
+    results.i18n.push({ check: 'English milestone keys', passed: enHasMilestones });
+    
+    // Check for fallback message
+    const thHasFallback = thContent.includes('fallback:');
+    const enHasFallback = enContent.includes('fallback:');
+    
+    printCheck(thHasFallback, 'Thai dictionary has fallback message');
+    results.i18n.push({ check: 'Thai fallback', passed: thHasFallback });
+    
+    printCheck(enHasFallback, 'English dictionary has fallback message');
+    results.i18n.push({ check: 'English fallback', passed: enHasFallback });
+  }
+  
+  // Check viewer i18n files
+  const viewerThPath = path.join(__dirname, '..', 'viewer', 'i18n', 'th.json');
+  const viewerEnPath = path.join(__dirname, '..', 'viewer', 'i18n', 'en.json');
+  
+  const viewerThExists = fileExists(viewerThPath);
+  printCheck(viewerThExists, 'Viewer Thai translations (th.json) exist');
+  results.i18n.push({ check: 'Viewer Thai i18n', passed: viewerThExists });
+  
+  const viewerEnExists = fileExists(viewerEnPath);
+  printCheck(viewerEnExists, 'Viewer English translations (en.json) exist');
+  results.i18n.push({ check: 'Viewer English i18n', passed: viewerEnExists });
+  
+  // Check viewer.js for i18n support
+  const viewerJsPath = path.join(__dirname, '..', 'viewer', 'viewer.js');
+  const viewerJsExists = fileExists(viewerJsPath);
+  printCheck(viewerJsExists, 'viewer.js exists');
+  results.i18n.push({ check: 'viewer.js', passed: viewerJsExists });
+  
+  if (viewerJsExists) {
+    const viewerJsContent = readFile(viewerJsPath);
+    
+    const hasLoadI18n = viewerJsContent.includes('loadI18n');
+    printCheck(hasLoadI18n, 'viewer.js has loadI18n function');
+    results.i18n.push({ check: 'loadI18n function', passed: hasLoadI18n });
+    
+    const hasSwitchLanguage = viewerJsContent.includes('switchLanguage');
+    printCheck(hasSwitchLanguage, 'viewer.js has switchLanguage function');
+    results.i18n.push({ check: 'switchLanguage function', passed: hasSwitchLanguage });
+    
+    const hasTranslateFunc = viewerJsContent.includes('function t(');
+    printCheck(hasTranslateFunc, 'viewer.js has translation function');
+    results.i18n.push({ check: 'Translation function', passed: hasTranslateFunc });
+  }
+  
+  // Check viewer index.html
+  const viewerHtmlPath = path.join(__dirname, '..', 'viewer', 'index.html');
+  const viewerHtmlExists = fileExists(viewerHtmlPath);
+  printCheck(viewerHtmlExists, 'viewer index.html exists');
+  results.i18n.push({ check: 'index.html', passed: viewerHtmlExists });
+  
+  if (viewerHtmlExists) {
+    const htmlContent = readFile(viewerHtmlPath);
+    
+    const hasLangSwitcher = htmlContent.includes('language-switcher') || 
+                           htmlContent.includes('switchLanguage');
+    printCheck(hasLangSwitcher, 'index.html has language switcher');
+    results.i18n.push({ check: 'Language switcher', passed: hasLangSwitcher });
+  }
+  
+  // Check demo scripts
+  const demoPath = path.join(__dirname, 'meebot-feedback', 'demo.js');
+  const integrationPath = path.join(__dirname, 'meebot-feedback', 'integration-example.js');
+  
+  const demoExists = fileExists(demoPath);
+  printCheck(demoExists, 'Dictionary demo script exists');
+  results.i18n.push({ check: 'Demo script', passed: demoExists });
+  
+  const integrationExists = fileExists(integrationPath);
+  printCheck(integrationExists, 'Integration example script exists');
+  results.i18n.push({ check: 'Integration example', passed: integrationExists });
+}
+
+/**
  * Print summary
  */
 function printSummary() {
@@ -328,7 +436,8 @@ function printSummary() {
     { name: '🟣 Badge Assets', results: results.badgeAssets },
     { name: '🟢 Config & Simulation', results: results.config },
     { name: '🔵 Uploader & Metadata', results: results.uploader },
-    { name: '🟠 Viewer & MeeBot', results: results.viewer }
+    { name: '🟠 Viewer & MeeBot', results: results.viewer },
+    { name: '🌍 i18n Dictionary & Viewer', results: results.i18n }
   ];
   
   let totalPassed = 0;
@@ -379,6 +488,7 @@ function main() {
   verifyConfig();
   verifyUploader();
   verifyViewer();
+  verifyI18n();
   printSummary();
 }
 
