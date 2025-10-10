@@ -15,6 +15,7 @@
     "demo:deploy-registry": "npm run build && node dist/examples/deploy-registry-demo.js",
     "demo:dashboard": "npm run build && node dist/examples/dashboard-integration-demo.js",
     "demo:auto-deploy": "npm run build && node dist/examples/auto-deploy-workflow-demo.js",
+    "demo:meebot-sprite": "node examples/meebot-sprite-demo.js",
     "deploy:badge": "node --loader ts-node/esm scripts/deploy.ts Badge",
     "deploy:quest": "node --loader ts-node/esm scripts/deploy.ts Quest",
     "deploy:fallback": "node --loader ts-node/esm scripts/deploy.ts Fallback",
