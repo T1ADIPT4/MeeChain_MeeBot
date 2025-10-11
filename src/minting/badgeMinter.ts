@@ -1,6 +1,6 @@
 /**
  * Badge Minter for MeeChain
- * Handles badge minting with fallback mechanism for resilience
+ * HandlSumเช็คmarye minting with fallback mechanism for resilience
  */
 
 import { logEvent } from '../utils/logger.js'
