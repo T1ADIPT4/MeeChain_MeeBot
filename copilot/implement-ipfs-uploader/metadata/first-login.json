@@ -1,0 +1,16 @@
+{
+  "name": "Badge: first-login",
+  "description": "NFT badge for first-login",
+  "image": "ipfs://first-login-hash",
+  "fallback_image": "./assets/fallback/first-login.png",
+  "attributes": [
+    {
+      "trait_type": "Milestone",
+      "value": "first-login"
+    },
+    {
+      "trait_type": "Uploader",
+      "value": "MeeChain"
+    }
+  ]
+}

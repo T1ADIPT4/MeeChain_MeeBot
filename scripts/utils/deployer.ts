@@ -29,7 +29,7 @@ export async function deployContract(
   await new Promise((resolve) => setTimeout(resolve, 500))
   
   // Generate a mock contract address (in production, this would be from actual deployment)
-  const address = generateContractAddress(contractType, network)
+  const address = generateContractAddress()
   const txHash = `0x${Math.random().toString(16).substring(2, 66)}`
   
   const result: DeploymentResult = {
@@ -50,11 +50,12 @@ export async function deployContract(
  * Generate a mock contract address (for demonstration purposes)
  * In production, this would come from actual blockchain deployment
  */
-function generateContractAddress(contractType: string, network: string): string {
-  const prefix = contractType.substring(0, 3)
-  const networkPrefix = network.substring(0, 3).charAt(0).toUpperCase() + network.substring(1, 3)
-  const random = Math.random().toString(16).substring(2, 10) // Shortened to fit 42 chars
-  return `0x${prefix}${networkPrefix}${random}`.substring(0, 42).padEnd(42, '0')
+function generateContractAddress(): string {
+  let address = '0x'
+  for (let i = 0; i < 40; i++) {
+    address += Math.floor(Math.random() * 16).toString(16)
+  }
+  return address
 }
 
 /**
@@ -73,7 +74,7 @@ export async function verifyContract(
   await new Promise((resolve) => setTimeout(resolve, 200))
   
   // Basic validation: check if address looks valid
-  const isValid = address.startsWith('0x') && address.length === 42
+  const isValid = /^0x[a-fA-F0-9]{40}$/.test(address)
   
   if (isValid) {
     console.log(`✅ Contract verified successfully`)

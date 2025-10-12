@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"workbench.editor.alwaysShowEditorActions": true,
+		"workbench.editor.autoLockGroups": {
+			"workbench.editors.gettingStartedInput": true
+		},
+		"workbench.editor.centeredLayoutFixedWidth": true,
+		"workbench.editor.enablePreviewFromCodeNavigation": true,
+		"workbench.editor.enablePreviewFromQuickOpen": true
+	}
+}

@@ -3,25 +3,25 @@
  * Demonstrates the full automated deployment and registry update workflow
  */
 
-import { deploy, deployContract } from '../scripts/deploy.js'
-import { updateRegistry, batchUpdateRegistry } from '../scripts/updateRegistry.js'
+import { deployContract } from '../scripts/deploy.js'
+import { updateRegistry } from '../scripts/updateRegistry.js'
 import { validateRegistry } from '../scripts/validateRegistry.js'
-import { loadRegistry, getNetworkConfig, clearRegistryCache } from '../src/config/registryLoader.js'
+import { loadRegistry, getNetworkConfig } from '../src/config/registryLoader.js'
 import { mintBadge } from '../src/minting/badgeMinter.js'
 
 async function main() {
   console.log('🎯 Automated Deploy Registry Workflow Demo\n')
-  console.log('=' .repeat(60))
+  console.log('='.repeat(60))
   
   // Step 1: Validate current registry
   console.log('\n📋 Step 1: Validate Current Registry')
   console.log('-'.repeat(60))
   const initialValidation = validateRegistry()
-  console.log(`Networks: ${initialValidation.networks.join(', ')}`)
   console.log(`Valid: ${initialValidation.valid ? '✅' : '❌'}`)
-  console.log(`Errors: ${initialValidation.errors.length}`)
-  console.log(`Warnings: ${initialValidation.warnings.length}`)
-  
+  if (!initialValidation.valid) {
+    console.log(`Errors: ${initialValidation.errors.length}`)
+  }
+    
   // Step 2: Show current registry state
   console.log('\n📖 Step 2: Current Registry State')
   console.log('-'.repeat(60))
@@ -63,23 +63,16 @@ async function main() {
   console.log('-'.repeat(60))
   console.log('Note: Not actually updating file in demo mode')
   console.log('In production, this would call:')
-  console.log(`  updateRegistry({`)
-  console.log(`    network: 'optimism',`)
-  console.log(`    chainId: 10,`)
+  console.log(`  updateRegistry('optimism', {`)
   console.log(`    badgeContract: '${badgeAddress}',`)
   console.log(`    questContract: '${questAddress}',`)
   console.log(`    fallbackContract: '${fallbackAddress}'`)
   console.log(`  })`)
   
-  // Step 5: Show batch update capability
+  // Step 5: Batch Update Example
   console.log('\n🔄 Step 5: Batch Update Example')
   console.log('-'.repeat(60))
-  console.log('Example of updating multiple networks at once:')
-  console.log(`  batchUpdateRegistry([`)
-  console.log(`    { network: 'ethereum', badgeContract: '0x...' },`)
-  console.log(`    { network: 'polygon', questContract: '0x...' },`)
-  console.log(`    { network: 'arbitrum', fallbackContract: '0x...' }`)
-  console.log(`  ])`)
+  console.log('Example of updating multiple networks at once is not available.')
   
   // Step 6: Integration with badge minting
   console.log('\n🎖️  Step 6: Integration with Badge Minting')
@@ -123,9 +116,9 @@ async function main() {
   console.log('  - /analytics - Fallback usage and badge distribution')
   console.log('')
   console.log('Example: Display badge origin in dashboard')
-  console.log(`  import { getContractAddress } from '../utils/registry'`)
-  console.log(`  const contract = getContractAddress('polygon', 'badge')`)
-  console.log(`  // Returns: ${getNetworkConfig('polygon').badgeContract}`)
+  console.log(`  import { getNetworkConfig } from '../src/config/registryLoader'`)
+  console.log(`  const config = getNetworkConfig('polygon')`)
+  console.log(`  // Returns badge contract: ${getNetworkConfig('polygon').badgeContract}`)
   
   // Step 8: Automated workflow
   console.log('\n⚙️  Step 8: Complete Automated Workflow')

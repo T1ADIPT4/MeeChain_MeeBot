@@ -14,17 +14,17 @@ describe('Registry Utility', () => {
   describe('getContractAddress', () => {
     test('should get badge contract for polygon', () => {
       const address = getContractAddress('polygon', 'badge')
-      expect(address).toBe('0xBadgePoly123')
+      expect(address).toBe('0x4444444444444444444444444444444444444444')
     })
 
     test('should get quest contract for ethereum', () => {
       const address = getContractAddress('ethereum', 'quest')
-      expect(address).toBe('0xQuestEth456')
+      expect(address).toBe('0x2222222222222222222222222222222222222222')
     })
 
     test('should get fallback contract for arbitrum', () => {
       const address = getContractAddress('arbitrum', 'fallback')
-      expect(address).toBe('0xFallbackArb789')
+      expect(address).toBe('0x9999999999999999999999999999999999999999')
     })
 
     test('should return N/A for invalid network', () => {
