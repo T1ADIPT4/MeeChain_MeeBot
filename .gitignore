@@ -35,3 +35,14 @@ coverage/
 tmp/
 temp/
 *.tmp
+
+# MSIX build artifacts
+msix-package/
+*.msix
+*.appx
+*.pfx
+*.cer
+*.base64
+
+# Patch files (optional - remove if you want to commit patches)
+# *.patch

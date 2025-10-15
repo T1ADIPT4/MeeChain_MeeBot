@@ -1,0 +1,9 @@
+{
+  "version": "0.0.0",
+  "patch_file": "none",
+  "timestamp": "2025-01-01T00:00:00Z",
+  "patch_applied": false,
+  "build_success": false,
+  "workflow_run_id": "0",
+  "commit_sha": "initial"
+}
