@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MeeChain Patch Status Viewer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 40px;
+      padding: 40px 20px;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin: 5px;
+    }
+    
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    
+    .status-item {
+      margin: 15px 0;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+    
+    .status-item strong {
+      display: inline-block;
+      min-width: 150px;
+      color: #495057;
+    }
+    
+    .status-item span {
+      color: #212529;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #6c757d;
+    }
+    
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .version-header {
+      font-size: 2rem;
+      color: #212529;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #e9ecef;
+    }
+    
+    .timestamp {
+      color: #6c757d;
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+    
+    footer {
+      text-align: center;
+      color: white;
+      margin-top: 40px;
+      padding: 20px;
+      opacity: 0.8;
+    }
+    
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🤖 MeeChain MeeBot</h1>
+      <p class="subtitle">Deployment Status Viewer</p>
+    </header>
+    
+    <div class="card">
+      <div id="status-container">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading deployment status...</p>
+        </div>
+      </div>
+    </div>
+    
+    <footer>
+      <p>MeeChain MeeBot - Quest and Badge System</p>
+      <p style="margin-top: 5px; font-size: 0.9rem;">Automated Deployment & Release System</p>
+    </footer>
+  </div>
+  
+  <script>
+    function formatTimestamp(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZoneName: 'short'
+      });
+    }
+    
+    function createStatusBadge(label, value) {
+      const isSuccess = value === true || value === 'true';
+      const isFail = value === false || value === 'false';
+      
+      if (typeof value === 'boolean' || value === 'true' || value === 'false') {
+        const badgeClass = isSuccess ? 'success' : 'error';
+        const icon = isSuccess ? '✅' : '❌';
+        const text = isSuccess ? 'Yes' : 'No';
+        return `<span class="status-badge ${badgeClass}">${icon} ${text}</span>`;
+      }
+      
+      return `<span class="status-badge info">${value}</span>`;
+    }
+    
+    fetch('status/patch-status.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Status file not found');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const container = document.getElementById('status-container');
+        
+        const overallSuccess = data.patch_applied && data.build_success;
+        const statusClass = overallSuccess ? 'success' : 'error';
+        
+        container.innerHTML = `
+          <div class="version-header">
+            Version ${data.version}
+            ${createStatusBadge('Status', overallSuccess)}
+          </div>
+          
+          <div class="status-item">
+            <strong>📦 Patch File:</strong>
+            <span>${data.patch_file}</span>
+          </div>
+          
+          <div class="status-item">
+            <strong>🔧 Patch Applied:</strong>
+            ${createStatusBadge('Patch', data.patch_applied)}
+          </div>
+          
+          <div class="status-item">
+            <strong>🏗️ Build Success:</strong>
+            ${createStatusBadge('Build', data.build_success)}
+          </div>
+          
+          <div class="status-item">
+            <strong>⏰ Timestamp:</strong>
+            <span class="timestamp">${formatTimestamp(data.timestamp)}</span>
+          </div>
+          
+          <div class="status-item">
+            <strong>🔄 Workflow Run:</strong>
+            <span>#${data.workflow_run_id}</span>
+          </div>
+          
+          <div class="status-item">
+            <strong>📝 Commit SHA:</strong>
+            <span style="font-family: monospace;">${data.commit_sha.substring(0, 8)}</span>
+          </div>
+        `;
+      })
+      .catch(error => {
+        console.error('Error loading status:', error);
+        document.getElementById('status-container').innerHTML = `
+          <div class="error-message">
+            <h3>❌ Failed to Load Status</h3>
+            <p style="margin-top: 10px;">
+              Could not load deployment status information. 
+              The status file may not exist yet or there was an error loading it.
+            </p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+              Error: ${error.message}
+            </p>
+          </div>
+        `;
+      });
+  </script>
+</body>
+</html>
