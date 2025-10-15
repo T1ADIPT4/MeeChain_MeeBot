@@ -13,6 +13,7 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 - 📊 Dashboard with badge provenance & fallback logs
 - ⚙️ Settings page with modular toggles
 - 🆘 Support page with FAQ system
+- 🚀 **NEW**: Automated deployment workflow with MSIX packaging
 
 ## 📦 Tech Stack
 
@@ -71,6 +72,7 @@ npm test
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
+- 🚀 [Automated Deployment Workflow](WORKFLOW_GUIDE.md) - GitHub Actions workflow for automated releases
 
 ### Example Usage
 
@@ -151,15 +153,62 @@ MeeChain_MeeBot/
 ├── examples/
 │   ├── settings-support-demo.ts # Settings/Support demo
 │   ├── deploy-registry-demo.ts  # Deploy registry demo
-│   └── dashboard-integration-demo.ts  # Dashboard demo
+│   ├── dashboard-integration-demo.ts  # Dashboard demo
+│   ├── sample-patch.patch       # Example patch file
+│   └── README-patches.md        # Patch creation guide
+├── docs/                        # Deployment viewer files
+│   ├── index.html               # Status viewer page
+│   ├── status/
+│   │   └── patch-status.json    # Deployment status
+│   └── assets/                  # Logo and splash assets
+├── msix-template/               # MSIX package template
+│   ├── AppxManifest.xml         # Package manifest
+│   └── README.md                # MSIX documentation
+├── .github/
+│   └── workflows/
+│       ├── codeql.yml           # Code scanning
+│       └── automate-deploy.yml  # Automated deployment
 ├── QUEST_SYSTEM.md              # Quest system documentation
 ├── DEPLOY_REGISTRY.md           # Deploy registry documentation
 ├── DASHBOARD_INTEGRATION.md     # Dashboard integration documentation
 ├── INTEGRATION.md               # Integration guide
 ├── ARCHITECTURE.md              # Architecture diagrams
 ├── SETTINGS_SUPPORT.md          # Settings/Support documentation
+├── WORKFLOW_GUIDE.md            # Deployment workflow guide
 └── package.json
 ```
+
+## 🚀 Automated Deployment
+
+MeeChain MeeBot includes a comprehensive automated deployment workflow that handles:
+
+- ✅ Patch application and validation
+- ✅ Automated testing and building
+- ✅ Status tracking and viewer deployment
+- ✅ MSIX package creation with dependencies
+- ✅ Code signing with certificates
+- ✅ GitHub Release creation
+
+### Quick Deploy
+
+1. **Configure Secrets** (one-time setup):
+   - Add `SIGNING_CERT_PFX` (Base64-encoded PFX certificate)
+   - Add `SIGNING_CERT_PASSWORD` (Certificate password)
+
+2. **Run Workflow**:
+   - Go to **Actions** → **Automated Deploy and Release**
+   - Click **Run workflow**
+   - Enter patch file name (e.g., `examples/sample-patch.patch`)
+   - Enter version (e.g., `1.0.0`)
+   - Click **Run workflow**
+
+3. **View Results**:
+   - Deployment viewer: `https://<owner>.github.io/<repo>/`
+   - GitHub Release: Automatically created with MSIX package
+
+### Documentation
+
+See [WORKFLOW_GUIDE.md](WORKFLOW_GUIDE.md) for complete setup instructions, certificate generation, troubleshooting, and best practices.
 
 ## 🤝 Contributing
 
