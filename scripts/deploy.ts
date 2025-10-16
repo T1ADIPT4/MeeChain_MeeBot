@@ -7,6 +7,9 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import type { DeployRegistry, NetworkConfig, SupportedNetwork } from '../src/config/registryTypes.js'
+import { deployAllContracts, verifyContract } from './utils/deployer.js'
+import { updateRegistry, backupRegistry } from './updateRegistry.js'
+import { validateRegistry } from './validateRegistry.js'
 
 interface DeployOptions {
   contractType: 'Badge' | 'Quest' | 'Fallback'
@@ -26,8 +29,10 @@ async function deployContract(contractType: string, network: string): Promise<st
   await new Promise(resolve => setTimeout(resolve, 1000))
   
   // Generate a mock contract address
-  const timestamp = Date.now().toString(16)
-  const mockAddress = `0x${contractType.substring(0, 4)}${network.substring(0, 4)}${timestamp}`
+  const randomHex = Array.from({ length: 40 }, () =>
+    Math.floor(Math.random() * 16).toString(16)
+  ).join('')
+  const mockAddress = `0x${randomHex}`
   
   console.log(`✅ Deployed ${contractType} at ${mockAddress}`)
   return mockAddress
@@ -167,33 +172,6 @@ Examples:
   return { contractType, network, address, simulate }
 }
 
-// Run if called directly
-const isMainModule = process.argv[1] && process.argv[1].endsWith('deploy.ts')
-if (isMainModule) {
-  try {
-    const options = parseArgs()
-    deploy(options).catch(error => {
-      console.error('❌ Deployment failed:', error)
-      process.exit(1)
-    })
-  } catch (error) {
-    console.error('❌ Error:', error)
-    process.exit(1)
-  }
-}
-
-export { deploy, deployContract, updateRegistryFile }
-
-/**
- * Main Deployment Script for MeeChain
- * Orchestrates contract deployment and registry updates
- */
-
-import { deployAllContracts, verifyContract } from './utils/deployer.js'
-import { updateRegistry, backupRegistry } from './updateRegistry.js'
-import { validateRegistry } from './validateRegistry.js'
-import type { SupportedNetwork } from '../src/config/registryTypes.js'
-
 /**
  * Deploy contracts to a specific network and update registry
  * @param network - Target blockchain network
@@ -273,8 +251,19 @@ async function main() {
   await deployToNetwork(network)
 }
 
-// Run deployment
-main().catch((error) => {
-  console.error('Fatal error:', error)
-  process.exit(1)
-})
+// Run if called directly
+const isMainModule = process.argv[1] && process.argv[1].endsWith('deploy.ts')
+if (isMainModule) {
+  try {
+    const options = parseArgs()
+    deploy(options).catch(error => {
+      console.error('❌ Deployment failed:', error)
+      process.exit(1)
+    })
+  } catch (error) {
+    console.error('❌ Error:', error)
+    process.exit(1)
+  }
+}
+
+export { deploy, deployContract, updateRegistryFile, main as deployMain }

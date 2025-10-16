@@ -1,0 +1,36 @@
+
+import React, { useState } from 'react';
+import './App.css';
+import ConnectWalletButton from './components/ConnectWalletButton';
+import ProfileViewer from './components/ProfileViewer';
+import Leaderboard from './components/Leaderboard'; // <-- Import Leaderboard
+import { MeeBotProvider } from './context/MeeBotContext';
+
+function App() {
+  const [userAddress, setUserAddress] = useState<string | null>(null);
+  const viewerEmail = "pouri199028@gmail.com";
+
+  const handleConnect = (address: string) => {
+    setUserAddress(address);
+  };
+
+  return (
+    <MeeBotProvider>
+      <div className="App">
+        <header className="App-header">
+          <h1>MeeChain Dashboard</h1>
+          <ConnectWalletButton onConnect={handleConnect} />
+        </header>
+        <main>
+          <ProfileViewer userAddress={userAddress} viewerEmail={viewerEmail} />
+          
+          {/* เพิ่ม Leaderboard เข้าไปในหน้าหลัก */}
+          <Leaderboard />
+
+        </main>
+      </div>
+    </MeeBotProvider>
+  );
+}
+
+export default App;

@@ -1,0 +1,13 @@
+diff --git a/README.md b/README.md
+index abc1234..def5678 100644
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,8 @@
+ # MeeChain_MeeBot
+ 
+-Fallback-aware quest verification and badge minting system for MeeChain - modular, resilient, and easily auditable.
++Fallback-aware quest verification and badge minting system for MeeChain - modular, resilient, easily auditable, and production-ready.
++
++**Latest Version**: See [Releases](https://github.com/T1ADIPT4/MeeChain_MeeBot/releases) for the latest MSIX package.
+ 
+ ## 🎯 Quest System

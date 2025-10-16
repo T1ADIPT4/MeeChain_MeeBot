@@ -48,3 +48,16 @@ logs-export-*.csv
 registry-provenance-*.json
 demo-logs.json
 demo-registry-provenance.json
+
+# Auto-generated metadata
+copilot/ipfs-uploader/metadata/
+# MSIX build artifacts
+msix-package/
+*.msix
+*.appx
+*.pfx
+*.cer
+*.base64
+
+# Patch files (optional - remove if you want to commit patches)
+# *.patch

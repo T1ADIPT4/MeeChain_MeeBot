@@ -1,0 +1,63 @@
+
+.leaderboard-container {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin: 2rem auto;
+  max-width: 900px;
+}
+
+.leaderboard-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaderboard-table th, .leaderboard-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.leaderboard-table th {
+  color: #6c757d;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.leaderboard-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.leaderboard-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.rank-cell {
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: center;
+  width: 50px;
+}
+
+.address-cell {
+  font-family: monospace;
+}
+
+.tier-cell, .badges-cell {
+  text-align: center;
+}
+
+/* Highlight a special user */
+.highlight-row td {
+  background-color: #fff3cd; /* A light yellow highlight */
+  font-weight: bold;
+}

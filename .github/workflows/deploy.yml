@@ -1,0 +1,42 @@
+---
+name: "Deploy and Sign"
+
+"on":
+  push:
+    branches: ["production"]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔍 Validate Secrets Presence
+        run: |
+          if ("${{ secrets.SIGNING_CERT_PFX }}" -eq "") {
+            Write-Error "❌ SIGNING_CERT_PFX is missing"
+            exit 1
+          }
+          if ("${{ secrets.SIGNING_CERT_PASSWORD }}" -eq "") {
+            Write-Error "❌ SIGNING_CERT_PASSWORD is missing"
+            exit 1
+          }
+          Write-Host "✅ Secrets are present and readable"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
