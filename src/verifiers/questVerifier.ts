@@ -18,7 +18,7 @@ export interface Quest {
 }
 
 // Mock quest database (replace with actual database in production)
-const questDatabase: Record<string, Quest> = {
+export const questDatabase: Record<string, Quest> = {
   'quest-001': {
     id: 'quest-001',
     name: 'First Steps',

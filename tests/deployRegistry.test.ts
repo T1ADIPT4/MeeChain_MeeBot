@@ -54,25 +54,25 @@ describe('Deploy Registry System', () => {
     test('should get Ethereum network config', () => {
       const config = getNetworkConfig('ethereum')
       expect(config.chainId).toBe(1)
-      expect(config.badgeContract).toBe('0xBadgeEth123')
-      expect(config.questContract).toBe('0xQuestEth456')
-      expect(config.fallbackContract).toBe('0xFallbackEth789')
+      expect(config.badgeContract).toBe('0x1111111111111111111111111111111111111111')
+      expect(config.questContract).toBe('0x2222222222222222222222222222222222222222')
+      expect(config.fallbackContract).toBe('0x3333333333333333333333333333333333333333')
     })
 
     test('should get Polygon network config', () => {
       const config = getNetworkConfig('polygon')
       expect(config.chainId).toBe(137)
-      expect(config.badgeContract).toBe('0xBadgePoly123')
-      expect(config.questContract).toBe('0xQuestPoly456')
-      expect(config.fallbackContract).toBe('0xFallbackPoly789')
+      expect(config.badgeContract).toBe('0x4444444444444444444444444444444444444444')
+      expect(config.questContract).toBe('0x5555555555555555555555555555555555555555')
+      expect(config.fallbackContract).toBe('0x6666666666666666666666666666666666666666')
     })
 
     test('should get Arbitrum network config', () => {
       const config = getNetworkConfig('arbitrum')
       expect(config.chainId).toBe(42161)
-      expect(config.badgeContract).toBe('0xBadgeArb123')
-      expect(config.questContract).toBe('0xQuestArb456')
-      expect(config.fallbackContract).toBe('0xFallbackArb789')
+      expect(config.badgeContract).toBe('0x7777777777777777777777777777777777777777')
+      expect(config.questContract).toBe('0x8888888888888888888888888888888888888888')
+      expect(config.fallbackContract).toBe('0x9999999999999999999999999999999999999999')
     })
 
     test('should throw error for unknown network', () => {
@@ -86,17 +86,17 @@ describe('Deploy Registry System', () => {
   describe('Contract Address Getters', () => {
     test('should get badge contract for Ethereum', () => {
       const address = getBadgeContract('ethereum')
-      expect(address).toBe('0xBadgeEth123')
+      expect(address).toBe('0x1111111111111111111111111111111111111111')
     })
 
     test('should get quest contract for Polygon', () => {
       const address = getQuestContract('polygon')
-      expect(address).toBe('0xQuestPoly456')
+      expect(address).toBe('0x5555555555555555555555555555555555555555')
     })
 
     test('should get fallback contract for Arbitrum', () => {
       const address = getFallbackContract('arbitrum')
-      expect(address).toBe('0xFallbackArb789')
+      expect(address).toBe('0x9999999999999999999999999999999999999999')
     })
   })
 
@@ -108,7 +108,7 @@ describe('Deploy Registry System', () => {
       const tx = await mintBadge(userId, questId)
 
       expect(tx.network).toBe('polygon')
-      expect(tx.contractAddress).toBe('0xBadgePoly123')
+      expect(tx.contractAddress).toBe('0x4444444444444444444444444444444444444444')
       expect(tx.chain).toBe('primary')
     })
 
@@ -119,7 +119,7 @@ describe('Deploy Registry System', () => {
       const tx = await mintBadge(userId, questId, 'ethereum')
 
       expect(tx.network).toBe('ethereum')
-      expect(tx.contractAddress).toBe('0xBadgeEth123')
+      expect(tx.contractAddress).toBe('0x1111111111111111111111111111111111111111')
       expect(tx.chain).toBe('primary')
     })
 
@@ -130,7 +130,7 @@ describe('Deploy Registry System', () => {
       const tx = await fallbackMintBadge(userId, questId)
 
       expect(tx.network).toBe('ethereum')
-      expect(tx.contractAddress).toBe('0xFallbackEth789')
+      expect(tx.contractAddress).toBe('0x3333333333333333333333333333333333333333')
       expect(tx.chain).toBe('fallback')
     })
 
@@ -141,7 +141,7 @@ describe('Deploy Registry System', () => {
       const tx = await fallbackMintBadge(userId, questId, 'arbitrum')
 
       expect(tx.network).toBe('arbitrum')
-      expect(tx.contractAddress).toBe('0xFallbackArb789')
+      expect(tx.contractAddress).toBe('0x9999999999999999999999999999999999999999')
       expect(tx.chain).toBe('fallback')
     })
   })
@@ -169,7 +169,7 @@ describe('Deploy Registry System', () => {
       const tx = await mintBadge('user-1', 'quest-1')
       
       expect(tx.network).toBe('arbitrum')
-      expect(tx.contractAddress).toBe('0xBadgeArb123')
+      expect(tx.contractAddress).toBe('0x7777777777777777777777777777777777777777')
 
       // Reset to default
       setPrimaryNetwork('polygon')
@@ -181,7 +181,7 @@ describe('Deploy Registry System', () => {
       const tx = await fallbackMintBadge('user-1', 'quest-1')
       
       expect(tx.network).toBe('polygon')
-      expect(tx.contractAddress).toBe('0xFallbackPoly789')
+      expect(tx.contractAddress).toBe('0x6666666666666666666666666666666666666666')
 
       // Reset to default
       setFallbackNetwork('ethereum')

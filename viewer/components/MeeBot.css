@@ -1,0 +1,73 @@
+
+/* --- MeeBot Sprite and Animations --- */
+
+.meebot-sprite-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 150px; /* ให้มีพื้นที่สำหรับข้อความและ sprite */
+}
+
+.meebot-sprite {
+  font-size: 4rem; /* ขนาดของ emoji */
+  margin-bottom: 0.5rem;
+  transition: transform 0.3s ease-in-out;
+}
+
+.meebot-message-bubble {
+  background-color: #e9ecef;
+  color: #333;
+  padding: 0.8rem 1.2rem;
+  border-radius: 20px;
+  max-width: 90%;
+  position: relative;
+  font-weight: 500;
+}
+
+.meebot-message-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-top-color: #e9ecef;
+  border-bottom: 0;
+  margin-left: -10px;
+  margin-bottom: -10px;
+}
+
+/* --- Animations --- */
+
+@keyframes thinking-anim {
+  0% { transform: translateY(0) rotate(0); }
+  25% { transform: translateY(-5px) rotate(-5deg); }
+  75% { transform: translateY(0) rotate(5deg); }
+  100% { transform: translateY(0) rotate(0); }
+}
+
+@keyframes celebrate-anim {
+  0% { transform: scale(1) rotate(0); }
+  50% { transform: scale(1.2) rotate(15deg); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+@keyframes confused-anim {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-3px) rotate(-3deg); }
+  60% { transform: translateX(3px) rotate(3deg); }
+}
+
+.mood-thinking .meebot-sprite {
+  animation: thinking-anim 1.5s infinite ease-in-out;
+}
+
+.mood-celebrate .meebot-sprite {
+  animation: celebrate-anim 0.8s 2;
+}
+
+.mood-confused .meebot-sprite {
+  animation: confused-anim 0.5s 3;
+}
