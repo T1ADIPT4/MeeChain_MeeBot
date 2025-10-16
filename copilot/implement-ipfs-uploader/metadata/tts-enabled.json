@@ -1,0 +1,16 @@
+{
+  "name": "Badge: tts-enabled",
+  "description": "NFT badge for tts-enabled",
+  "image": "ipfs://tts-enabled-hash",
+  "fallback_image": "./assets/fallback/tts-enabled.png",
+  "attributes": [
+    {
+      "trait_type": "Milestone",
+      "value": "tts-enabled"
+    },
+    {
+      "trait_type": "Uploader",
+      "value": "MeeChain"
+    }
+  ]
+}

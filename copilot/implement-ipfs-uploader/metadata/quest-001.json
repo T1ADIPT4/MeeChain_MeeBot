@@ -1,0 +1,19 @@
+{
+  "name": "Badge: quest-001",
+  "description": "NFT badge for quest-001",
+  "image": "ipfs://quest-001-hash",
+  "fallback_image": "./assets/fallback/quest-001.png",
+  "owner": "pouri199028@gmail.com",
+  "minted": true,
+  "timestamp": "2025-10-10T22:06:00Z",
+  "attributes": [
+    {
+      "trait_type": "Milestone",
+      "value": "quest-001"
+    },
+    {
+      "trait_type": "Uploader",
+      "value": "MeeChain"
+    }
+  ]
+}

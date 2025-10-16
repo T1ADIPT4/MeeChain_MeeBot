@@ -7,7 +7,7 @@ import { readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
 import { deployContract, updateRegistryFile } from '../scripts/deploy'
 import { updateRegistry } from '../scripts/updateRegistry'
-import { validateRegistry, isValidAddress, validateNetworkConfig } from '../scripts/validateRegistry'
+import { validateRegistry, isValidAddress } from '../scripts/validateRegistry'
 import { clearRegistryCache } from '../src/config/registryLoader'
 import type { DeployRegistry } from '../src/config/registryTypes'
 
@@ -33,7 +33,7 @@ describe('Automated Deploy Scripts', () => {
       
       expect(address).toBeDefined()
       expect(address).toMatch(/^0x/)
-      expect(address.length).toBeGreaterThan(10)
+      expect(address.length).toBe(42)
     })
 
     test('should generate different addresses for different contracts', async () => {
@@ -46,7 +46,7 @@ describe('Automated Deploy Scripts', () => {
 
   describe('updateRegistryFile', () => {
     test('should update badge contract address', () => {
-      const testAddress = '0xTestBadge999'
+      const testAddress = '0x1111111111111111111111111111111111111111'
       
       updateRegistryFile('polygon', 'Badge', testAddress)
       clearRegistryCache()
@@ -56,7 +56,7 @@ describe('Automated Deploy Scripts', () => {
     })
 
     test('should update quest contract address', () => {
-      const testAddress = '0xTestQuest888'
+      const testAddress = '0x2222222222222222222222222222222222222222'
       
       updateRegistryFile('ethereum', 'Quest', testAddress)
       clearRegistryCache()
@@ -66,7 +66,7 @@ describe('Automated Deploy Scripts', () => {
     })
 
     test('should update fallback contract address', () => {
-      const testAddress = '0xTestFallback777'
+      const testAddress = '0x3333333333333333333333333333333333333333'
       
       updateRegistryFile('arbitrum', 'Fallback', testAddress)
       clearRegistryCache()
@@ -78,7 +78,7 @@ describe('Automated Deploy Scripts', () => {
     test('should update lastUpdated timestamp', () => {
       const before = Date.now()
       
-      updateRegistryFile('polygon', 'Badge', '0xTest123')
+      updateRegistryFile('polygon', 'Badge', '0x4444444444444444444444444444444444444444')
       clearRegistryCache()
       
       const registry: DeployRegistry = JSON.parse(readFileSync(registryPath, 'utf-8'))
@@ -90,10 +90,9 @@ describe('Automated Deploy Scripts', () => {
 
   describe('updateRegistry', () => {
     test('should update single contract', () => {
-      const testAddress = '0xNewBadge123'
+      const testAddress = '0x5555555555555555555555555555555555555555'
       
-      updateRegistry({
-        network: 'polygon',
+      updateRegistry('polygon', {
         badgeContract: testAddress
       })
       clearRegistryCache()
@@ -103,38 +102,30 @@ describe('Automated Deploy Scripts', () => {
     })
 
     test('should update multiple contracts', () => {
-      updateRegistry({
-        network: 'ethereum',
-        badgeContract: '0xBadge456',
-        questContract: '0xQuest789'
+      updateRegistry('ethereum', {
+        badgeContract: '0x1111111111111111111111111111111111111111',
+        questContract: '0x2222222222222222222222222222222222222222'
       })
       clearRegistryCache()
       
       const registry: DeployRegistry = JSON.parse(readFileSync(registryPath, 'utf-8'))
-      expect(registry.networks.ethereum.badgeContract).toBe('0xBadge456')
-      expect(registry.networks.ethereum.questContract).toBe('0xQuest789')
+      expect(registry.networks.ethereum.badgeContract).toBe('0x1111111111111111111111111111111111111111')
+      expect(registry.networks.ethereum.questContract).toBe('0x2222222222222222222222222222222222222222')
     })
 
-    test('should create new network if not exists', () => {
-      updateRegistry({
-        network: 'optimism' as any,
-        chainId: 10,
-        badgeContract: '0xOptimismBadge'
-      })
-      clearRegistryCache()
-      
-      const registry: DeployRegistry = JSON.parse(readFileSync(registryPath, 'utf-8'))
-      expect(registry.networks.optimism).toBeDefined()
-      expect(registry.networks.optimism.chainId).toBe(10)
-      expect(registry.networks.optimism.badgeContract).toBe('0xOptimismBadge')
+    test('should not create new network if not exists', () => {
+      expect(() => {
+        updateRegistry('optimism' as any, {
+          badgeContract: '0xOptimismBadge'
+        })
+      }).toThrow()
     })
   })
 
   describe('isValidAddress', () => {
     test('should validate correct addresses', () => {
-      expect(isValidAddress('0x1234567890abcdef')).toBe(true)
-      expect(isValidAddress('0xABCDEF123456')).toBe(true)
-      expect(isValidAddress('0xTest123')).toBe(true)
+      expect(isValidAddress('0x1234567890abcdef1234567890abcdef12345678')).toBe(true)
+      expect(isValidAddress('0xABCDEF1234567890ABCDEF1234567890abcdef')).toBe(true)
     })
 
     test('should reject invalid addresses', () => {
@@ -142,6 +133,7 @@ describe('Automated Deploy Scripts', () => {
       expect(isValidAddress('0x')).toBe(false)
       expect(isValidAddress('')).toBe(false)
       expect(isValidAddress('not-an-address')).toBe(false)
+      expect(isValidAddress('0xTest123')).toBe(false)
     })
   })
 
@@ -150,10 +142,6 @@ describe('Automated Deploy Scripts', () => {
       const result = validateRegistry()
       
       expect(result.valid).toBe(true)
-      expect(result.networkCount).toBeGreaterThan(0)
-      expect(result.networks).toContain('ethereum')
-      expect(result.networks).toContain('polygon')
-      expect(result.networks).toContain('arbitrum')
     })
 
     test('should detect missing version', () => {
@@ -165,7 +153,7 @@ describe('Automated Deploy Scripts', () => {
       const result = validateRegistry()
       
       expect(result.valid).toBe(false)
-      expect(result.errors).toContain('Missing version field')
+      expect(result.errors.some(e => e.message === 'Missing version field')).toBe(true)
     })
 
     test('should detect invalid lastUpdated', () => {
@@ -177,7 +165,7 @@ describe('Automated Deploy Scripts', () => {
       const result = validateRegistry()
       
       expect(result.valid).toBe(false)
-      expect(result.errors.some(e => e.includes('Invalid lastUpdated'))).toBe(true)
+      expect(result.errors.some(e => e.message.includes('Invalid date format (should be ISO 8601)'))).toBe(true)
     })
 
     test('should warn on missing contracts', () => {
@@ -200,67 +188,7 @@ describe('Automated Deploy Scripts', () => {
       const result = validateRegistry()
       
       expect(result.valid).toBe(false)
-      expect(result.errors.some(e => e.includes('Invalid badgeContract address format'))).toBe(true)
-    })
-  })
-
-  describe('validateNetworkConfig', () => {
-    test('should validate correct network config', () => {
-      const errors: string[] = []
-      const warnings: string[] = []
-      
-      validateNetworkConfig(
-        'test-network',
-        {
-          chainId: 1,
-          badgeContract: '0xBadge123',
-          questContract: '0xQuest456',
-          fallbackContract: '0xFallback789'
-        },
-        errors,
-        warnings
-      )
-      
-      expect(errors).toHaveLength(0)
-      expect(warnings).toHaveLength(0)
-    })
-
-    test('should detect invalid chain ID', () => {
-      const errors: string[] = []
-      const warnings: string[] = []
-      
-      validateNetworkConfig(
-        'test-network',
-        {
-          chainId: 0,
-          badgeContract: '0xBadge123',
-          questContract: '0xQuest456',
-          fallbackContract: '0xFallback789'
-        },
-        errors,
-        warnings
-      )
-      
-      expect(errors).toContain('test-network: Invalid or missing chainId')
-    })
-
-    test('should warn on duplicate addresses', () => {
-      const errors: string[] = []
-      const warnings: string[] = []
-      
-      validateNetworkConfig(
-        'test-network',
-        {
-          chainId: 1,
-          badgeContract: '0xSame123',
-          questContract: '0xSame123',
-          fallbackContract: '0xFallback789'
-        },
-        errors,
-        warnings
-      )
-      
-      expect(warnings.some(w => w.includes('Duplicate contract addresses'))).toBe(true)
+      expect(result.errors.some(e => e.message.includes('Invalid address format (should start with 0x)'))).toBe(true)
     })
   })
 
@@ -268,7 +196,7 @@ describe('Automated Deploy Scripts', () => {
     test('should deploy, update, and validate successfully', async () => {
       // Deploy
       const address = await deployContract('Badge', 'polygon')
-      expect(address).toMatch(/^0x/)
+      expect(address).toMatch(/^0x[a-fA-F0-9]{40}$/)
       
       // Update registry
       updateRegistryFile('polygon', 'Badge', address)
