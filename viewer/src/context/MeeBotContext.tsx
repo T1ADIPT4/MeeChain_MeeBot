@@ -1,7 +1,8 @@
 
 import React, { createContext, useState, useContext, ReactNode } from 'react';
+import { TransactionStatus } from '../types/transaction';
 
-export type MeeBotMood = 'neutral' | 'thinking' | 'celebrate' | 'confused';
+export type MeeBotMood = 'neutral' | 'thinking' | 'celebrate' | 'confused' | 'warning' | 'success';
 
 interface MeeBotState {
   mood: MeeBotMood;
@@ -12,6 +13,7 @@ interface MeeBotState {
 interface MeeBotContextType {
   meeBotState: MeeBotState;
   setMeeBot: (mood: MeeBotMood, message: string) => void;
+  setReplayFeedback: (status: TransactionStatus) => void;
 }
 
 const MeeBotContext = createContext<MeeBotContextType | undefined>(undefined);
@@ -32,8 +34,30 @@ export const MeeBotProvider = ({ children }: { children: ReactNode }) => {
     }));
   };
 
+  const setReplayFeedback = (status: TransactionStatus) => {
+    switch (status) {
+      case 'replayed':
+        setMeeBot('celebrate', '🎉 เหรียญของคุณพร้อมซัพพลายแล้ว! กดเลยเพื่อปล่อยพลัง MeeChain Singapore');
+        break;
+      case 'supplied':
+        setMeeBot('success', '✅ ซัพพลายสำเร็จ! เหรียญถูกส่งไปยังปลายทางแล้ว');
+        break;
+      case 'failed':
+        setMeeBot('confused', '😕 ดูเหมือน replay ยังไม่สำเร็จนะครับ รอ��ีกสักครู่หรือกด "ดึงเหรียญกลับ" ถ้าคุณมีสิทธิ์');
+        break;
+      case 'pending':
+        setMeeBot('thinking', '⏳ กำลังตรวจสอบธุรกรรม กรุณารอสักครู่...');
+        break;
+      case 'refunded':
+        setMeeBot('neutral', '↩️ เหรียญถูกดึงกลับแล้ว ตรวจสอบกระเป๋าของคุณนะครับ');
+        break;
+      default:
+        setMeeBot('neutral', 'สวัสดีครับ! มีอะไรให้ช่วยไหมครับ?');
+    }
+  };
+
   return (
-    <MeeBotContext.Provider value={{ meeBotState, setMeeBot }}>
+    <MeeBotContext.Provider value={{ meeBotState, setMeeBot, setReplayFeedback }}>
       {children}
     </MeeBotContext.Provider>
   );

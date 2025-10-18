@@ -5,6 +5,48 @@
   text-align: center;
 }
 
+.App-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  color: white;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.App-header h1 {
+  margin: 0;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-buttons button {
+  padding: 0.5rem 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-buttons button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.nav-buttons button.active {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: white;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

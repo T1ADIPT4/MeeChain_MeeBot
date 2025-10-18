@@ -13,6 +13,8 @@ const moodEmojis: Record<MeeBotMood, string> = {
   thinking: '🤔',
   celebrate: '🎉',
   confused: '😟',
+  warning: '⚠️',
+  success: '✅',
 };
 
 export default function MeeBotSprite({ mood, message }: MeeBotSpriteProps) {
