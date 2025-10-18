@@ -1,7 +1,6 @@
 
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-
-export type MeeBotMood = 'neutral' | 'thinking' | 'celebrate' | 'confused';
+import { MeeBotMood } from '../components/MeeBotSprite';
 
 interface MeeBotState {
   mood: MeeBotMood;

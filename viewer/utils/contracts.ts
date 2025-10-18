@@ -78,3 +78,9 @@ export async function getQuestStatus(user: string, questId: string): Promise<str
     return 'unknown';
   }
 }
+
+export async function upgradeTier(userAddress: string): Promise<boolean> {
+  console.log(`[Contract] Upgrading tier for ${userAddress}...`);
+  await new Promise(res => setTimeout(res, 1000));
+  return Math.random() > 0.1; // 90% success rate
+}

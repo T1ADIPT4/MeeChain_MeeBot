@@ -1,21 +1,34 @@
 
 import React, { useState } from 'react';
-import ProfileViewer from './components/ProfileViewer';
-import { MeeBotProvider } from './context/MeeBotContext'; // เพิ่มเข้ามา
+import ProfileViewer from '../components/ProfileViewer';
+import ConnectWalletButton from '../components/ConnectWalletButton';
+import Leaderboard from '../components/Leaderboard';
+import SwapT2PtoMEE from '../components/SwapT2PtoMEE';
+import { MeeBotProvider } from './context/MeeBotContext';
 
 function App() {
-  // สมมติว่ามีระบบดึง userAddress จาก wallet
-  const [userAddress, setUserAddress] = useState('0x1234567890AbCdEf1234567890AbCdEf12345678');
+  const [userAddress, setUserAddress] = useState<string | null>(null);
+  const viewerEmail = "pouri199028@gmail.com";
+
+  const handleConnect = (address: string) => {
+    setUserAddress(address);
+  };
 
   return (
-    <MeeBotProvider> // ครอบ Provider ไว้ที่นี่
+    <MeeBotProvider>
       <div className="App">
         <header className="App-header">
           <h1>MeeChain Dashboard</h1>
-          {/* อาจจะมีปุ่ม Connect Wallet ตรงนี้ */}
+          <ConnectWalletButton onConnect={handleConnect} />
         </header>
         <main>
-          <ProfileViewer userAddress={userAddress} />
+          <ProfileViewer userAddress={userAddress} viewerEmail={viewerEmail} />
+          
+          {/* เพิ่ม Swap T2P to MEE */}
+          <SwapT2PtoMEE />
+          
+          {/* เพิ่ม Leaderboard เข้าไปในหน้าหลัก */}
+          <Leaderboard />
         </main>
       </div>
     </MeeBotProvider>
