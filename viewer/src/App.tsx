@@ -5,7 +5,7 @@ import ConnectWalletButton from '../components/ConnectWalletButton';
 import Leaderboard from '../components/Leaderboard';
 import SwapT2PtoMEE from '../components/SwapT2PtoMEE';
 import CoinStatusDemo from '../components/CoinStatusDemo';
-import { MeeBotProvider } from './context/MeeBotContext';
+import { MeeBotProvider } from '../context/MeeBotContext';
 
 function App() {
   const [userAddress, setUserAddress] = useState<string | null>(null);

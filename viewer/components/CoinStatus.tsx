@@ -5,8 +5,8 @@ import {
   supplyCoins, 
   refundCoins, 
   getTransactionStatus 
-} from '../src/services/blockchainService';
-import { useMeeBot } from '../src/context/MeeBotContext';
+} from '../services/blockchainService';
+import { useMeeBot } from '../context/MeeBotContext';
 import MeeBotSprite from './MeeBotSprite';
 import './CoinStatus.css';
 

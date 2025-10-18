@@ -1,7 +1,8 @@
 
 import React from 'react';
-import { MeeBotMood } from '../src/context/MeeBotContext';
 import './MeeBot.css'; // Import สไตล์ใหม่
+
+export type MeeBotMood = 'neutral' | 'thinking' | 'celebrate' | 'confused' | 'warning' | 'success';
 
 interface MeeBotSpriteProps {
   mood: MeeBotMood;
