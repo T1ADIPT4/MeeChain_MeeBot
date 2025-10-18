@@ -26,6 +26,39 @@ npm run deploy:fallback -- --network polygon
 npm run deploy:badge -- --network polygon --address 0x123...
 ```
 
+### 🎖️ deploy-badge.ts
+
+Deploy MeeChain Badge SBT contract to BSC mainnet/testnet.
+
+**Usage:**
+```bash
+# Deploy to BSC Testnet
+npm run deploy:badge-sbt
+
+# Deploy to BSC Mainnet
+npm run deploy:badge-sbt:mainnet
+
+# Compile contracts first
+npm run compile
+```
+
+**What it does:**
+1. Deploys MeeChainBadgeSBT.sol contract
+2. Registers all badge metadata on-chain
+3. Sets badge URIs for each badge type
+4. Displays deployment summary and contract address
+
+**Requirements:**
+- `.env` file with PRIVATE_KEY and BSCSCAN_API_KEY
+- Sufficient BNB in wallet for gas fees
+- Hardhat properly configured
+
+**After deployment:**
+1. Update `.env` with MEECHAIN_BADGE_CONTRACT_ADDRESS
+2. Copy ABI to frontend: `cp artifacts/contracts/MeeChainBadgeSBT.sol/MeeChainBadgeSBT.json viewer/src/abis/`
+3. Verify contract on BscScan
+4. Test with `npm test -- tests/badgeSBT.test.ts`
+
 **Options:**
 - `--network <name>` - Network to deploy to (ethereum|polygon|arbitrum)
 - `--address <addr>` - Use existing contract address instead of deploying
