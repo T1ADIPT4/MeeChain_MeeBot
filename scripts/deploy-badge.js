@@ -1,5 +1,4 @@
-import { ethers } from "hardhat";
-
+// @ts-nocheck - Hardhat runtime environment types
 /**
  * Deploy MeeChainBadgeSBT contract
  * 
@@ -7,20 +6,23 @@ import { ethers } from "hardhat";
  *   npx hardhat run scripts/deploy-badge.ts --network bscTestnet
  *   npx hardhat run scripts/deploy-badge.ts --network bscMainnet
  */
+
+const hre = require("hardhat");
+
 async function main() {
   console.log("🚀 Deploying MeeChainBadgeSBT contract...\n");
 
   // Get deployer account
-  const [deployer] = await ethers.getSigners();
+  const [deployer] = await hre.ethers.getSigners();
   console.log("📝 Deploying with account:", deployer.address);
   
   // Get account balance
-  const balance = await ethers.provider.getBalance(deployer.address);
-  console.log("💰 Account balance:", ethers.formatEther(balance), "BNB\n");
+  const balance = await hre.ethers.provider.getBalance(deployer.address);
+  console.log("💰 Account balance:", hre.ethers.formatEther(balance), "BNB\n");
 
   // Deploy contract
   console.log("⏳ Deploying contract...");
-  const MeeChainBadgeSBT = await ethers.getContractFactory("MeeChainBadgeSBT");
+  const MeeChainBadgeSBT = await hre.ethers.getContractFactory("MeeChainBadgeSBT");
   const badgeContract = await MeeChainBadgeSBT.deploy();
   
   await badgeContract.waitForDeployment();

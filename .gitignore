@@ -59,5 +59,10 @@ msix-package/
 *.cer
 *.base64
 
+# Hardhat artifacts
+artifacts/
+cache/
+typechain-types/
+
 # Patch files (optional - remove if you want to commit patches)
 # *.patch

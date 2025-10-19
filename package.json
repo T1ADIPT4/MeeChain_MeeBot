@@ -20,7 +20,7 @@
     "demo:dashboard": "npm run build && node dist/examples/dashboard-integration-demo.js",
     "demo:auto-deploy": "npm run build && node dist/examples/auto-deploy-workflow-demo.js",
     "demo:supply": "node examples/meechain-supply-demo.js",
-    "deploy:badge": "npx hardhat run scripts/deploy-badge.ts",
+    "deploy:badge": "npx hardhat run scripts/deploy-badge.js",
     "deploy:quest": "node --loader ts-node/esm scripts/deploy.ts Quest",
     "deploy:fallback": "node --loader ts-node/esm scripts/deploy.ts Fallback",
     "deploy:supply": "npx hardhat run scripts/deployMeeChainSupply.js",
