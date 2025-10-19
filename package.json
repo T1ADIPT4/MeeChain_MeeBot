@@ -28,7 +28,9 @@
     "ipfs:generate-metadata": "node copilot/implement-ipfs-uploader/metadata-generator.js",
     "ipfs:test-metadata": "node copilot/implement-ipfs-uploader/test-metadata-generator.js",
     "ipfs:meebot-demo": "node copilot/implement-ipfs-uploader/meebot-milestone-example.js",
-    "verify:meebot": "node copilot/verifyMeeBotFlow.js"
+    "verify:meebot": "node copilot/verifyMeeBotFlow.js",
+    "api:dev": "node --loader ts-node/esm api/server.ts",
+    "api:start": "node api/server.js"
   },
   "keywords": [
     "meechain",
@@ -41,6 +43,8 @@
   "author": "MeeChain Team",
   "license": "MIT",
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
@@ -55,11 +59,16 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
+    "body-parser": "^2.2.0",
     "chart.js": "^4.5.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
     "firebase-admin": "^13.5.0",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.3.0",
-    "react-router-dom": "^7.9.4"
+    "react-router-dom": "^7.9.4",
+    "web3": "^4.16.0"
   },
   "directories": {
     "example": "examples",
