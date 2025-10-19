@@ -100,11 +100,45 @@ npm run demo:deploy-automation
 
 See [DEPLOY_AUTOMATION.md](DEPLOY_AUTOMATION.md) for complete documentation.
 
+### 🔧 MeeBot Backend API
+
+A standalone Express.js backend server for interacting with MeeChain Supply contracts:
+
+```bash
+# Navigate to backend directory
+cd meebot-backend
+
+# Install dependencies
+npm install
+
+# Configure environment
+cp .env.example .env
+# Edit .env with your actual values
+
+# Start the server
+npm start
+```
+
+**Features:**
+- 🌐 RESTful API for contract interactions
+- 🔐 Secure transaction signing with private keys
+- 📝 Automatic transaction logging
+- ✅ Support for replay, supply, and refund actions
+- 🔍 User status queries
+- 📊 Health check endpoint
+
+**API Endpoints:**
+- `POST /api/meechain/trigger` - Execute contract actions
+- `GET /api/meechain/status/:address` - Get user status
+- `GET /health` - Server health check
+
+See [meebot-backend/README.md](meebot-backend/README.md) for complete API documentation and usage examples.
+
 ### Documentation
 
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
 - 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
-
+- 🔧 [MeeBot Backend](meebot-backend/README.md) - Express.js API server for MeeChain Supply
 - 🤖 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment system guide
       copilot/automate-deploy-registry-json
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
@@ -202,6 +236,14 @@ MeeChain_MeeBot/
 ├── msix-template/               # MSIX package template
 │   ├── AppxManifest.xml         # Package manifest
 │   └── README.md                # MSIX documentation
+├── meebot-backend/              # Express.js backend API server
+│   ├── abi/
+│   │   └── MeeChainSupply.json  # Contract ABI
+│   ├── logs/                    # Transaction logs
+│   ├── index.js                 # Main server file
+│   ├── package.json             # Backend dependencies
+│   ├── .env.example             # Environment template
+│   └── README.md                # Backend documentation
 ├── .github/
 │   └── workflows/
 │       ├── codeql.yml           # Code scanning
