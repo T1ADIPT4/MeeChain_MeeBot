@@ -5,6 +5,8 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 ## 🔧 Features
 
 - ✅ **Automated Deploy-Registry System** - Multi-chain contract deployment automation
+- ✅ **Badge Ownership Verification** - Soulbound token (SBT) system for contributor badges
+- ✅ **Contributor Explorer** - Search and explore all contributors with badges and reputation
 - ✅ Fallback-aware multi-chain minting
 - 🌐 Multi-chain contract registry (Ethereum, Polygon, Arbitrum)
 - 🤖 MeeBot sprite + TTS feedback
@@ -13,14 +15,9 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 - 🛡️ Admin panel for contract authorization
 - 📊 Dashboard with badge provenance & fallback logs
 - ⚙️ Settings page with modular toggles
-- 📊 **Dashboard** - View badges, networks, and fallback logs
-- ⚙️ **Admin Panel** - Contract management and log export
-- 🛡️ Settings page with modular toggles
-- 🆘
 - 📤 **Log Export** - JSON/CSV export with provenance
-- 
 - 🆘 Support page with FAQ system
-- 🚀 **NEW**: Automated deployment workflow with MSIX packaging
+- 🚀 **MSIX Packaging** - Automated deployment workflow
 
 ## 📦 Tech Stack
 
@@ -104,9 +101,8 @@ See [DEPLOY_AUTOMATION.md](DEPLOY_AUTOMATION.md) for complete documentation.
 
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
 - 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
-
+- 🏅 [Badge Ownership Guide](BADGE_OWNERSHIP_GUIDE.md) - Badge verification and Contributor Explorer
 - 🤖 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment system guide
-      copilot/automate-deploy-registry-json
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
@@ -135,9 +131,41 @@ if (result.success) {
 }
 ```
 
+## 🏅 Badge Ownership System
+
+MeeChain now features a complete badge ownership verification system:
+
+**Smart Contract (MeeChainBadge.sol):**
+- Soulbound Token (SBT) implementation - non-transferable badges
+- `hasBadge(user, badgeId)` - Check single badge ownership
+- `getBadges(user)` - Get all badges for an address
+- `getBadgeType(tokenId)` - Get badge type name
+- Owner-controlled minting and revocation
+
+**Contributor Explorer UI:**
+- Search contributors by name or address
+- Filter by reputation score and badge type
+- Display badges with on-chain verification links
+- Top contributors leaderboard
+- Direct BscScan integration for transparency
+
+```typescript
+// Check if user has a badge
+const hasWatchdog = await badgeContract.methods
+  .hasBadge(userAddress, WATCHDOG_ID)
+  .call();
+
+// Get all user badges
+const badges = await badgeContract.methods
+  .getBadges(userAddress)
+  .call();
+```
+
+See [Badge Ownership Guide](BADGE_OWNERSHIP_GUIDE.md) for complete documentation and examples.
+
 ## 🧪 Testing
 
-All 46 tests passing with 100% success rate:
+All 178+ tests passing with high success rate:
 - ✅ Quest verification
 - ✅ Primary chain minting
 - ✅ Automatic fallback
@@ -147,6 +175,8 @@ All 46 tests passing with 100% success rate:
 - ✅ TTS quest system (14 tests)
 - ✅ Deploy registry (9 tests)
 - ✅ Dashboard utilities (13 tests)
+- ✅ Badge ownership verification (29 tests)
+- ✅ Contributor service (29 tests)
 
 ## 📁 Project Structure
 
