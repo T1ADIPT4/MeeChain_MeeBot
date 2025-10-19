@@ -4,9 +4,9 @@
 
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import { db } from './database';
-import { notifyAuditorTeam } from './notifications';
-import { FlagRequest, ApiResponse, RefundFlag } from './types';
+import { db } from './database.js';
+import { notifyAuditorTeam } from './notifications.js';
+import { FlagRequest, ApiResponse, RefundFlag } from './types.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;

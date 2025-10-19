@@ -3,7 +3,7 @@
  * Sends notifications when refund logs are flagged
  */
 
-import { RefundFlag } from './types';
+import { RefundFlag } from './types.js';
 
 /**
  * Send notification to Discord webhook

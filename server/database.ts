@@ -3,7 +3,7 @@
  * In production, this would be replaced with a real database (MongoDB, PostgreSQL, etc.)
  */
 
-import { RefundLog, RefundFlag } from './types';
+import { RefundLog, RefundFlag } from './types.js';
 
 // In-memory storage
 const refundLogs: RefundLog[] = [];
