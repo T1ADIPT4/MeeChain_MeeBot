@@ -73,13 +73,15 @@ export async function upgradeTier(userAddress: string): Promise<boolean> {
 
 /**
  * Fetch owned badges (mock)
+ * Returns badge IDs instead of names
  */
-export async function fetchOwnedBadges(userAddress: string): Promise<string[]> {
+export async function fetchOwnedBadges(userAddress: string): Promise<number[]> {
   console.log(`[BlockchainService] Fetching owned badges for ${userAddress}`);
-  // Mock implementation
+  // Mock implementation - in production, this would call badgeSBTContract.getBadgesOf(userAddress)
   await new Promise(res => setTimeout(res, 500));
-  const mockBadges = ['Pioneer', 'Quest Master', 'Early Adopter'];
-  return mockBadges.slice(0, Math.floor(Math.random() * 3) + 1);
+  const mockBadgeIds = [1, 2, 3, 5, 6]; // Pioneer, Quest Master, Early Adopter, Flow Master, Token Holder
+  const numBadges = Math.floor(Math.random() * mockBadgeIds.length) + 1;
+  return mockBadgeIds.slice(0, numBadges);
 }
 
 /**
@@ -110,11 +112,13 @@ export async function checkQuestStatus(userAddress: string, questId: string): Pr
 /**
  * Mint badge (mock)
  */
-export async function mintBadge(userAddress: string, questId: string): Promise<boolean> {
+export async function mintBadge(userAddress: string, questId: string): Promise<{ success: boolean; badgeId?: number }> {
   console.log(`[BlockchainService] Minting badge for quest ${questId} to user ${userAddress}`);
   // Mock implementation
   await new Promise(res => setTimeout(res, 1000));
-  return Math.random() > 0.1; // 90% success rate
+  const success = Math.random() > 0.1; // 90% success rate
+  const badgeId = success ? Math.floor(Math.random() * 10) + 1 : undefined;
+  return { success, badgeId };
 }
 
 /**
