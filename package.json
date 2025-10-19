@@ -12,6 +12,8 @@
     "deploy": "npm run build && firebase deploy",
     "copilot-test-tts-badge": "jest tests/ttsQuest.test.ts",
     "dev:dashboard": "vite",
+    "server": "node --loader ts-node/esm server/index.ts",
+    "dev:server": "node --loader ts-node/esm --watch server/index.ts",
     "example": "npm run build && node dist/examples/auto-deploy-workflow-demo.js",
     "demo:settings": "npm run build && node dist/examples/settings-support-demo.js",
     "demo:tts-quest": "npm run build && node dist/examples/tts-quest-demo.js",
@@ -55,7 +57,11 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
     "chart.js": "^4.5.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "firebase-admin": "^13.5.0",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.3.0",
