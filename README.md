@@ -13,14 +13,12 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 - 🛡️ Admin panel for contract authorization
 - 📊 Dashboard with badge provenance & fallback logs
 - ⚙️ Settings page with modular toggles
-- 📊 **Dashboard** - View badges, networks, and fallback logs
-- ⚙️ **Admin Panel** - Contract management and log export
-- 🛡️ Settings page with modular toggles
-- 🆘
 - 📤 **Log Export** - JSON/CSV export with provenance
-- 
 - 🆘 Support page with FAQ system
 - 🚀 **NEW**: Automated deployment workflow with MSIX packaging
+- 🔍 **NEW**: Auditor Dashboard for DAO Governance
+- 📥 **NEW**: CSV Export & Dispute Flagging System
+- 🏛️ **NEW**: DAO Proposal Generation
 
 ## 📦 Tech Stack
 
@@ -62,19 +60,55 @@ npm run example
 npm run demo:settings              # Settings/Support demo
 npm run demo:deploy-registry       # Deploy Registry demo
 npm run demo:deploy-automation     # Automated deployment demo
+npm run demo:dao-governance        # DAO Governance demo (NEW!)
+
+# Start API server for DAO Governance
+npm run api:start                  # Start REST API server
+npm run api:dev                    # Start with auto-reload
 
 # Deploy contracts (automated)
 npm run deploy <network>           # Deploy to specific network
 npm run validate-registry          # Validate registry integrity
 
-# Run tests (47 comprehensive tests)
-copilot/automate-deploy-registry-json
-npm test
+# Run tests
+npm test                           # All tests
+npm test tests/api.test.ts         # API tests only
 ```
+
+### 🏛️ DAO Governance & Export Log System
+
+**NEW!** Complete system for transparent refund management with DAO oversight:
+
+```bash
+# Start the API server
+npm run api:start
+
+# Run the complete demo workflow
+npm run demo:dao-governance
+```
+
+**Key Features:**
+- 📥 **CSV Export** - Export all refund logs for auditing
+- 🚩 **Dispute Flagging** - Community can flag suspicious refunds
+- 📝 **DAO Proposals** - Auto-generate Snapshot-compatible proposals
+- 🎨 **Auditor Dashboard** - Beautiful React UI for log management
+- 📊 **Real-time Statistics** - Track pending, verified, and flagged refunds
+- 🔗 **BscScan Integration** - Direct links to blockchain transactions
+
+**API Endpoints:**
+```bash
+GET  /api/logs/export-csv          # Download CSV
+POST /api/logs/flag                # Flag a refund
+GET  /api/logs                     # Get all logs
+```
+
+See [EXPORT_LOG_SYSTEM.md](EXPORT_LOG_SYSTEM.md) for complete documentation.
+
+---
 
 ### 🚀 Automated Deploy-Registry System
 
-The new automated system manages contract deployments across multiple chains:
+The automated system manages contract deployments across multiple chains:
 
 ```bash
 # Deploy contracts to a network
@@ -104,13 +138,14 @@ See [DEPLOY_AUTOMATION.md](DEPLOY_AUTOMATION.md) for complete documentation.
 
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
 - 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
-
 - 🤖 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment system guide
-      copilot/automate-deploy-registry-json
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
 - 🚀 [Automated Deployment Workflow](WORKFLOW_GUIDE.md) - GitHub Actions workflow for automated releases
+- 🔍 **[Export Log System](EXPORT_LOG_SYSTEM.md)** - Complete system overview and implementation guide
+- 📡 **[API Documentation](API_DOCUMENTATION.md)** - RESTful API reference for refund log management
+- 🎨 **[Auditor Dashboard Integration](AUDITOR_DASHBOARD_INTEGRATION.md)** - Dashboard setup and customization
 
 ### Example Usage
 
