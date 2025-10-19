@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getAllContributors, ContributorData, initMockData } from '../services/contributorReputationService';
+import { getAllContributors, initMockData } from '../services/contributorReputationService';
+import type { ContributorData } from '../services/contributorReputationService';
 
 export default function ContributorLeaderboard() {
   const [contributors, setContributors] = useState<ContributorData[]>([]);

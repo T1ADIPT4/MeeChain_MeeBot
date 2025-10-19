@@ -3,19 +3,19 @@
  * จัดการคะแนน reputation และ badge ของผู้มีส่วนร่วม
  */
 
+export interface ReputationAction {
+  type: 'flag_submit' | 'flag_confirm' | 'flag_reject' | 'review_complete';
+  timestamp: number;
+  points: number;
+  refundId?: string;
+}
+
 export interface ContributorData {
   address: string;
   name?: string;
   score: number;
   badges: string[];
   actions: ReputationAction[];
-}
-
-export interface ReputationAction {
-  type: 'flag_submit' | 'flag_confirm' | 'flag_reject' | 'review_complete';
-  timestamp: number;
-  points: number;
-  refundId?: string;
 }
 
 // Badge thresholds and definitions
