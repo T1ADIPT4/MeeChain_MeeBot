@@ -17,6 +17,31 @@ The main ERC-20 token for the MeeChain ecosystem.
 npx hardhat run scripts/deployMEEToken.js --network bscTestnet
 ```
 
+### MeeChainBadge.sol
+Soulbound Token (SBT) implementation for contributor badges.
+
+- **Symbol**: MEEBADGE
+- **Name**: MeeChain Badge
+- **Token Standard**: ERC-721 (Non-Transferable)
+- **Features**: 
+  - Soulbound (non-transferable)
+  - Badge ownership verification
+  - Batch badge queries
+  - Badge type metadata
+  - Owner-controlled minting and revocation
+
+**Key Functions**:
+- `hasBadge(address user, uint256 badgeId)` - Check if user owns a badge
+- `getBadges(address user)` - Get all badges for a user
+- `getBadgeType(uint256 tokenId)` - Get badge type name
+- `mintBadge(address to, string badgeType)` - Mint new badge (owner only)
+- `revokeBadge(uint256 tokenId)` - Revoke a badge (owner only)
+
+**Deployment**:
+```bash
+npx hardhat run scripts/deployBadge.js --network bscTestnet
+```
+
 ### MeeChainSupply.sol
 Secure replay/supply system for MeeChain Singapore.
 
@@ -39,6 +64,7 @@ npx hardhat run scripts/deployMeeChainSupply.js --network bscTestnet
 
 - [MeeChain Token Guide](../MEECHAIN_TOKEN_GUIDE.md)
 - [MeeChain Supply Guide](../MEECHAIN_SUPPLY_GUIDE.md)
+- [Badge Ownership Guide](../BADGE_OWNERSHIP_GUIDE.md)
 
 ## Testing
 
