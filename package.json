@@ -30,7 +30,8 @@
     "ipfs:meebot-demo": "node copilot/implement-ipfs-uploader/meebot-milestone-example.js",
     "verify:meebot": "node copilot/verifyMeeBotFlow.js",
     "api:dev": "node --loader ts-node/esm api/server.ts",
-    "api:start": "node api/server.js"
+    "api:start": "node api/server.js",
+    "demo:api-integration": "node --loader ts-node/esm examples/api-integration-demo.ts"
   },
   "keywords": [
     "meechain",
