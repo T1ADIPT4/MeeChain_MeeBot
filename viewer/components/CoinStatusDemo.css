@@ -1,0 +1,133 @@
+.coin-status-demo {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  padding: 2rem;
+}
+
+.demo-header {
+  text-align: center;
+  color: white;
+  margin-bottom: 3rem;
+}
+
+.demo-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.demo-header p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.role-selector {
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 2rem;
+  color: white;
+}
+
+.role-selector h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.role-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.role-btn {
+  padding: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.role-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.role-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.5);
+}
+
+.role-description {
+  max-width: 800px;
+  margin: 0 auto 2rem;
+}
+
+.description-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: white;
+  border-left: 4px solid #667eea;
+}
+
+.description-card h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+}
+
+.description-card p {
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+.demo-info {
+  max-width: 800px;
+  margin: 3rem auto;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 2rem;
+  color: white;
+}
+
+.demo-info h3 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.demo-info ol {
+  line-height: 2;
+  padding-left: 1.5rem;
+}
+
+.demo-info li {
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .demo-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .role-selector,
+  .demo-info {
+    padding: 1.5rem;
+  }
+
+  .role-buttons {
+    grid-template-columns: 1fr;
+  }
+}
