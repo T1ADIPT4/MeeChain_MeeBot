@@ -1,0 +1,73 @@
+# MeeChain Smart Contracts
+
+This directory contains the smart contracts for the MeeChain ecosystem.
+
+## Contracts
+
+### MeeChainToken.sol
+The main ERC-20 token for the MeeChain ecosystem.
+
+- **Symbol**: MEE
+- **Name**: MeeChain Token
+- **Initial Supply**: 1,000,000 MEE
+- **Features**: Mintable (owner only), Burnable
+
+**Deployment**:
+```bash
+npx hardhat run scripts/deployMEEToken.js --network bscTestnet
+```
+
+### MeeChainSupply.sol
+Secure replay/supply system for MeeChain Singapore.
+
+- **Purpose**: Safe and transparent token supply with replay verification
+- **Authorization**: MeeBot only
+- **Features**: 
+  - Replay verification before supply
+  - Two-step process (confirm → trigger)
+  - Recovery mechanism (refund)
+  - Event logging for transparency
+
+**Deployment**:
+```bash
+export MEEBOT_ADDRESS="0x..."
+export MEE_TOKEN_ADDRESS="0x..."
+npx hardhat run scripts/deployMeeChainSupply.js --network bscTestnet
+```
+
+## Documentation
+
+- [MeeChain Token Guide](../MEECHAIN_TOKEN_GUIDE.md)
+- [MeeChain Supply Guide](../MEECHAIN_SUPPLY_GUIDE.md)
+
+## Testing
+
+All contracts have comprehensive test coverage:
+
+```bash
+# Run all tests
+npm test
+
+# Run specific contract tests
+npm test tests/meeChainSupply.test.ts
+```
+
+## Security
+
+- All contracts use Solidity 0.8.x with built-in overflow checks
+- Access control implemented via modifiers
+- Event emissions for transparency
+- Comprehensive test coverage
+
+## Verification
+
+After deployment, verify contracts on BscScan:
+
+```bash
+# MeeChainToken
+npx hardhat verify --network bscTestnet <CONTRACT_ADDRESS>
+
+# MeeChainSupply
+npx hardhat verify --network bscTestnet <CONTRACT_ADDRESS> \
+  "<MEEBOT_ADDRESS>" "<TOKEN_ADDRESS>"
+```
