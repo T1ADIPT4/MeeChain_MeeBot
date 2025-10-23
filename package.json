@@ -32,6 +32,8 @@
     "ipfs:test-metadata": "node copilot/implement-ipfs-uploader/test-metadata-generator.js",
     "ipfs:meebot-demo": "node copilot/implement-ipfs-uploader/meebot-milestone-example.js",
     "verify:meebot": "node copilot/verifyMeeBotFlow.js",
+    "demo:refund-audit": "npm run build && node dist/examples/refund-audit-demo.js",
+    "demo:refund-contract": "npm run build && node dist/examples/refund-contract-integration.js"
     "api:dev": "node --loader ts-node/esm api/server.ts",
     "api:start": "node api/server.js",
     "demo:api-integration": "node --loader ts-node/esm examples/api-integration-demo.ts"
