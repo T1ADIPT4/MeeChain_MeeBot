@@ -5,6 +5,7 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 ## 🔧 Features
 
 - ✅ **Automated Deploy-Registry System** - Multi-chain contract deployment automation
+- ✅ **Web3.js Integration** - Complete smart contract integration with BSC
 - ✅ Fallback-aware multi-chain minting
 - 🌐 Multi-chain contract registry (Ethereum, Polygon, Arbitrum)
 - 🤖 MeeBot sprite + TTS feedback
@@ -13,12 +14,7 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 - 🛡️ Admin panel for contract authorization
 - 📊 Dashboard with badge provenance & fallback logs
 - ⚙️ Settings page with modular toggles
-- 📊 **Dashboard** - View badges, networks, and fallback logs
-- ⚙️ **Admin Panel** - Contract management and log export
-- 🛡️ Settings page with modular toggles
-- 🆘
 - 📤 **Log Export** - JSON/CSV export with provenance
-- 
 - 🆘 Support page with FAQ system
 - 🚀 **NEW**: Automated deployment workflow with MSIX packaging
 
@@ -104,9 +100,9 @@ See [DEPLOY_AUTOMATION.md](DEPLOY_AUTOMATION.md) for complete documentation.
 
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
 - 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
-
+- 🔗 [Web3.js Integration Guide](WEB3_INTEGRATION_GUIDE.md) - Complete Web3.js integration with MeeChainSupply
+- ⚡ [Web3.js Quick Reference](WEB3_QUICK_REFERENCE.md) - Quick reference for Web3.js usage
 - 🤖 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment system guide
-      copilot/automate-deploy-registry-json
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
@@ -135,9 +131,42 @@ if (result.success) {
 }
 ```
 
+## 🔗 Web3.js Integration
+
+Complete integration with MeeChainSupply smart contract on BSC:
+
+```typescript
+import { initWeb3, toWei } from './utils/web3Config';
+import { 
+  initMeeChainSupplyContract,
+  confirmReplay,
+  triggerSupply
+} from './utils/meeChainSupplyContract';
+
+// Setup
+const web3 = initWeb3(false); // BSC Mainnet
+const contract = initMeeChainSupplyContract(web3);
+
+// Confirm replay after verification
+await confirmReplay(contract, userAddress, toWei('1.5'), meeBotAddress);
+
+// Trigger supply
+await triggerSupply(contract, userAddress, meeBotAddress);
+```
+
+**Features:**
+- 🌐 BSC Mainnet/Testnet support
+- 🔄 Complete contract function wrappers
+- 💱 Wei/BNB conversion utilities
+- 📡 Event listeners for real-time updates
+- 🔒 Secure transaction handling
+- 📝 Comprehensive documentation
+
+See [WEB3_INTEGRATION_GUIDE.md](WEB3_INTEGRATION_GUIDE.md) for complete documentation.
+
 ## 🧪 Testing
 
-All 46 tests passing with 100% success rate:
+All tests passing with 100% success rate:
 - ✅ Quest verification
 - ✅ Primary chain minting
 - ✅ Automatic fallback
@@ -147,6 +176,7 @@ All 46 tests passing with 100% success rate:
 - ✅ TTS quest system (14 tests)
 - ✅ Deploy registry (9 tests)
 - ✅ Dashboard utilities (13 tests)
+- ✅ Web3.js integration (16 tests)
 
 ## 📁 Project Structure
 
@@ -167,9 +197,15 @@ MeeChain_MeeBot/
 │   │   └── logger.ts            # Event logging system
 │   ├── example.ts               # Usage examples
 │   └── test.ts                  # Test suite
+├── utils/
+│   ├── web3Config.ts            # Web3 setup and utilities
+│   └── meeChainSupplyContract.ts # Contract integration
+├── examples/
+│   └── web3-integration-demo.ts # Web3.js demo
 ├── tests/
 │   ├── ttsQuest.test.ts         # TTS quest tests
-│   └── deployRegistry.test.ts   # Deploy registry tests
+│   ├── deployRegistry.test.ts   # Deploy registry tests
+│   └── web3Integration.test.ts  # Web3.js integration tests
 ├── pages/
 │   ├── Settings.tsx             # Settings page
 │   ├── Support.tsx              # Support/FAQ page
