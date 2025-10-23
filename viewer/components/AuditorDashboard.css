@@ -1,0 +1,268 @@
+/* Auditor Dashboard Styles */
+
+.auditor-dashboard {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1a202c;
+  margin-bottom: 0.5rem;
+}
+
+.filter-bar {
+  background: white;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.refund-log-table {
+  margin-top: 1rem;
+}
+
+.refund-log-table h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #2d3748;
+}
+
+.contributor-panel {
+  padding: 1rem;
+}
+
+.contributor-panel h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #2d3748;
+}
+
+.contributor-info {
+  margin-bottom: 1.5rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.address-short {
+  font-family: monospace;
+  background: #f7fafc;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.score {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2563eb;
+}
+
+.contributor-stats {
+  margin-bottom: 1.5rem;
+}
+
+.contributor-stats h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #4a5568;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+  background: #f7fafc;
+  border-radius: 0.375rem;
+  border: 1px solid #e2e8f0;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #718096;
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #2d3748;
+}
+
+.stat-value.success {
+  color: #16a34a;
+}
+
+.stat-value.error {
+  color: #dc2626;
+}
+
+.contributor-badges {
+  margin-bottom: 1.5rem;
+}
+
+.contributor-badges h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #4a5568;
+}
+
+.badge-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.badge-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #fef3c7;
+  border-radius: 0.375rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #fbbf24;
+}
+
+.badge-icon {
+  font-size: 1.5rem;
+}
+
+.badge-info {
+  flex: 1;
+}
+
+.badge-info strong {
+  display: block;
+  color: #92400e;
+  margin-bottom: 0.25rem;
+}
+
+.badge-info p {
+  font-size: 0.875rem;
+  color: #78350f;
+  margin: 0;
+}
+
+.contributor-actions {
+  margin-bottom: 1.5rem;
+}
+
+.contributor-actions h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #4a5568;
+}
+
+.action-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.action-timestamp {
+  font-size: 0.75rem;
+  color: #718096;
+  min-width: 80px;
+}
+
+.action-type {
+  flex: 1;
+  font-size: 0.875rem;
+  color: #4a5568;
+}
+
+.action-score {
+  font-weight: bold;
+  font-size: 0.875rem;
+  min-width: 40px;
+  text-align: right;
+}
+
+.action-score.positive {
+  color: #16a34a;
+}
+
+.action-score.negative {
+  color: #dc2626;
+}
+
+.dashboard-footer {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-footer h3 {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #2d3748;
+}
+
+.dashboard-footer pre {
+  background: #f7fafc;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .dashboard-content {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .auditor-dashboard {
+    padding: 1rem;
+  }
+  
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filter-bar {
+    flex-direction: column !important;
+  }
+}
