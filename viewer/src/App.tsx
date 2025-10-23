@@ -4,6 +4,7 @@ import ProfileViewer from '../components/ProfileViewer';
 import ConnectWalletButton from '../components/ConnectWalletButton';
 import Leaderboard from '../components/Leaderboard';
 import SwapT2PtoMEE from '../components/SwapT2PtoMEE';
+import ContributorExplorer from './components/ContributorExplorer';
 import { MeeBotProvider } from './context/MeeBotContext';
 
 function App() {
@@ -29,6 +30,9 @@ function App() {
           
           {/* เพิ่ม Leaderboard เข้าไปในหน้าหลัก */}
           <Leaderboard />
+
+          {/* เพิ่ม Contributor Explorer */}
+          <ContributorExplorer />
         </main>
       </div>
     </MeeBotProvider>
