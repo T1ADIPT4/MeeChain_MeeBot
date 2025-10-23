@@ -4,13 +4,13 @@
   "networks": {
     "ethereum": {
       "chainId": 1,
-      "badgeContract": "0x1111111111111111111111111111111111111111",
+      "badgeContract": "invalid-address",
       "questContract": "0x2222222222222222222222222222222222222222",
       "fallbackContract": "0x3333333333333333333333333333333333333333"
     },
     "polygon": {
       "chainId": 137,
-      "badgeContract": "0x4444444444444444444444444444444444444444",
+      "badgeContract": "",
       "questContract": "0x5555555555555555555555555555555555555555",
       "fallbackContract": "0x6666666666666666666666666666666666666666"
     },
