@@ -4,6 +4,7 @@ import Admin from './pages/Admin';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import Support from './pages/Support';
+import AuditorDashboard from './pages/AuditorDashboard';
 import ContributorProfile from './pages/ContributorProfile';
 import ContributorExplorer from './pages/ContributorExplorer';
 import Sidebar from './pages/components/Sidebar';
@@ -24,6 +25,7 @@ function App() {
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/support" element={<Support />} />
+              <Route path="/auditor-dashboard" element={<AuditorDashboard />} />
               <Route path="/contributors" element={<ContributorExplorer />} />
               <Route path="/contributor/:address" element={<ContributorProfile />} />
             </Routes>
