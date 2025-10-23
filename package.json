@@ -12,6 +12,8 @@
     "deploy": "npm run build && firebase deploy",
     "copilot-test-tts-badge": "jest tests/ttsQuest.test.ts",
     "dev:dashboard": "vite",
+    "api:start": "tsx api/server.ts",
+    "api:dev": "tsx watch api/server.ts",
     "example": "npm run build && node dist/examples/auto-deploy-workflow-demo.js",
     "demo:settings": "npm run build && node dist/examples/settings-support-demo.js",
     "demo:tts-quest": "npm run build && node dist/examples/tts-quest-demo.js",
@@ -32,6 +34,7 @@
     "ipfs:test-metadata": "node copilot/implement-ipfs-uploader/test-metadata-generator.js",
     "ipfs:meebot-demo": "node copilot/implement-ipfs-uploader/meebot-milestone-example.js",
     "verify:meebot": "node copilot/verifyMeeBotFlow.js",
+    "demo:dao-governance": "tsx examples/dao-governance-demo.ts"
     "demo:refund-audit": "npm run build && node dist/examples/refund-audit-demo.js",
     "demo:refund-contract": "npm run build && node dist/examples/refund-contract-integration.js"
     "api:dev": "node --loader ts-node/esm api/server.ts",
@@ -63,11 +66,17 @@
     "react-dom": "^18.3.1",
     "ts-jest": "^29.4.4",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "vite": "^7.1.9",
     "vitest": "^3.2.4"
   },
   "dependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "chart.js": "^4.5.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
     "body-parser": "^2.2.0",
     "chart.js": "^4.5.0",
     "cors": "^2.8.5",
@@ -75,6 +84,7 @@
     "express": "^5.1.0",
     "ethers": "^6.15.0",
     "firebase-admin": "^13.5.0",
+    "json2csv": "^6.0.0-alpha.2",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.3.0",
     "react-router-dom": "^7.9.4",
