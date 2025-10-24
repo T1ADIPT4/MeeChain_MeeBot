@@ -1,0 +1,121 @@
+/* Refund Log Details Styles */
+
+.refund-log-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.details-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #333;
+  min-width: 140px;
+}
+
+.detail-value {
+  flex: 1;
+  text-align: right;
+  color: #666;
+  word-break: break-all;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.detail-value.status-success {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.detail-value.status-failed {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.detail-value.status-pending {
+  color: #ffc107;
+  font-weight: 600;
+}
+
+.copy-button {
+  background: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+
+.copy-button:hover {
+  background: #357abd;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.flag-button {
+  flex: 1;
+  padding: 15px 30px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+  min-width: 200px;
+}
+
+.flag-button:hover {
+  background: #c82333;
+}
+
+@media (max-width: 768px) {
+  .detail-row {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .detail-value {
+    text-align: left;
+    justify-content: flex-start;
+  }
+
+  .detail-label {
+    min-width: auto;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .flag-button {
+    min-width: auto;
+    width: 100%;
+  }
+}

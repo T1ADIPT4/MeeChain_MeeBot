@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+         xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+         xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities">
+  
+  <Identity Name="MeeChain.MeeBot"
+            Publisher="CN=MeeChain"
+            Version="1.0.0.0" />
+  
+  <Properties>
+    <DisplayName>MeeChain MeeBot</DisplayName>
+    <PublisherDisplayName>MeeChain Team</PublisherDisplayName>
+    <Logo>assets\logo.png</Logo>
+    <Description>MeeChain MeeBot - Quest Verification and Badge Minting System</Description>
+  </Properties>
+  
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.22621.0" />
+    
+    <!-- Microsoft.UI.Xaml 2.8 dependency -->
+    <PackageDependency Name="Microsoft.UI.Xaml.2.8" 
+                       MinVersion="8.2310.30001.0" 
+                       Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" />
+    
+    <!-- VCLibs dependency for C++ runtime -->
+    <PackageDependency Name="Microsoft.VCLibs.140.00.UWPDesktop" 
+                       MinVersion="14.0.30704.0" 
+                       Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US" />
+  </Dependencies>
+  
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+  
+  <Applications>
+    <Application Id="MeeBot" 
+                 Executable="MeeBot.exe" 
+                 EntryPoint="Windows.FullTrustApplication">
+      
+      <uap:VisualElements DisplayName="MeeChain MeeBot"
+                         Description="MeeChain MeeBot - Quest and Badge System"
+                         BackgroundColor="transparent"
+                         Square150x150Logo="assets\logo.png"
+                         Square44x44Logo="assets\logo.png">
+        
+        <uap:DefaultTile Wide310x150Logo="assets\logo.png" 
+                        ShortName="MeeBot">
+          <uap:ShowNameOnTiles>
+            <uap:ShowOn Tile="square150x150Logo"/>
+            <uap:ShowOn Tile="wide310x150Logo"/>
+          </uap:ShowNameOnTiles>
+        </uap:DefaultTile>
+        
+        <uap:SplashScreen Image="assets\splash.png" 
+                         BackgroundColor="#667eea" />
+        
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+  
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+    <Capability Name="internetClient" />
+  </Capabilities>
+  
+</Package>

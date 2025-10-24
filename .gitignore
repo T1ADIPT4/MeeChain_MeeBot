@@ -12,6 +12,13 @@ logs/
 *.log
 npm-debug.log*
 
+# Test logs (keep directory structure but ignore log files)
+tests/logs/*.log
+
+# Transaction logs and nonce tracking
+logs/tx.log
+logs/nonces.json
+
 # Environment
 .env
 .env.local
@@ -35,3 +42,26 @@ coverage/
 tmp/
 temp/
 *.tmp
+
+# Registry backups
+config/deploy-registry.backup.*.json
+
+# Exported logs
+logs-export-*.json
+logs-export-*.csv
+registry-provenance-*.json
+demo-logs.json
+demo-registry-provenance.json
+
+# Auto-generated metadata
+copilot/ipfs-uploader/metadata/
+# MSIX build artifacts
+msix-package/
+*.msix
+*.appx
+*.pfx
+*.cer
+*.base64
+
+# Patch files (optional - remove if you want to commit patches)
+# *.patch

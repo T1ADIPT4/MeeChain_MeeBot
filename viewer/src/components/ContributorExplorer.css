@@ -1,0 +1,295 @@
+.explorer-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.explorer-container h2 {
+  margin-bottom: 1.5rem;
+  color: #1a202c;
+  font-size: 2rem;
+}
+
+/* Filters Section */
+.explorer-filters {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f7fafc;
+  border-radius: 8px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #4299e1;
+}
+
+.filter-group {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.filter-group label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.reputation-filter,
+.badge-filter {
+  padding: 0.5rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 1rem;
+  min-width: 150px;
+}
+
+.reputation-filter:focus,
+.badge-filter:focus {
+  outline: none;
+  border-color: #4299e1;
+}
+
+/* Results Info */
+.results-info {
+  margin-bottom: 1rem;
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+/* Table Container */
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 2rem;
+}
+
+.contributors-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.contributors-table thead {
+  background: #edf2f7;
+}
+
+.contributors-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #2d3748;
+  border-bottom: 2px solid #cbd5e0;
+}
+
+.contributor-row {
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.2s;
+}
+
+.contributor-row:hover {
+  background-color: #f7fafc;
+}
+
+.contributors-table td {
+  padding: 1rem;
+}
+
+/* Identity Cell */
+.contributor-identity .identity-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.contributor-identity strong {
+  color: #2d3748;
+}
+
+.address-short {
+  color: #718096;
+  font-size: 0.875rem;
+  font-family: monospace;
+}
+
+/* Reputation Cell */
+.reputation-cell {
+  text-align: center;
+}
+
+.reputation-score {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #fef5e7;
+  border-radius: 20px;
+  font-weight: 600;
+  color: #d69e2e;
+}
+
+/* Badges Cell */
+.badges-cell {
+  max-width: 300px;
+}
+
+.badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.badge-item {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: #e6fffa;
+  border: 1px solid #81e6d9;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  color: #234e52;
+  cursor: default;
+}
+
+.no-badges {
+  color: #a0aec0;
+  font-style: italic;
+}
+
+/* Actions Cell */
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.verify-link,
+.profile-link {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.verify-link {
+  background: #4299e1;
+  color: white;
+}
+
+.verify-link:hover {
+  background: #3182ce;
+}
+
+.profile-link {
+  background: #48bb78;
+  color: white;
+}
+
+.profile-link:hover {
+  background: #38a169;
+}
+
+/* No Results */
+.no-results {
+  text-align: center;
+  padding: 2rem;
+  color: #a0aec0;
+  font-style: italic;
+}
+
+/* Top Contributors Section */
+.top-contributors {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f7fafc;
+  border-radius: 8px;
+}
+
+.top-contributors h3 {
+  margin-bottom: 1rem;
+  color: #2d3748;
+}
+
+.top-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.top-contributor-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 6px;
+  border-left: 4px solid #4299e1;
+}
+
+.top-contributor-item .rank {
+  font-weight: 700;
+  color: #4299e1;
+  min-width: 40px;
+}
+
+.top-contributor-item .name {
+  flex: 1;
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.top-contributor-item .score {
+  color: #d69e2e;
+  font-weight: 600;
+}
+
+.top-contributor-item .badge-count {
+  color: #48bb78;
+  font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .explorer-container {
+    padding: 1rem;
+  }
+
+  .filter-group {
+    flex-direction: column;
+  }
+
+  .table-container {
+    overflow-x: scroll;
+  }
+
+  .contributors-table {
+    font-size: 0.875rem;
+  }
+
+  .contributors-table th,
+  .contributors-table td {
+    padding: 0.5rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .verify-link,
+  .profile-link {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
