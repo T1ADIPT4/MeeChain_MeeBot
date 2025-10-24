@@ -4,23 +4,6 @@
   "description": "Fallback-aware quest verification and badge minting system for MeeChain",
   "main": "dist/QuestManager.js",
   "type": "module",
-  "scripts": {
-    "build": "tsc",
-    "test": "jest",
-    "copilot-test-tts-badge": "jest tests/ttsQuest.test.ts",
-    "dev": "tsc --watch",
-    "example": "npm run build && node dist/example.js",
-    "demo:settings": "npm run build && node dist/examples/settings-support-demo.js",
-    "demo:tts-quest": "npm run build && node dist/examples/tts-quest-demo.js",
-    "demo:deploy-registry": "npm run build && node dist/examples/deploy-registry-demo.js",
-    "demo:dashboard": "npm run build && node dist/examples/dashboard-integration-demo.js",
-    "demo:auto-deploy": "npm run build && node dist/examples/auto-deploy-workflow-demo.js",
-    "deploy:badge": "node --loader ts-node/esm scripts/deploy.ts Badge",
-    "deploy:quest": "node --loader ts-node/esm scripts/deploy.ts Quest",
-    "deploy:fallback": "node --loader ts-node/esm scripts/deploy.ts Fallback",
-    "registry:update": "node --loader ts-node/esm scripts/updateRegistry.ts",
-    "registry:validate": "node --loader ts-node/esm scripts/validateRegistry.ts"
-  },
   "keywords": [
     "meechain",
     "quest",
@@ -31,16 +14,35 @@
   ],
   "author": "MeeChain Team",
   "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc",
+    "start": "node dist/QuestManager.js",
+    "dev": "vite --config dev-app/vite.config.ts",
+  "preview": "vite preview --config dev-app/vite.config.ts",
+  "dev:server": "ts-node server/meebotWebhook.ts",
+  "start:server": "node dist/server/meebotWebhook.js"
+  },
   "devDependencies": {
+    "@types/express": "^5.0.4",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
+    "@vitejs/plugin-react": "^4.3.0",
     "jest": "^30.2.0",
     "ts-jest": "^29.4.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vite": "^5.4.0"
   },
   "dependencies": {
-    "react": "^18.2.0"
+    "buffer": "^6.0.3",
+    "ethers": "^6.15.0",
+    "express": "^5.1.0",
+    "firebase": "^10.0.0",
+    "lucide-react": "^0.268.0",
+    "process": "^0.11.10",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

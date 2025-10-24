@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MeeBot Patch Status</title>
+    <link rel="stylesheet" href="assets/meebot.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>🧩 MeeBot Patch Status</h1>
+      <div id="status">
+        <p>Loading patch status…</p>
+      </div>
+      <div id="sprite" class="sprite-container">
+        <img
+          src="https://meechain.app/assets/sprites/loading.gif"
+          alt="Loading..."
+        />
+      </div>
+      <footer>
+        <p>Auto-refresh (JS polling) every 30 seconds</p>
+      </footer>
+    </div>
+
+    <script>
+      async function fetchStatus() {
+        try {
+          const res = await fetch("status/patch-status.json", {
+            cache: "no-store",
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          const statusDiv = document.getElementById("status");
+          const spriteDiv = document.getElementById("sprite");
+
+          statusDiv.innerHTML = `
+          <p><strong>Patch:</strong> ${data.patch}</p>
+          <p><strong>Branch:</strong> ${data.branch}</p>
+          <p><strong>Status:</strong> ${
+            data.status === "success" ? "✅ Success" : "❌ Failed"
+          }</p>
+          <p><strong>Timestamp:</strong> ${new Date(
+            data.timestamp
+          ).toLocaleString()}</p>
+          <p><a href="${
+            data.prUrl
+          }" target="_blank" rel="noopener">View Pull Request</a></p>
+        `;
+
+          let spriteUrl = "https://meechain.app/assets/sprites/loading.gif";
+          if (data.status === "success")
+            spriteUrl = "https://meechain.app/assets/sprites/celebrate.gif";
+          else if (data.status === "failed")
+            spriteUrl = "https://meechain.app/assets/sprites/sad.gif";
+
+          spriteDiv.innerHTML = `<img src="${spriteUrl}" alt="MeeBot status sprite" />`;
+        } catch (err) {
+          document.getElementById(
+            "status"
+          ).innerHTML = `<p>⚠️ Failed to load patch status.</p>`;
+          const spriteDiv = document.getElementById("sprite");
+          if (spriteDiv)
+            spriteDiv.innerHTML = `<img src="https://meechain.app/assets/sprites/sad.gif" alt="Error sprite" />`;
+          console.error("Error loading patch status:", err);
+        }
+      }
+
+      // initial load
+      fetchStatus();
+      // poll every 30s
+      setInterval(fetchStatus, 30000);
+    </script>
+  </body>
+</html>

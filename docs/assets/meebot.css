@@ -1,0 +1,27 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #f9f9fc;
+  color: #333;
+  text-align: center;
+  padding: 2rem;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 2rem;
+}
+
+.sprite-container img {
+  margin-top: 1rem;
+  width: 120px;
+}
+
+footer {
+  margin-top: 1rem;
+  color: #666;
+  font-size: 0.9rem;
+}

@@ -3,6 +3,9 @@
  * Handles badge minting with fallback mechanism for resilience
  */
 
+
+// เชื่อมต่อ production chain ด้วย web3BadgeMinter
+import { mintBadge as web3MintBadge, fallbackMintBadge as web3FallbackMintBadge } from './web3BadgeMinter'
 import { logEvent } from '../utils/logger.js'
 import { getBadgeContract, getFallbackContract } from '../config/registryLoader.js'
 import type { SupportedNetwork } from '../config/registryTypes.js'
@@ -38,46 +41,9 @@ export async function mintBadge(
   userId: string,
   questId: string,
   network?: SupportedNetwork
-): Promise<BadgeTransaction> {
-  const chainNetwork = network || primaryNetwork
-  const contractAddress = getBadgeContract(chainNetwork)
-  
-  logEvent('badge-mint-start', { 
-    userId, 
-    questId, 
-    chain: 'primary',
-    network: chainNetwork,
-    contractAddress 
-  }, 'debug')
-
-  // Simulate primary chain minting
-  await new Promise((resolve) => setTimeout(resolve, 100))
-
-  if (!mintingSuccess) {
-    throw new Error('Primary chain minting failed')
-  }
-
-  const transaction: BadgeTransaction = {
-    txHash: `0x${Math.random().toString(16).slice(2)}`,
-    userId,
-    questId,
-    badgeId: `badge-${questId}`,
-    timestamp: new Date(),
-    chain: 'primary',
-    contractAddress,
-    network: chainNetwork,
-  }
-
-  logEvent('badge-mint-success', {
-    userId,
-    questId,
-    tx: transaction.txHash,
-    chain: 'primary',
-    network: chainNetwork,
-    contractAddress,
-  })
-
-  return transaction
+): Promise<any> {
+  // เรียกใช้ฟังก์ชัน production (web3)
+  return web3MintBadge(userId, questId, network)
 }
 
 /**
@@ -92,46 +58,9 @@ export async function fallbackMintBadge(
   userId: string,
   questId: string,
   network?: SupportedNetwork
-): Promise<BadgeTransaction> {
-  const chainNetwork = network || fallbackNetwork
-  const contractAddress = getFallbackContract(chainNetwork)
-  
-  logEvent('badge-fallback-mint-start', { 
-    userId, 
-    questId, 
-    chain: 'fallback',
-    network: chainNetwork,
-    contractAddress 
-  }, 'debug')
-
-  // Simulate fallback chain minting (usually more reliable)
-  await new Promise((resolve) => setTimeout(resolve, 150))
-
-  if (!fallbackMintingSuccess) {
-    throw new Error('Fallback chain minting also failed')
-  }
-
-  const transaction: BadgeTransaction = {
-    txHash: `0xfb${Math.random().toString(16).slice(2)}`,
-    userId,
-    questId,
-    badgeId: `badge-${questId}-fallback`,
-    timestamp: new Date(),
-    chain: 'fallback',
-    contractAddress,
-    network: chainNetwork,
-  }
-
-  logEvent('badge-fallback-mint-success', {
-    userId,
-    questId,
-    tx: transaction.txHash,
-    chain: 'fallback',
-    network: chainNetwork,
-    contractAddress,
-  })
-
-  return transaction
+): Promise<any> {
+  // เรียกใช้ฟังก์ชัน production (web3)
+  return web3FallbackMintBadge(userId, questId, network)
 }
 
 /**

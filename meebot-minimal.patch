@@ -1,0 +1,13 @@
+*** Begin Patch
+*** Update File: package.json
+@@
+-  "license": "MIT",
+-  "author": "MeeChain Team",
++  "license": "MIT",
++  "scripts": {
++    "test": "jest",
++    "build": "tsc",
++    "start": "node dist/QuestManager.js"
++  },
++  "author": "MeeChain Team",
+*** End Patch

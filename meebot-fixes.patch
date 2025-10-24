@@ -1,0 +1,24 @@
+*** Begin Patch
+*** End Patch
+*** Begin Patch
+*** Update File: package.json
+@@
+   "license": "MIT",
+-  "scripts": {
+-    "test": "jest",
+-    "build": "tsc",
+-    "start": "node dist/QuestManager.js"
+-  },
+-  "devDependencies": {
++  "scripts": {
++    "test": "jest",
++    "build": "tsc",
++    "start": "node dist/QuestManager.js"
++  },
++  "jest": {
++    "config": "./jest.config.js"
++  },
++  "devDependencies": {
+@@
+ }
+*** End Patch

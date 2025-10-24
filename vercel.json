@@ -1,0 +1,7 @@
+{
+  "redirects": [
+    { "source": "/dashboard", "destination": "https://meechain.app/dashboard", "permanent": false },
+    { "source": "/notify", "destination": "https://meechain.meebot.app/notify", "permanent": false },
+    { "source": "/leaderboard", "destination": "https://meechain.app/leaderboard", "permanent": false }
+  ]
+}

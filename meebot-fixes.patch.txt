@@ -1,0 +1,58 @@
+*** Begin Patch
+*** Update File: package.json
+@@
+   "scripts": {
+     "test": "jest",
+     "build": "tsc",
+     "start": "node dist/QuestManager.js"
+   },
+-  "jest": {
+-    "config": "./jest.config.js"
+-  },
++  
+@@
+-  "dependencies": {
+-    "react": "^18.2.0"
+-  }
++  "dependencies": {
++    "react": "^18.2.0",
++    "lucide-react": "^0.268.0",
++    "firebase": "^10.0.0"
++  }
+ }
+*** End Patch
+
+*** Begin Patch
+*** Update File: pages/Admin.tsx
+@@
+-import MeeBot from './components/MeeBot'; // use named export
++import { MeeBot } from '../components/MeeBot'; // use named export
+@@
+-      <MeeBot className="sprite-deploy-ready" />
++      {/* MeeBot is a runtime helper, not a React component. Use its methods to drive sprite/TTS. */}
++      <div className="meebot-sprite" onClick={() => MeeBot.setSprite('happy')}>
++        <button>Trigger MeeBot Happy Sprite</button>
++      </div>
+*** End Patch
+
+*** Begin Patch
+*** Update File: pages/index.tsx
+@@
+-// 1. Dashboard Page (New - Skeleton)
+-const DashboardPage = ({ balance, userId }) => {
++// 1. Dashboard Page (New - Skeleton)
++type DashboardPageProps = { balance: number; userId?: string | null };
++const DashboardPage = ({ balance, userId }: DashboardPageProps) => {
+@@
+-// 3. Receive Token Page (Existing - Integrated)
+-const ReceiveTokenPage = ({ userId }) => {
++// 3. Receive Token Page (Existing - Integrated)
++type ReceiveTokenPageProps = { userId?: string | null };
++const ReceiveTokenPage = ({ userId }: ReceiveTokenPageProps) => {
+@@
+-// --- Core Navigation Component ---
+-const NavigationMenu = ({ currentPage, setCurrentPage }) => {
++// --- Core Navigation Component ---
++type NavigationMenuProps = { currentPage: string; setCurrentPage: (p: string) => void };
++const NavigationMenu = ({ currentPage, setCurrentPage }: NavigationMenuProps) => {
+*** End Patch

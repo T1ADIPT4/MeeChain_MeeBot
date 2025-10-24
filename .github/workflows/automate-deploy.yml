@@ -1,0 +1,293 @@
+name: Automate Deploy — Apply Patch, Build MSIX, Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      patch_file:
+        description: 'Patch file to apply'
+        required: true
+      version:
+        description: 'Release version (e.g. 1.0.0)'
+        required: true
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+
+    env:
+      PATCH: ${{ github.event.inputs.patch_file }}
+      VERSION: ${{ github.event.inputs.version }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+
+    steps:
+      - name: 🛎️ Checkout (persist credentials)
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: 🔎 Read dependency versions from JSON
+        id: deps
+        run: |
+          if (!(Test-Path DesktopAppInstaller_Dependencies.json)) { Write-Error "DesktopAppInstaller_Dependencies.json not found"; exit 1 }
+          $json = Get-Content DesktopAppInstaller_Dependencies.json -Raw | ConvertFrom-Json
+          # assume the JSON order matches expected entries
+          echo "DESKTOP_UIX_VERSION=$($json.Dependencies[0].Version)" >> $env:GITHUB_ENV
+          echo "DESKTOP_VCLIBS_VERSION=$($json.Dependencies[1].Version)" >> $env:GITHUB_ENV
+
+      - name: � Validate consistency between PackageDependencies.json and DesktopAppInstaller_Dependencies.json
+        run: |
+          if (!(Test-Path PackageDependencies.json)) { Write-Error "PackageDependencies.json not found"; exit 1 }
+          $pkgDeps = Get-Content PackageDependencies.json -Raw | ConvertFrom-Json
+          $installerDeps = Get-Content DesktopAppInstaller_Dependencies.json -Raw | ConvertFrom-Json
+
+          $pkgUIX = ($pkgDeps.Dependencies | Where-Object { $_.Name -eq "Microsoft.UI.Xaml.2.8" }).Version
+          $installerUIX = ($installerDeps.Dependencies | Where-Object { $_.Name -eq "Microsoft.UI.Xaml.2.8" }).Version
+
+          $pkgVCLibs = ($pkgDeps.Dependencies | Where-Object { $_.Name -eq "Microsoft.VCLibs.140.00.UWPDesktop" }).Version
+          $installerVCLibs = ($installerDeps.Dependencies | Where-Object { $_.Name -eq "Microsoft.VCLibs.140.00.UWPDesktop" }).Version
+
+          $mismatch = $false
+
+          if ($pkgUIX -ne $installerUIX) {
+            Write-Host "⚠️ Microsoft.UI.Xaml version mismatch: Package=$pkgUIX, Installer=$installerUIX"
+            $mismatch = $true
+          }
+
+          if ($pkgVCLibs -ne $installerVCLibs) {
+            Write-Host "⚠️ Microsoft.VCLibs version mismatch: Package=$pkgVCLibs, Installer=$installerVCLibs"
+            $mismatch = $true
+          }
+
+          if (-not $mismatch) {
+            Write-Host "✅ Dependency versions match across both files"
+            exit 0
+          }
+
+          # Auto-fix PackageDependencies.json to match DesktopAppInstaller_Dependencies.json
+          Write-Host "🔧 Auto-fixing PackageDependencies.json to match DesktopAppInstaller_Dependencies.json"
+
+          # Update the in-memory object
+          foreach ($d in $pkgDeps.Dependencies) {
+            if ($d.Name -eq 'Microsoft.UI.Xaml.2.8') { $d.Version = $installerUIX }
+            if ($d.Name -eq 'Microsoft.VCLibs.140.00.UWPDesktop') { $d.Version = $installerVCLibs }
+          }
+
+          # Write back updated JSON
+          $pkgDeps | ConvertTo-Json -Depth 8 | Out-File -Encoding UTF8 PackageDependencies.json
+
+          # Commit & push fix to a timestamped branch and open a PR (safe with branch protection)
+          $timestamp = Get-Date -Format "yyyyMMdd-HHmm"
+          $depsBranch = "ci/fix-deps-$timestamp"
+
+          git fetch origin --prune
+          $defaultBranch = '${{ env.DEFAULT_BRANCH }}'
+          git checkout -b $depsBranch origin/$defaultBranch
+
+          git config user.name "MeeBot CI"
+          git config user.email "meebot@ci.local"
+          git add PackageDependencies.json
+          git commit -m "🔧 Sync PackageDependencies.json versions from DesktopAppInstaller_Dependencies.json" || Write-Host "No changes to commit"
+          git push origin $depsBranch
+
+          echo "DEPS_BRANCH=$depsBranch" >> $env:GITHUB_ENV
+
+      - name: 🚀 Open Pull Request for deps fix
+        if: always()
+        run: |
+          $branchName = $env:DEPS_BRANCH
+          if (-not $branchName) { Write-Error "Deps branch name not set"; exit 1 }
+
+          gh auth setup-git
+          gh pr create --title "🔧 Sync dependency versions" `
+                       --body "This PR updates PackageDependencies.json to match DesktopAppInstaller_Dependencies.json automatically." `
+                       --base ${{ env.DEFAULT_BRANCH }} --head $branchName `
+                       --label "auto-fix,deps-sync"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🪄 Create manifest-fix branch and apply fix
+        id: create_manifest_branch
+        run: |
+          $manifestPath = 'manifests/meechain.viewer/1.0.0/manifest.yaml'
+          if (!(Test-Path $manifestPath)) { Write-Error "$manifestPath not found"; exit 1 }
+
+          $timestamp = Get-Date -Format "yyyyMMdd-HHmm"
+          $branchName = "ci/fix-manifest-$timestamp"
+
+          git fetch origin --prune
+          $defaultBranch = '${{ env.DEFAULT_BRANCH }}'
+          git checkout -b $branchName origin/$defaultBranch
+
+          $manifest = Get-Content $manifestPath -Raw
+
+          $uixVer = $env:DESKTOP_UIX_VERSION
+          $vclibsVer = $env:DESKTOP_VCLIBS_VERSION
+
+          # Replace versions (preserve identifier left-hand side)
+          $manifest = $manifest -replace 'Microsoft\.UI\.Xaml\.[^@\s]+' , "Microsoft.UI.Xaml.2.8@$uixVer"
+          $manifest = $manifest -replace 'Microsoft\.VCLibs\.[^@\s]+' , "Microsoft.VCLibs.140.00.UWPDesktop@$vclibsVer"
+
+          $manifest | Set-Content $manifestPath -Encoding utf8
+
+          git config user.name "MeeBot CI"
+          git config user.email "meebot@ci.local"
+          git add $manifestPath
+          # Save staged diff for PR body
+          git diff --staged --no-color > manifest.diff || Write-Host "No diff generated"
+          git commit -m "🔧 Auto-fix manifest versions to match DesktopAppInstaller_Dependencies.json" || Write-Host "No changes to commit"
+          git push origin $branchName
+
+          echo "BRANCH_NAME=$branchName" >> $env:GITHUB_ENV
+          echo "MANIFEST_DIFF_FILE=manifest.diff" >> $env:GITHUB_ENV
+
+      - name: 🚀 Open Pull Request for manifest fix
+        if: always()
+        run: |
+          $branchName = $env:BRANCH_NAME
+          if (-not $branchName) { Write-Error "Branch name not set"; exit 1 }
+
+          $diffFile = $env:MANIFEST_DIFF_FILE
+          $diff = ''
+          if (Test-Path $diffFile) { $diff = Get-Content $diffFile -Raw }
+
+          $body = "This PR updates manifest.yaml to match DesktopAppInstaller_Dependencies.json automatically.`n`n"
+          if ($diff -ne '') { $body += "```diff`n$diff`n```" }
+
+          gh auth setup-git
+          gh pr create --title "🔧 Auto-fix manifest version" `
+                       --body $body `
+                       --base ${{ env.DEFAULT_BRANCH }} --head $branchName `
+                       --label "auto-fix,manifest-sync,auto-merge" `
+                       --reviewer thanawat-dev
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ✅ Auto-merge PR if checks pass
+        if: always()
+        run: |
+          $branchName = $env:BRANCH_NAME
+          if (-not $branchName) { Write-Host "No branch; skipping auto-merge"; exit 0 }
+
+          # find open PR for this branch
+          $prNumber = gh pr list --state open --head $branchName --json number --jq '.[0].number'
+          if (-not $prNumber) { Write-Host "No open PR found for $branchName"; exit 0 }
+
+          $labels = gh pr view $prNumber --json labels --jq '.labels[].name' || @()
+          if ($labels -contains 'auto-merge') {
+            Write-Host "Attempting auto-merge for PR #$prNumber"
+            gh pr merge $prNumber --auto --rebase || Write-Host "Auto-merge initiated or awaiting checks"
+          } else {
+            Write-Host "⚠️ Skipping auto-merge: label 'auto-merge' not present"
+          }
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🧪 Install & run tests
+        run: |
+          npm ci
+          npm test
+          npm run build
+
+      - name: 🌿 Create branch and apply patch
+        run: |
+          git fetch origin --prune
+          git checkout -B meebot/fix-jest-deps
+          if (!(Test-Path "${{ github.event.inputs.patch_file }}")) { Write-Error "Patch not found"; exit 1 }
+          git apply --check "${{ github.event.inputs.patch_file }}" || git apply --3way "${{ github.event.inputs.patch_file }}" || git apply --reject "${{ github.event.inputs.patch_file }}"
+
+      - name: ❌ Fail on rejects
+        run: |
+          $rej = Get-ChildItem -Recurse -Filter *.rej -ErrorAction SilentlyContinue
+          if ($rej -and $rej.Count -gt 0) { Write-Error "Found .rej files"; $rej | ForEach-Object { Write-Host $_.FullName }; exit 1 }
+
+      - name: 📝 Commit & push patch branch
+        run: |
+          git add -A
+          git config user.name "MeeBot CI"
+          git config user.email "meebot@ci.local"
+          git commit -m "Apply patch: ${{ github.event.inputs.patch_file }}" || Write-Host "No changes to commit"
+          git push -u origin HEAD
+
+      - name: 📬 Create or reuse PR
+        id: create_pr
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner, repo = context.repo.repo;
+            const head = `${owner}:meebot/fix-jest-deps`;
+            const existing = await github.rest.pulls.list({ owner, repo, head, state: 'open' });
+            let pr;
+            if (existing.data && existing.data.length) { pr = existing.data[0]; } else { pr = (await github.rest.pulls.create({ owner, repo, title: `🧩 MeeBot Patch: ${process.env.PATCH}`, head: 'meebot/fix-jest-deps', base: context.payload.repository.default_branch, body: 'This PR was auto-generated by MeeBot CI.' })).data }
+            core.setOutput('pr_number', pr.number.toString()); core.setOutput('pr_url', pr.html_url);
+
+      - name: 🎮 MeeBot PR actions
+        if: success()
+        uses: actions/github-script@v7
+        env:
+          PR_NUMBER: ${{ steps.create_pr.outputs.pr_number }}
+          PR_URL: ${{ steps.create_pr.outputs.pr_url }}
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = Number(process.env.PR_NUMBER);
+            try { await github.rest.issues.addAssignees({ owner: context.repo.owner, repo: context.repo.repo, issue_number: pr, assignees: ['t1adipt4'] }); } catch(e){}
+            try { await github.rest.pulls.requestReviewers({ owner: context.repo.owner, repo: context.repo.repo, pull_number: pr, reviewers: ['t1adipt4'] }); } catch(e){}
+            try { await github.rest.issues.addLabels({ owner: context.repo.owner, repo: context.repo.repo, issue_number: pr, labels: ['patch','auto-generated','needs-review'] }); } catch(e){}
+            await github.rest.issues.createComment({ owner: context.repo.owner, repo: context.repo.repo, issue_number: pr, body: `MeeBot applied patch ${process.env.PATCH} — PR: ${process.env.PR_URL}` });
+
+      - name: 📝 Create patch-status.json and publish to gh-pages/docs/status
+        run: |
+          $status = @{ patch = "${{ github.event.inputs.patch_file }}"; branch = 'meebot/fix-jest-deps'; status = 'success'; timestamp = "$(Get-Date -Format o)"; prUrl = "${{ steps.create_pr.outputs.pr_url }}" } | ConvertTo-Json -Depth 4
+          $status | Out-File -Encoding UTF8 patch-status.json
+          git fetch origin
+          if (git show-ref --quiet refs/remotes/origin/gh-pages) { git checkout gh-pages } else { git checkout --orphan gh-pages; git rm -rf . || true; mkdir docs; "<html><body><h1>MeeBot Viewer</h1></body></html>" | Out-File docs/index.html; git add docs/index.html; git commit -m 'init gh-pages'; git push origin gh-pages }
+          if (!(Test-Path docs)) { New-Item -ItemType Directory -Path docs | Out-Null }
+          if (!(Test-Path docs\status)) { New-Item -ItemType Directory -Path docs\status | Out-Null }
+          Move-Item -Force ./patch-status.json docs\status\patch-status.json
+          git add docs/status/patch-status.json
+          git commit -m "Update patch status" || Write-Host "No changes to commit"
+          git push origin gh-pages
+
+      - name: 📦 Generate MSIX package
+        run: |
+          mkdir MeeBotViewer
+          cp -r docs/* MeeBotViewer/
+          mkdir Output
+          MakeAppx pack -d MeeBotViewer -p Output/MeeBotViewer.msix
+
+      - name: � Check secrets presence
+        run: |
+          if ("${{ secrets.SIGNING_CERT_PFX }}" -eq "") { throw "Missing SIGNING_CERT_PFX" }
+          if ("${{ secrets.SIGNING_CERT_PASSWORD }}" -eq "") { throw "Missing SIGNING_CERT_PASSWORD" }
+
+      - name: 🔐 Decode signing certificate
+        run: |
+          [System.IO.File]::WriteAllBytes('signing.pfx', [Convert]::FromBase64String('${{ secrets.SIGNING_CERT_PFX }}'))
+
+      - name: 🔏 Sign MSIX package
+        if: ${{ secrets.SIGNING_CERT_PFX != '' && secrets.SIGNING_CERT_PASSWORD != '' }}
+        run: |
+          signtool sign /fd SHA256 /f signing.pfx /p "${{ secrets.SIGNING_CERT_PASSWORD }}" Output/MeeBotViewer.msix
+
+      - name: 🚀 Publish GitHub Release with MSIX
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: "MeeBot Viewer v${{ github.event.inputs.version }}"
+          body: |
+            🎉 MSIX package for MeeBot Viewer
+            - Patch: ${{ github.event.inputs.patch_file }}
+            - Viewer: https://<owner>.github.io/<repo>/docs/
+          files: |
+            Output/MeeBotViewer.msix
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🔎 Verify release artifact
+        run: |
+          if (!(Test-Path Output\MeeBotViewer.msix)) { Write-Error "MSIX not found"; exit 1 }
+          Write-Host "MSIX present: Output\MeeBotViewer.msix"

@@ -1,0 +1,101 @@
+name: Build & Release MSIX
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 1.0.0 or 2025.10.15)'
+        required: true
+      patch_file:
+        description: 'Optional: patch file name to list in release body'
+        required: false
+
+jobs:
+  build-msix:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      VERSION: ${{ github.event.inputs.version }}
+      PATCH: ${{ github.event.inputs.patch_file }}
+
+    steps:
+      - name: 🧱 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📁 Prepare viewer folder
+        run: |
+          $src = Join-Path $Env:GITHUB_WORKSPACE 'docs'
+          $dst = Join-Path $Env:GITHUB_WORKSPACE 'MeeBotViewer'
+          if (Test-Path $dst) { Remove-Item -Recurse -Force $dst }
+          if (!(Test-Path $src)) { Write-Error "docs/ not found in workspace"; exit 1 }
+          Copy-Item -Path (Join-Path $src '*') -Destination $dst -Recurse -Force
+          # If AppxManifest.xml exists under packaging, prefer that
+          if (Test-Path (Join-Path $Env:GITHUB_WORKSPACE 'packaging\AppxManifest.xml')) {
+            Copy-Item -Path (Join-Path $Env:GITHUB_WORKSPACE 'packaging\AppxManifest.xml') -Destination (Join-Path $dst 'AppxManifest.xml') -Force
+          }
+
+      - name: 📦 Generate MSIX package
+        run: |
+          $out = Join-Path $Env:GITHUB_WORKSPACE 'Output'
+          if (!(Test-Path $out)) { New-Item -ItemType Directory -Path $out | Out-Null }
+          Push-Location $Env:GITHUB_WORKSPACE
+          try {
+            MakeAppx pack -d MeeBotViewer -p "$out\MeeBotViewer.msix"
+            if ($LASTEXITCODE -ne 0) { Write-Error "MakeAppx returned $LASTEXITCODE"; exit $LASTEXITCODE }
+          } catch {
+            Write-Error "MakeAppx not found or failed. Ensure Windows SDK is installed on the runner."; exit 1
+          } finally { Pop-Location }
+
+      - name: 🔐 Decode signing certificate (if provided)
+        id: decode_cert
+        run: |
+          if (-not [string]::IsNullOrEmpty("${{ secrets.SIGNING_CERT_PFX }}")) {
+            Write-Host "Decoding signing certificate"
+            [System.IO.File]::WriteAllBytes('signing.pfx', [Convert]::FromBase64String('${{ secrets.SIGNING_CERT_PFX }}'))
+            Write-Host "Certificate written to signing.pfx"
+          } else {
+            Write-Host "SIGNING_CERT_PFX not provided — skipping decode & sign"
+          }
+
+      - name: 🔏 Sign MSIX package (if cert provided)
+        if: ${{ secrets.SIGNING_CERT_PFX != '' && secrets.SIGNING_CERT_PASSWORD != '' }}
+        run: |
+          $msix = Join-Path $Env:GITHUB_WORKSPACE 'Output\MeeBotViewer.msix'
+          if (!(Test-Path $msix)) { Write-Error "MSIX not found: $msix"; exit 1 }
+          try {
+            & signtool sign /fd SHA256 /f signing.pfx /p "${{ secrets.SIGNING_CERT_PASSWORD }}" /tr http://timestamp.digicert.com /td SHA256 $msix
+            if ($LASTEXITCODE -ne 0) { Write-Error "SignTool failed with exit code $LASTEXITCODE"; exit $LASTEXITCODE }
+          } catch {
+            Write-Error "SignTool not found or signing failed. Ensure Windows SDK is available on runner."; exit 1
+          }
+
+      - name: ✅ Verify MSIX exists
+        run: |
+          $msix = Join-Path $Env:GITHUB_WORKSPACE 'Output\MeeBotViewer.msix'
+          if (!(Test-Path $msix)) { Write-Error "MSIX not found at $msix"; exit 1 }
+          Write-Host "MSIX ready: $msix"
+
+      - name: 🚀 Create GitHub Release and upload MSIX
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: "MeeBot Viewer v${{ env.VERSION }}"
+          body: |
+            🎉 MSIX package for MeeBot Viewer
+            - Viewer: https://<owner>.github.io/<repo>/docs/
+            - Patch: ${{ env.PATCH }}
+            - Branch: meebot/fix-jest-deps
+            - Status: ✅ Built and (if available) signed
+          files: |
+            Output/MeeBotViewer.msix
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 📦 Upload build artifact (fallback)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: MeeBotViewer-msix
+          path: Output/MeeBotViewer.msix

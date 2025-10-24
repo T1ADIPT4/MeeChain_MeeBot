@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Contributor timeline: contributors/{userId}/timeline/{eventId}
+    match /contributors/{userId}/timeline/{eventId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update, delete: if false; // ไม่อนุญาตให้แก้ไข/ลบย้อนหลัง
+    }
+    // Contributor profile: contributors/{userId}
+    match /contributors/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    // Leaderboard (public)
+    match /leaderboard/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

@@ -15,6 +15,10 @@ npm-debug.log*
 # Environment
 .env
 .env.local
+/.env.production
+/.env.production.example
+**/.env
+**/.env.local
 
 # IDE
 .vscode/

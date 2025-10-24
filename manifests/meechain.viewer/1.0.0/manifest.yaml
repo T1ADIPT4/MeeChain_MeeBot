@@ -1,0 +1,15 @@
+Id: meechain.viewer
+Publisher: MeeChain Labs
+Name: MeeBot Patch Viewer
+Version: 1.0.0
+Channel: Stable
+License: MIT
+InstallerType: msix
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://github.com/<owner>/<repo>/releases/download/v1.0.0/MeeBotViewer.msix
+    Scope: user
+Dependencies:
+  WindowsFeatures:
+    - Microsoft.UI.Xaml.2.8@8.2310.30001.0
+    - Microsoft.VCLibs.140.00.UWPDesktop@14.0.33728.0

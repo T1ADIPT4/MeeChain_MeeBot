@@ -1,0 +1,12 @@
+{
+  "Dependencies": [
+    {
+      "Version": "6.2.3180.32001",
+      "Name": "Microsoft.UI.Xaml.2.8"
+    },
+    {
+      "Version": "14.0.32820.100",
+      "Name": "Microsoft.VCLibs.140.00.UWPDesktop"
+    }
+  ]
+}

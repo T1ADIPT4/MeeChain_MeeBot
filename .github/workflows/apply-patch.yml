@@ -1,0 +1,58 @@
+name: "🧩 MeeBot Patch & Deploy"
+
+on:
+  workflow_dispatch:
+    inputs:
+      patch_file:
+        description: "ชื่อไฟล์ patch (เช่น meebot-fixes.patch)"
+        required: true
+        default: "meebot-fixes.patch"
+
+jobs:
+  apply-patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛎️ Checkout repo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: 📦 Apply patch
+        run: |
+          git apply patches/${{ github.event.inputs.patch_file }}
+          echo "✅ Patch applied: ${{ github.event.inputs.patch_file }}"
+
+      - name: 🔍 Validate build
+        run: |
+          npm install
+          npm run build
+
+  preview-deploy:
+    needs: apply-patch
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚀 Deploy to Vercel (Preview)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_MEECHAIN }}
+          vercel-args: "--previews"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+  notify-success:
+    needs: preview-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🤖 Notify MeeBot (Firestore)
+        run: |
+          curl -X POST https://meebot-api.meechain.io/api/notify \
+            -H "Authorization: Bearer ${{ secrets.MEEBOT_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "type": "deploy",
+              "status": "success",
+              "message": "🎉 MeeBot ได้รับ patch ใหม่และ deploy preview สำเร็จแล้ว!",
+              "timestamp": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'"
+            }'

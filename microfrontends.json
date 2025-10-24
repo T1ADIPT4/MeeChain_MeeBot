@@ -1,0 +1,25 @@
+{
+    "$schema": "https://openapi.vercel.sh/microfrontends.json",
+    "applications": {
+        "express-js-on-vercel": {
+            "development": {
+                "fallback": "meechain.meebot.app"
+            }
+        },
+        "contributor-dashboard": {
+            "development": {
+                "fallback": "meechain.app/dashboard"
+            }
+        },
+        "leaderboard": {
+            "development": {
+                "fallback": "meechain.app/leaderboard"
+            }
+        },
+        "governance-vote": {
+            "development": {
+                "fallback": "meechain.app/governance"
+            }
+        }
+    }
+}
