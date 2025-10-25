@@ -1,0 +1,83 @@
+/* Refund Logs Table Styles */
+
+.refund-logs-table-container {
+  overflow-x: auto;
+}
+
+.no-logs {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.refund-logs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.refund-logs-table thead {
+  background: #f8f9fa;
+  border-bottom: 2px solid #ddd;
+}
+
+.refund-logs-table th {
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+}
+
+.refund-logs-table tbody tr {
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.refund-logs-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.refund-logs-table tbody tr.selected {
+  background: #e3f2fd;
+}
+
+.refund-logs-table td {
+  padding: 12px 15px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.status-success {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.status-failed {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-badge.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+@media (max-width: 768px) {
+  .refund-logs-table {
+    font-size: 0.85rem;
+  }
+
+  .refund-logs-table th,
+  .refund-logs-table td {
+    padding: 8px 10px;
+  }
+}
