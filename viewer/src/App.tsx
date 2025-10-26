@@ -6,6 +6,7 @@ import Leaderboard from '../components/Leaderboard';
 import SwapT2PtoMEE from '../components/SwapT2PtoMEE';
 import AuditorDashboard from './components/AuditorDashboard';
 import ContributorLeaderboard from './components/ContributorLeaderboard';
+import ContributorExplorer from './components/ContributorExplorer';
 import { MeeBotProvider } from './context/MeeBotContext';
 
 function App() {
@@ -106,6 +107,11 @@ function App() {
               <ContributorLeaderboard />
             </div>
           )}
+          {/* เพิ่ม Leaderboard เข้าไปในหน้าหลัก */}
+          <Leaderboard />
+
+          {/* เพิ่ม Contributor Explorer */}
+          <ContributorExplorer />
         </main>
       </div>
     </MeeBotProvider>

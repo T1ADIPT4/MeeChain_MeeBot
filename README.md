@@ -5,6 +5,10 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 ## 🔧 Features
 
 - ✅ **Automated Deploy-Registry System** - Multi-chain contract deployment automation
+- ✅ **Badge Ownership Verification** - Soulbound token (SBT) system for contributor badges
+- ✅ **Contributor Explorer** - Search and explore all contributors with badges and reputation
+- ✅ **MeeBot Web3 Backend API** - REST API for Web3 interactions (NEW!)
+- ✅ **Web3.js Integration** - Complete smart contract integration with BSC
 - ✅ Fallback-aware multi-chain minting
 - 🌐 Multi-chain contract registry (Ethereum, Polygon, Arbitrum)
 - 🤖 MeeBot sprite + TTS feedback
@@ -13,14 +17,16 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 - 🛡️ Admin panel for contract authorization
 - 📊 Dashboard with badge provenance & fallback logs
 - ⚙️ Settings page with modular toggles
-- 📊 **Dashboard** - View badges, networks, and fallback logs
-- ⚙️ **Admin Panel** - Contract management and log export
-- 🛡️ Settings page with modular toggles
-- 🆘
 - 📤 **Log Export** - JSON/CSV export with provenance
-- 
 - 🆘 Support page with FAQ system
+- 🚀 **MSIX Packaging** - Automated deployment workflow
 - 🚀 **NEW**: Automated deployment workflow with MSIX packaging
+- 🔍 **NEW**: Auditor Dashboard with refund monitoring and flag system
+- 🔍 **NEW**: Auditor Dashboard for DAO Governance
+- 📥 **NEW**: CSV Export & Dispute Flagging System
+- 🏛️ **NEW**: DAO Proposal Generation
+- 🔐 **NEW**: Refund Audit Trail System - Complete logging and audit for refund operations
+- 🚀 Automated deployment workflow with MSIX packaging
 
 ## 📦 Tech Stack
 
@@ -37,7 +43,12 @@ MeeChain เป็นแพลตฟอร์ม Web3 ที่ออกแบ�
 git clone https://github.com/TLADPT14/MeeChain_MeeBot.git
 cd MeeChain_MeeBot
 npm install
+
+# Start the frontend
 npm run dev
+
+# Start the backend API server (in a separate terminal)
+npm run server
 ```
 
 ## 🎯 Quest System
@@ -62,19 +73,57 @@ npm run example
 npm run demo:settings              # Settings/Support demo
 npm run demo:deploy-registry       # Deploy Registry demo
 npm run demo:deploy-automation     # Automated deployment demo
+npm run demo:dao-governance        # DAO Governance demo (NEW!)
+
+# Start API server for DAO Governance
+npm run api:start                  # Start REST API server
+npm run api:dev                    # Start with auto-reload
+npm run demo:refund-audit          # Refund audit trail demo
+npm run demo:refund-contract       # Refund contract integration demo
 
 # Deploy contracts (automated)
 npm run deploy <network>           # Deploy to specific network
 npm run validate-registry          # Validate registry integrity
 
-# Run tests (47 comprehensive tests)
-copilot/automate-deploy-registry-json
-npm test
+# Run tests
+npm test                           # All tests
+npm test tests/api.test.ts         # API tests only
 ```
+
+### 🏛️ DAO Governance & Export Log System
+
+**NEW!** Complete system for transparent refund management with DAO oversight:
+
+```bash
+# Start the API server
+npm run api:start
+
+# Run the complete demo workflow
+npm run demo:dao-governance
+```
+
+**Key Features:**
+- 📥 **CSV Export** - Export all refund logs for auditing
+- 🚩 **Dispute Flagging** - Community can flag suspicious refunds
+- 📝 **DAO Proposals** - Auto-generate Snapshot-compatible proposals
+- 🎨 **Auditor Dashboard** - Beautiful React UI for log management
+- 📊 **Real-time Statistics** - Track pending, verified, and flagged refunds
+- 🔗 **BscScan Integration** - Direct links to blockchain transactions
+
+**API Endpoints:**
+```bash
+GET  /api/logs/export-csv          # Download CSV
+POST /api/logs/flag                # Flag a refund
+GET  /api/logs                     # Get all logs
+```
+
+See [EXPORT_LOG_SYSTEM.md](EXPORT_LOG_SYSTEM.md) for complete documentation.
+
+---
 
 ### 🚀 Automated Deploy-Registry System
 
-The new automated system manages contract deployments across multiple chains:
+The automated system manages contract deployments across multiple chains:
 
 ```bash
 # Deploy contracts to a network
@@ -100,17 +149,86 @@ npm run demo:deploy-automation
 
 See [DEPLOY_AUTOMATION.md](DEPLOY_AUTOMATION.md) for complete documentation.
 
+### 🔍 Auditor Dashboard
+
+The Auditor Dashboard provides transparent monitoring of refund transactions:
+
+```bash
+# Start the API server
+npm run server
+
+# In another terminal, start the frontend
+npm run dev
+
+# Access the dashboard at http://localhost:5173/auditor-dashboard
+```
+
+**Features:**
+- 📊 Real-time refund log monitoring
+- 🔍 Search by address, transaction hash, or refund ID
+- 📅 Date range filtering
+- 🚨 Flag suspicious transactions
+- 📄 Export logs to CSV
+- 🔔 Discord webhook notifications
+
+See [AUDITOR_DASHBOARD.md](AUDITOR_DASHBOARD.md) for complete documentation.
+### 🌐 MeeBot Web3 Backend API (NEW!)
+
+A complete REST API for secure Web3 interactions with the MeeChain Supply smart contract:
+
+```bash
+# Quick start
+npm run api:dev
+
+# Test the API
+curl http://localhost:3000/health
+
+# Confirm replay
+curl -X POST http://localhost:3000/api/meechain/trigger \
+  -H "Content-Type: application/json" \
+  -d '{
+    "userAddress": "0x...",
+    "action": "replay",
+    "amountBNB": "0.01"
+  }'
+```
+
+**Features:**
+- ✅ Replay confirmation endpoint
+- ✅ Token supply trigger
+- ✅ Refund processing
+- ✅ Transaction monitoring
+- ✅ Database logging (Firebase + in-memory)
+- ✅ 32 tests with 100% pass rate
+- ✅ Production ready with Docker/PM2 support
+
+**Documentation:**
+- Quick Start: [QUICKSTART_API.md](QUICKSTART_API.md)
+- Implementation Guide: [MEEBOT_WEB3_BACKEND_GUIDE.md](MEEBOT_WEB3_BACKEND_GUIDE.md)
+- API Reference: [api/README.md](api/README.md)
+- Integration Examples: [examples/api-integration-demo.ts](examples/api-integration-demo.ts)
+- Summary: [IMPLEMENTATION_MEEBOT_API.md](IMPLEMENTATION_MEEBOT_API.md)
+
 ### Documentation
 
 - 📖 [Quest System Overview](QUEST_SYSTEM.md) - Complete API reference and usage guide
 - 🌐 [Deploy Registry](DEPLOY_REGISTRY.md) - Multi-chain contract deployment registry
-
+- 🏅 [Badge Ownership Guide](BADGE_OWNERSHIP_GUIDE.md) - Badge verification and Contributor Explorer
+- 🔍 [Auditor Dashboard](AUDITOR_DASHBOARD.md) - Refund monitoring and flag notification system
 - 🤖 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment system guide
-      copilot/automate-deploy-registry-json
+- 🤖 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment system guide
+- 🔐 [Refund Audit System](REFUND_AUDIT_SYSTEM.md) - Complete refund logging and audit trail
+- 🚀 [Refund Quick Start](REFUND_QUICK_START.md) - Get started with refund system in minutes
+- 🔗 [Web3.js Integration Guide](WEB3_INTEGRATION_GUIDE.md) - Complete Web3.js integration with MeeChainSupply
+- ⚡ [Web3.js Quick Reference](WEB3_QUICK_REFERENCE.md) - Quick reference for Web3.js usage
+- 🤖 [Deploy Automation](DEPLOY_AUTOMATION.md) - Automated deployment system guide
 - 🔌 [Integration Guide](INTEGRATION.md) - React, Web3, Firebase integration examples
 - 🏗️ [Architecture](ARCHITECTURE.md) - System design and data flow diagrams
 - ⚙️ [Settings & Support Pages](SETTINGS_SUPPORT.md) - Settings and Support page documentation
 - 🚀 [Automated Deployment Workflow](WORKFLOW_GUIDE.md) - GitHub Actions workflow for automated releases
+- 🔍 **[Export Log System](EXPORT_LOG_SYSTEM.md)** - Complete system overview and implementation guide
+- 📡 **[API Documentation](API_DOCUMENTATION.md)** - RESTful API reference for refund log management
+- 🎨 **[Auditor Dashboard Integration](AUDITOR_DASHBOARD_INTEGRATION.md)** - Dashboard setup and customization
 
 ### Example Usage
 
@@ -135,9 +253,77 @@ if (result.success) {
 }
 ```
 
+## 🏅 Badge Ownership System
+
+MeeChain now features a complete badge ownership verification system:
+
+**Smart Contract (MeeChainBadge.sol):**
+- Soulbound Token (SBT) implementation - non-transferable badges
+- `hasBadge(user, badgeId)` - Check single badge ownership
+- `getBadges(user)` - Get all badges for an address
+- `getBadgeType(tokenId)` - Get badge type name
+- Owner-controlled minting and revocation
+
+**Contributor Explorer UI:**
+- Search contributors by name or address
+- Filter by reputation score and badge type
+- Display badges with on-chain verification links
+- Top contributors leaderboard
+- Direct BscScan integration for transparency
+
+```typescript
+// Check if user has a badge
+const hasWatchdog = await badgeContract.methods
+  .hasBadge(userAddress, WATCHDOG_ID)
+  .call();
+
+// Get all user badges
+const badges = await badgeContract.methods
+  .getBadges(userAddress)
+  .call();
+```
+
+See [Badge Ownership Guide](BADGE_OWNERSHIP_GUIDE.md) for complete documentation and examples.
+
 ## 🧪 Testing
 
-All 46 tests passing with 100% success rate:
+All 178+ tests passing with high success rate:
+## 🔗 Web3.js Integration
+
+Complete integration with MeeChainSupply smart contract on BSC:
+
+```typescript
+import { initWeb3, toWei } from './utils/web3Config';
+import { 
+  initMeeChainSupplyContract,
+  confirmReplay,
+  triggerSupply
+} from './utils/meeChainSupplyContract';
+
+// Setup
+const web3 = initWeb3(false); // BSC Mainnet
+const contract = initMeeChainSupplyContract(web3);
+
+// Confirm replay after verification
+await confirmReplay(contract, userAddress, toWei('1.5'), meeBotAddress);
+
+// Trigger supply
+await triggerSupply(contract, userAddress, meeBotAddress);
+```
+
+**Features:**
+- 🌐 BSC Mainnet/Testnet support
+- 🔄 Complete contract function wrappers
+- 💱 Wei/BNB conversion utilities
+- 📡 Event listeners for real-time updates
+- 🔒 Secure transaction handling
+- 📝 Comprehensive documentation
+
+See [WEB3_INTEGRATION_GUIDE.md](WEB3_INTEGRATION_GUIDE.md) for complete documentation.
+
+## 🧪 Testing
+
+All tests passing with 100% success rate:
 - ✅ Quest verification
 - ✅ Primary chain minting
 - ✅ Automatic fallback
@@ -147,6 +333,9 @@ All 46 tests passing with 100% success rate:
 - ✅ TTS quest system (14 tests)
 - ✅ Deploy registry (9 tests)
 - ✅ Dashboard utilities (13 tests)
+- ✅ Badge ownership verification (29 tests)
+- ✅ Contributor service (29 tests)
+- ✅ Web3.js integration (16 tests)
 
 ## 📁 Project Structure
 
@@ -167,9 +356,15 @@ MeeChain_MeeBot/
 │   │   └── logger.ts            # Event logging system
 │   ├── example.ts               # Usage examples
 │   └── test.ts                  # Test suite
+├── utils/
+│   ├── web3Config.ts            # Web3 setup and utilities
+│   └── meeChainSupplyContract.ts # Contract integration
+├── examples/
+│   └── web3-integration-demo.ts # Web3.js demo
 ├── tests/
 │   ├── ttsQuest.test.ts         # TTS quest tests
-│   └── deployRegistry.test.ts   # Deploy registry tests
+│   ├── deployRegistry.test.ts   # Deploy registry tests
+│   └── web3Integration.test.ts  # Web3.js integration tests
 ├── pages/
 │   ├── Settings.tsx             # Settings page
 │   ├── Support.tsx              # Support/FAQ page
