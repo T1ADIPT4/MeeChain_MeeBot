@@ -30,9 +30,9 @@ export default function QuestBadgeViewer({ userAddress, questId }: QuestBadgeVie
     setStatus('loading');
     setMeeBot('thinking', `กำลัง Mint Badge สำหรับภารกิจ ${questId} (ข้อมูลจริง)...`);
     const result = await mintBadge(userAddress, questId);
-    if (result.success && result.badgeId) {
+    if (result.success) {
       setStatus('minted');
-      setMeeBot('celebrate', `เยี่ยม! คุณได้รับ Badge #${result.badgeId} แล้วครับ! (ข้อมูลจริง)`);
+      setMeeBot('celebrate', 'เยี่ยม! คุณได้รับ Badge แล้วครับ! (ข้อมูลจริง)');
     } else {
       setStatus('error');
       setMeeBot('confused', 'โอ๊ะ! การ Mint Badge ล้มเหลวครับ (ข้อมูลจริง)');
