@@ -148,3 +148,84 @@ export async function fetchTimelineEvents(userAddress: string): Promise<any[]> {
     { timestamp: Date.now() - 259200000, event: 'Tier Upgraded', details: 'Tier 2' },
   ];
 }
+
+/**
+ * Check if user has a specific badge (mock)
+ * In production, this would call: badgeContract.methods.hasBadge(userAddress, badgeId).call()
+ */
+export async function hasBadge(userAddress: string, badgeId: number): Promise<boolean> {
+  console.log(`[BlockchainService] Checking if ${userAddress} has badge ${badgeId}`);
+  // Mock implementation
+  await new Promise(res => setTimeout(res, 300));
+  // Simulate some users having certain badges
+  return Math.random() > 0.5;
+}
+
+/**
+ * Get all badges for a user (mock)
+ * In production, this would call: badgeContract.methods.getBadges(userAddress).call()
+ */
+export async function getUserBadgeIds(userAddress: string): Promise<number[]> {
+  console.log(`[BlockchainService] Fetching badge IDs for ${userAddress}`);
+  // Mock implementation
+  await new Promise(res => setTimeout(res, 300));
+  // Return mock badge IDs
+  const mockBadgeIds = [1, 3, 5, 7];
+  return mockBadgeIds.slice(0, Math.floor(Math.random() * 4) + 1);
+}
+
+/**
+ * Get badge type by token ID (mock)
+ * In production, this would call: badgeContract.methods.getBadgeType(tokenId).call()
+ */
+export async function getBadgeType(tokenId: number): Promise<string> {
+  console.log(`[BlockchainService] Fetching badge type for token ${tokenId}`);
+  // Mock implementation
+  await new Promise(res => setTimeout(res, 200));
+  const badgeTypes: Record<number, string> = {
+    1: 'Watchdog',
+    2: 'Pioneer',
+    3: 'Quest Master',
+    4: 'Early Adopter',
+    5: 'Community Leader',
+    6: 'Developer',
+    7: 'Tester',
+  };
+  return badgeTypes[tokenId] || 'Unknown Badge';
+}
+
+/**
+ * Example of how to use Web3 with badge contract in production
+ * This is commented out as it requires Web3 setup
+ */
+/*
+import Web3 from 'web3';
+
+const web3 = new Web3(window.ethereum);
+const badgeContractAddress = '0x...'; // Your deployed contract address
+const badgeContractABI = [...]; // Your contract ABI
+
+const badgeContract = new web3.eth.Contract(badgeContractABI, badgeContractAddress);
+
+// Check if user has a badge
+export async function hasBadge(userAddress: string, badgeId: number): Promise<boolean> {
+  try {
+    const hasIt = await badgeContract.methods.hasBadge(userAddress, badgeId).call();
+    return hasIt;
+  } catch (error) {
+    console.error('Error checking badge:', error);
+    return false;
+  }
+}
+
+// Get all badges for a user
+export async function getUserBadges(userAddress: string): Promise<number[]> {
+  try {
+    const badges = await badgeContract.methods.getBadges(userAddress).call();
+    return badges;
+  } catch (error) {
+    console.error('Error fetching badges:', error);
+    return [];
+  }
+}
+*/

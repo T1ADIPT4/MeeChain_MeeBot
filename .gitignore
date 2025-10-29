@@ -15,6 +15,10 @@ npm-debug.log*
 # Test logs (keep directory structure but ignore log files)
 tests/logs/*.log
 
+# Transaction logs and nonce tracking
+logs/tx.log
+logs/nonces.json
+
 # Environment
 .env
 .env.local
