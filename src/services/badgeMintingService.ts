@@ -1,231 +1,325 @@
 /**
  * Badge Minting Service
- * Integrates with MeeChainBadge smart contract to mint SBT badges
+ * Integrates with MeeChainSupply to mint badges on successful replay/supply
  */
 
-import { 
-  generateBadgeMetadata, 
-  uploadMetadataToIPFS,
-  generateWatchdogMetadata,
-  generateAuditorMetadata,
-  generateProposerMetadata
-} from '../utils/badgeMetadataGenerator.js'
-import { linkSBTToken } from './contributorReputationService.js'
-import { logEvent } from '../utils/logger.js'
+import { logEvent } from '../utils/logger.js';
+import { mintBadge, fallbackMintBadge } from '../minting/badgeMinter.js';
+import type { SupportedNetwork } from '../config/registryTypes.js';
 
-interface MintBadgeParams {
-  contributorAddress: string
-  badgeType: string
-  badgeName: string
-  description: string
-  actionCount: number
+export interface BadgeMintConfig {
+  enabled: boolean;
+  network?: SupportedNetwork;
+  fallbackNetwork?: SupportedNetwork;
+  badgeTypes: {
+    replay: string;
+    supply: string;
+    firstSupply: string;
+  };
 }
 
-interface MintResult {
-  success: boolean
-  tokenId?: number
-  txHash?: string
-  metadataURI?: string
-  error?: string
+export interface BadgeMintResult {
+  success: boolean;
+  badgeId?: string;
+  txHash?: string;
+  error?: string;
 }
 
-// Mock contract address - replace with actual deployed contract
-const BADGE_CONTRACT_ADDRESS = '0x0000000000000000000000000000000000000000'
+export class BadgeMintingService {
+  private config: BadgeMintConfig;
+  private firstSupplyUsers: Set<string>;
 
-/**
- * Mint a badge NFT for a contributor
- * This integrates with the MeeChainBadge smart contract
- */
-export async function mintBadgeNFT(params: MintBadgeParams): Promise<MintResult> {
-  const { contributorAddress, badgeType, badgeName, description, actionCount } = params
+  /**
+   * Constructor
+   * @param config - Badge minting configuration
+   */
+  constructor(config: BadgeMintConfig) {
+    this.config = config;
+    this.firstSupplyUsers = new Set();
 
-  try {
-    logEvent('badge-nft-mint-start', {
-      address: contributorAddress,
-      badgeType,
-      badgeName
-    }, 'debug')
+    logEvent('badge-minting-service-init', {
+      enabled: config.enabled,
+      network: config.network,
+      badgeTypes: config.badgeTypes
+    }, 'info');
+  }
 
-    // Step 1: Generate metadata based on badge type
-    let metadata
-    switch (badgeType) {
-      case 'watchdog':
-        metadata = generateWatchdogMetadata(contributorAddress, actionCount)
-        break
-      case 'auditor':
-        metadata = generateAuditorMetadata(contributorAddress, actionCount)
-        break
-      case 'proposer':
-        metadata = generateProposerMetadata(contributorAddress, actionCount)
-        break
-      default:
-        metadata = generateBadgeMetadata(
-          badgeType,
-          badgeName,
-          description,
-          contributorAddress,
-          'QmDefaultBadgeImageHash'
-        )
+  /**
+   * Mint badge for replay confirmation
+   * @param userId - User ID
+   * @param amount - Amount supplied
+   * @returns Badge mint result
+   */
+  async mintReplayBadge(
+    userId: string,
+    amount: string
+  ): Promise<BadgeMintResult> {
+    if (!this.config.enabled) {
+      return { success: false, error: 'Badge minting disabled' };
     }
 
-    // Step 2: Upload metadata to IPFS
-    const metadataURI = await uploadMetadataToIPFS(metadata)
-    
-    logEvent('badge-metadata-uploaded', {
-      address: contributorAddress,
-      badgeType,
-      metadataURI
-    }, 'debug')
+    try {
+      logEvent('badge-mint-replay-start', {
+        userId,
+        amount,
+        badgeType: this.config.badgeTypes.replay
+      }, 'info');
 
-    // Step 3: Mint badge on smart contract
-    // In production, this would call the actual smart contract
-    const result = await mintOnChain(
-      contributorAddress,
-      badgeType,
-      `ipfs://${metadataURI}`
-    )
+      const transaction = await mintBadge(
+        userId,
+        this.config.badgeTypes.replay,
+        this.config.network
+      );
 
-    if (!result.success) {
-      throw new Error(result.error || 'Minting failed')
-    }
+      logEvent('badge-mint-replay-success', {
+        userId,
+        badgeId: transaction.badgeId,
+        txHash: transaction.txHash
+      }, 'info');
 
-    // Step 4: Link SBT token to contributor profile
-    linkSBTToken(
-      contributorAddress,
-      result.tokenId!,
-      badgeName,
-      BADGE_CONTRACT_ADDRESS,
-      metadataURI
-    )
+      return {
+        success: true,
+        badgeId: transaction.badgeId,
+        txHash: transaction.txHash
+      };
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      logEvent('badge-mint-replay-error', {
+        userId,
+        error: errorMessage
+      }, 'error');
 
-    logEvent('badge-nft-minted', {
-      address: contributorAddress,
-      badgeType,
-      tokenId: result.tokenId,
-      txHash: result.txHash,
-      metadataURI
-    })
-
-    return {
-      success: true,
-      tokenId: result.tokenId,
-      txHash: result.txHash,
-      metadataURI
-    }
-
-  } catch (error) {
-    logEvent('badge-nft-mint-failed', {
-      address: contributorAddress,
-      badgeType,
-      error: error instanceof Error ? error.message : String(error)
-    }, 'error')
-
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
+      // Try fallback
+      return this.fallbackMintReplayBadge(userId, amount);
     }
   }
-}
 
-/**
- * Mock function to simulate on-chain minting
- * In production, replace with actual Web3/ethers.js contract interaction
- */
-async function mintOnChain(
-  to: string,
-  badgeType: string,
-  uri: string
-): Promise<{ success: boolean; tokenId?: number; txHash?: string; error?: string }> {
-  // Simulate contract interaction delay
-  await new Promise(resolve => setTimeout(resolve, 1000))
+  /**
+   * Fallback mint badge for replay confirmation
+   * @param userId - User ID
+   * @param amount - Amount supplied
+   * @returns Badge mint result
+   */
+  private async fallbackMintReplayBadge(
+    userId: string,
+    amount: string
+  ): Promise<BadgeMintResult> {
+    try {
+      logEvent('badge-mint-replay-fallback-start', {
+        userId,
+        amount
+      }, 'warn');
 
-  // Mock success (90% success rate)
-  if (Math.random() > 0.1) {
-    const tokenId = Math.floor(Math.random() * 10000)
-    const txHash = `0x${Math.random().toString(16).substring(2, 66)}`
+      const transaction = await fallbackMintBadge(
+        userId,
+        this.config.badgeTypes.replay,
+        this.config.fallbackNetwork
+      );
 
-    return {
-      success: true,
-      tokenId,
-      txHash
-    }
-  } else {
-    return {
-      success: false,
-      error: 'Transaction failed'
+      logEvent('badge-mint-replay-fallback-success', {
+        userId,
+        badgeId: transaction.badgeId,
+        txHash: transaction.txHash
+      }, 'info');
+
+      return {
+        success: true,
+        badgeId: transaction.badgeId,
+        txHash: transaction.txHash
+      };
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      logEvent('badge-mint-replay-fallback-error', {
+        userId,
+        error: errorMessage
+      }, 'error');
+
+      return {
+        success: false,
+        error: errorMessage
+      };
     }
   }
-}
 
-/**
- * Check if badge exists on-chain for a user
- * In production, query the smart contract
- */
-export async function checkBadgeOwnership(
-  address: string,
-  badgeType: string
-): Promise<boolean> {
-  // Mock implementation
-  await new Promise(resolve => setTimeout(resolve, 200))
-  
-  // In production, query: await badgeContract.methods.getBadgesByUser(address).call()
-  return Math.random() > 0.5
-}
+  /**
+   * Mint badge for successful supply
+   * @param userId - User ID
+   * @param amount - Amount supplied
+   * @returns Badge mint result
+   */
+  async mintSupplyBadge(
+    userId: string,
+    amount: string
+  ): Promise<BadgeMintResult> {
+    if (!this.config.enabled) {
+      return { success: false, error: 'Badge minting disabled' };
+    }
 
-/**
- * Get all badges owned by a user from the smart contract
- * In production, query the smart contract
- */
-export async function getUserBadgesFromChain(
-  address: string
-): Promise<Array<{ tokenId: number; badgeType: string; uri: string }>> {
-  // Mock implementation
-  await new Promise(resolve => setTimeout(resolve, 300))
-  
-  // In production: 
-  // const tokenIds = await badgeContract.methods.getBadgesByUser(address).call()
-  // Then fetch metadata for each token
-  
-  return []
-}
+    try {
+      // Check if this is the first supply for this user
+      const isFirstSupply = !this.firstSupplyUsers.has(userId);
+      const badgeType = isFirstSupply
+        ? this.config.badgeTypes.firstSupply
+        : this.config.badgeTypes.supply;
 
-/**
- * Example: Integration with badge minting when unlocking a badge
- */
-export async function onBadgeUnlocked(
-  address: string,
-  badgeId: string,
-  badgeName: string,
-  description: string,
-  actionCount: number
-): Promise<void> {
-  logEvent('badge-unlock-detected', {
-    address,
-    badgeId,
-    badgeName
-  })
+      logEvent('badge-mint-supply-start', {
+        userId,
+        amount,
+        badgeType,
+        isFirstSupply
+      }, 'info');
 
-  // Automatically mint NFT when badge is unlocked
-  const result = await mintBadgeNFT({
-    contributorAddress: address,
-    badgeType: badgeId,
-    badgeName,
-    description,
-    actionCount
-  })
+      const transaction = await mintBadge(
+        userId,
+        badgeType,
+        this.config.network
+      );
 
-  if (result.success) {
-    logEvent('badge-nft-auto-minted', {
-      address,
-      badgeId,
-      tokenId: result.tokenId,
-      txHash: result.txHash
-    })
-  } else {
-    logEvent('badge-nft-auto-mint-failed', {
-      address,
-      badgeId,
-      error: result.error
-    }, 'error')
+      // Mark user as having received first supply badge
+      if (isFirstSupply) {
+        this.firstSupplyUsers.add(userId);
+      }
+
+      logEvent('badge-mint-supply-success', {
+        userId,
+        badgeId: transaction.badgeId,
+        txHash: transaction.txHash,
+        isFirstSupply
+      }, 'info');
+
+      return {
+        success: true,
+        badgeId: transaction.badgeId,
+        txHash: transaction.txHash
+      };
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      logEvent('badge-mint-supply-error', {
+        userId,
+        error: errorMessage
+      }, 'error');
+
+      // Try fallback
+      return this.fallbackMintSupplyBadge(userId, amount);
+    }
+  }
+
+  /**
+   * Fallback mint badge for successful supply
+   * @param userId - User ID
+   * @param amount - Amount supplied
+   * @returns Badge mint result
+   */
+  private async fallbackMintSupplyBadge(
+    userId: string,
+    amount: string
+  ): Promise<BadgeMintResult> {
+    try {
+      const isFirstSupply = !this.firstSupplyUsers.has(userId);
+      const badgeType = isFirstSupply
+        ? this.config.badgeTypes.firstSupply
+        : this.config.badgeTypes.supply;
+
+      logEvent('badge-mint-supply-fallback-start', {
+        userId,
+        amount,
+        badgeType
+      }, 'warn');
+
+      const transaction = await fallbackMintBadge(
+        userId,
+        badgeType,
+        this.config.fallbackNetwork
+      );
+
+      // Mark user as having received first supply badge
+      if (isFirstSupply) {
+        this.firstSupplyUsers.add(userId);
+      }
+
+      logEvent('badge-mint-supply-fallback-success', {
+        userId,
+        badgeId: transaction.badgeId,
+        txHash: transaction.txHash
+      }, 'info');
+
+      return {
+        success: true,
+        badgeId: transaction.badgeId,
+        txHash: transaction.txHash
+      };
+    } catch (error) {
+      const errorMessage = (error as Error).message;
+      logEvent('badge-mint-supply-fallback-error', {
+        userId,
+        error: errorMessage
+      }, 'error');
+
+      return {
+        success: false,
+        error: errorMessage
+      };
+    }
+  }
+
+  /**
+   * Generate dynamic badge metadata
+   * @param userId - User ID
+   * @param badgeType - Badge type
+   * @param metadata - Additional metadata
+   * @returns Badge metadata object
+   */
+  generateBadgeMetadata(
+    userId: string,
+    badgeType: string,
+    metadata?: Record<string, any>
+  ): Record<string, any> {
+    const baseMetadata = {
+      name: `${badgeType} Badge`,
+      description: `Awarded for ${badgeType} achievement`,
+      userId,
+      timestamp: Date.now(),
+      ...metadata
+    };
+
+    // Add special attributes for first supply
+    if (badgeType === this.config.badgeTypes.firstSupply) {
+      baseMetadata.description = 'Awarded to pioneers who completed their first supply';
+      baseMetadata.rarity = 'rare';
+    }
+
+    logEvent('badge-metadata-generated', {
+      userId,
+      badgeType,
+      metadata: baseMetadata
+    }, 'debug');
+
+    return baseMetadata;
+  }
+
+  /**
+   * Check if user has received first supply badge
+   * @param userId - User ID
+   * @returns True if user has first supply badge
+   */
+  hasFirstSupplyBadge(userId: string): boolean {
+    return this.firstSupplyUsers.has(userId);
+  }
+
+  /**
+   * Enable or disable badge minting
+   * @param enabled - Enable flag
+   */
+  setEnabled(enabled: boolean): void {
+    this.config.enabled = enabled;
+    logEvent('badge-minting-enabled-changed', { enabled }, 'info');
+  }
+
+  /**
+   * Get configuration
+   * @returns Current configuration
+   */
+  getConfig(): BadgeMintConfig {
+    return { ...this.config };
   }
 }

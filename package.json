@@ -14,7 +14,7 @@
     "copilot-test-tts-badge": "jest tests/ttsQuest.test.ts",
     "dev:dashboard": "vite",
     "server": "node --loader ts-node/esm server/index.ts",
-    "dev:server": "node --loader ts-node/esm --watch server/index.ts",
+  "dev:server": "tsx watch server/index.ts",
     "api:start": "tsx api/server.ts",
     "api:dev": "tsx watch api/server.ts",
     "example": "npm run build && node dist/examples/auto-deploy-workflow-demo.js",
@@ -40,11 +40,12 @@
     "ipfs:test-metadata": "node copilot/implement-ipfs-uploader/test-metadata-generator.js",
     "ipfs:meebot-demo": "node copilot/implement-ipfs-uploader/meebot-milestone-example.js",
     "verify:meebot": "node copilot/verifyMeeBotFlow.js",
-    "demo:dao-governance": "tsx examples/dao-governance-demo.ts"
+
+    "demo:auditor": "npm run build && node dist/examples/auditor-dashboard-demo.js",
+    "demo:dao-governance": "tsx examples/dao-governance-demo.ts",
     "demo:refund-audit": "npm run build && node dist/examples/refund-audit-demo.js",
-    "demo:refund-contract": "npm run build && node dist/examples/refund-contract-integration.js"
-    "api:dev": "node --loader ts-node/esm api/server.ts",
-    "api:start": "node api/server.js",
+    "demo:refund-claim": "npm run build && node dist/examples/refund-claim-demo.js",
+    "demo:refund-contract": "npm run build && node dist/examples/refund-contract-integration.js",
     "demo:api-integration": "node --loader ts-node/esm examples/api-integration-demo.ts"
   },
   "keywords": [
@@ -88,10 +89,7 @@
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "body-parser": "^2.2.0",
-    "chart.js": "^4.5.0",
-    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0",
     "ethers": "^6.15.0",
     "firebase-admin": "^13.5.0",
     "json2csv": "^6.0.0-alpha.2",
