@@ -11,17 +11,13 @@ module.exports = {
     '!src/example.ts'
   ],
   extensionsToTreatAsEsm: ['.ts'],
-  globals: {
-    'ts-jest': {
-      useESM: true,
-    }
-  },
-  moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1',
-  },
   transform: {
     '^.+\\.tsx?$': ['ts-jest', {
-      useESM: true,
-    }],
+      tsconfig: 'tsconfig.json',
+      diagnostics: true
+    }]
   },
-}
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1'
+  }
+};

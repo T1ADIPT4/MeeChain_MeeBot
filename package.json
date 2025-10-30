@@ -19,6 +19,7 @@
     "api:dev": "tsx watch api/server.ts",
     "example": "npm run build && node dist/examples/auto-deploy-workflow-demo.js",
     "demo:settings": "npm run build && node dist/examples/settings-support-demo.js",
+<<<<<<< Updated upstream
     "demo:tts-quest": "npm run build && node dist/examples/tts-quest-demo.js",
     "demo:deploy-registry": "npm run build && node dist/examples/deploy-registry-demo.js",
     "demo:dashboard": "npm run build && node dist/examples/dashboard-integration-demo.js",
@@ -47,6 +48,12 @@
     "demo:refund-claim": "npm run build && node dist/examples/refund-claim-demo.js",
     "demo:refund-contract": "npm run build && node dist/examples/refund-contract-integration.js",
     "demo:api-integration": "node --loader ts-node/esm examples/api-integration-demo.ts"
+=======
+    "demo:tts-quest": "npm run build && node dist/examples/tts-quest-demo.js"
+    "verify:meebot": "node verifyMeeBotFlow.js",
+    "ipfs:generate-metadata": "node ipfs-uploader/ metadata-generator.js",
+    "ipfs:meebot-demo": "node ipfs-uploader/index.js"
+>>>>>>> Stashed changes
   },
   "keywords": [
     "meechain",
