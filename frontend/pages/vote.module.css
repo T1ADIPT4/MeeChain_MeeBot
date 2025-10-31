@@ -1,0 +1,33 @@
+.proposalContainer {
+  background: #f0f8ff;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.voteButton {
+  margin-right: 8px;
+  padding: 0.5rem 1.2rem;
+  background: #e6f7ff;
+  border: none;
+  border-radius: 6px;
+  color: #0077b6;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.voteButton:hover {
+  background: #b2eaff;
+}
+.proposalContainer {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f0f8ff;
+  border-radius: 8px;
+}
+
+.voteButton {
+  margin-right: 8px;
+}

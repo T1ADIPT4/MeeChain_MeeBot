@@ -4,14 +4,17 @@ import type { ContributorData } from '../services/contributorReputationService';
 
 export default function ContributorLeaderboard() {
   const [contributors, setContributors] = useState<ContributorData[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Initialize mock data for demo
-    initMockData();
-    
-    // Fetch contributors
-    const data = getAllContributors();
-    setContributors(data);
+    // Simulate loading
+    setLoading(true);
+    setTimeout(() => {
+      initMockData();
+      const data = getAllContributors();
+      setContributors(data);
+      setLoading(false);
+    }, 1200);
   }, []);
 
   return (
@@ -30,11 +33,41 @@ export default function ContributorLeaderboard() {
       }}>
         🏆 Contributor Leaderboard
       </h2>
-      
-      {contributors.length === 0 ? (
-        <p style={{ textAlign: 'center', color: '#718096' }}>
-          ยังไม่มีผู้มีส่วนร่วม
-        </p>
+
+      {loading ? (
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          {[...Array(5)].map((_, i) => (
+            <li key={i} style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '1rem', marginBottom: '0.5rem', background: '#f7fafc', borderRadius: '0.5rem',
+              opacity: 0.7, minHeight: '56px',
+              animation: 'pulse 1.2s infinite ease-in-out',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <span style={{ background: '#e2e8f0', borderRadius: '50%', width: 32, height: 32, display: 'inline-block' }} />
+                <div>
+                  <div style={{ background: '#e2e8f0', height: 16, width: 100, borderRadius: 8, marginBottom: 6 }} />
+                  <div style={{ background: '#e2e8f0', height: 12, width: 60, borderRadius: 6 }} />
+                </div>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <span style={{ background: '#e2e8f0', height: 20, width: 40, borderRadius: 8 }} />
+                <span style={{ background: '#e2e8f0', height: 20, width: 32, borderRadius: 8 }} />
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : contributors.length === 0 ? (
+        <div style={{ textAlign: 'center', color: '#718096', padding: '2rem 0' }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: 8 }}>🤖</div>
+          <div style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: 4 }}>
+            ยังไม่มีผู้มีส่วนร่วมในระบบ
+          </div>
+          <div style={{ fontSize: '0.95rem', color: '#a0aec0' }}>
+            เมื่อมีผู้ร่วมกิจกรรมหรือรีวิว ระบบจะแสดงอันดับที่นี่<br />
+            ชวนเพื่อนมาร่วมสร้างสรรค์ MeeChain ด้วยกันนะ!
+          </div>
+        </div>
       ) : (
         <ul style={{ listStyle: 'none', padding: 0 }}>
           {contributors.map((contributor, index) => (
@@ -80,7 +113,6 @@ export default function ContributorLeaderboard() {
                   </div>
                 </div>
               </div>
-
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <span style={{
                   fontSize: '1.25rem',
@@ -97,9 +129,9 @@ export default function ContributorLeaderboard() {
                     contributor.badges.map(badge => (
                       <span key={badge} title={badge}>
                         {badge === 'Watchdog' ? '🛡️' :
-                         badge === 'Validator' ? '✅' :
-                         badge === 'Guardian' ? '🏰' :
-                         badge === 'Champion' ? '👑' : '🏅'}
+                          badge === 'Validator' ? '✅' :
+                            badge === 'Guardian' ? '🏰' :
+                              badge === 'Champion' ? '👑' : '🏅'}
                       </span>
                     ))
                   ) : (

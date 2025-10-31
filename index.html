@@ -4,8 +4,148 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MeeChain Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body, button, input, textarea {
+      font-family: 'Kanit', 'Noto Sans Thai', Arial, sans-serif;
+    }
+  </style>
+    <link rel="icon" href="/icons/icon-192.png" type="image/png">
+    <link rel="manifest" href="/manifest.webmanifest">
+    <meta name="theme-color" content="#6A00FF">
+    <meta name="description" content="MeeChain contributor ecosystem powered by MeeBot">
+    <link rel="stylesheet" href="style.css">
   </head>
-  <body style="font-family: monospace;">
+  <body class="monospace-font">
+
+    <div id="root"></div>
+
+    <!-- MeeBot Welcome Floating Widget (Big Brother Style) -->
+    <div id="meebot-widget" style="position:fixed;right:2rem;bottom:2rem;z-index:1000;background:white;padding:1.5rem 2rem;border-radius:1.5rem;box-shadow:0 4px 24px #667eea22;display:flex;align-items:center;gap:1rem;max-width:340px;transition:box-shadow 0.2s;">
+  <img src="/assets/badges/meebot.png" alt="MeeBot" style="width:56px;height:56px;border-radius:50%;background:#f7fafc;box-shadow:0 2px 8px #667eea22;animation:waveHand 2s infinite alternate;" />
+      <div style="flex:1;">
+        <p style="margin:0 0 0.5rem 0;font-size:1rem;">สวัสดีครับน้อง! พี่ MeeBot เองครับ ยินดีต้อนรับสู่ MeeChain 🌟<br>
+        ถ้ามีอะไรอยากรู้ หรืออยากเริ่มภารกิจ พี่อยู่ตรงนี้เสมอนะครับ</p>
+        <button id="meebot-chat-btn" style="font-size:1rem;padding:0.5rem 1.2rem;background:#667eea;color:#fff;border:none;border-radius:0.5rem;cursor:pointer;">คุยกับพี่ MeeBot</button>
+      </div>
+    </div>
+    <style>
+      @keyframes waveHand {
+        0% { transform: rotate(-8deg); }
+        100% { transform: rotate(8deg); }
+      }
+      #meebot-chatbox { position:fixed;right:2.5rem;bottom:6.5rem;z-index:1100;max-width:340px;background:white;border-radius:1.5rem;box-shadow:0 4px 24px #667eea22;padding:1.5rem;display:none; }
+      #meebot-chatbox.active { display:block; }
+    </style>
+    <div id="meebot-chatbox">
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem;">
+        <img src="/assets/badges/meebot.png" alt="MeeBot" style="width:40px;height:40px;border-radius:50%;background:#f7fafc;" />
+        <span style="font-weight:bold;font-size:1.1rem;">พี่ MeeBot</span>
+      </div>
+      <div id="meebot-messages" style="font-size:1rem;color:#222;min-height:2.5rem;margin-bottom:1rem;">
+        สวัสดีครับน้อง! วันนี้อยากเริ่มภารกิจไหนก่อนดีครับ หรืออยากให้พี่ช่วยอะไรบอกได้เลยนะครับ 😊
+      </div>
+      <form id="meebot-chat-form" style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+        <input id="meebot-chat-input" type="text" placeholder="พิมพ์ข้อความถึง MeeBot..." style="flex:1;padding:0.5rem 1rem;border:1px solid #e2e8f0;border-radius:0.5rem;font-size:1rem;" autocomplete="off" />
+        <button type="submit" style="background:#667eea;color:#fff;border:none;border-radius:0.5rem;padding:0.5rem 1.2rem;cursor:pointer;">ส่ง</button>
+      </form>
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;">
+        <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.95rem;cursor:pointer;">
+          <input type="checkbox" id="meebot-voice-toggle" checked style="accent-color:#22c55e;width:1.1rem;height:1.1rem;" />
+          เปิดเสียง MeeBot
+        </label>
+        <button id="meebot-voice-btn" style="font-size:0.95rem;padding:0.4rem 1rem;background:#22c55e;color:#fff;border:none;border-radius:0.5rem;cursor:pointer;">ให้พี่ MeeBot พูด</button>
+        <button id="meebot-close-btn" style="font-size:0.95rem;padding:0.4rem 1rem;background:#e2e8f0;color:#222;border:none;border-radius:0.5rem;cursor:pointer;">ปิด</button>
+      </div>
+    </div>
+    <script>
+      // Floating chat open/close
+      const chatBtn = document.getElementById('meebot-chat-btn');
+      const chatBox = document.getElementById('meebot-chatbox');
+      const closeBtn = document.getElementById('meebot-close-btn');
+      const chatForm = document.getElementById('meebot-chat-form');
+      const chatInput = document.getElementById('meebot-chat-input');
+      const chatMessages = document.getElementById('meebot-messages');
+      const voiceBtn = document.getElementById('meebot-voice-btn');
+      const voiceToggle = document.getElementById('meebot-voice-toggle');
+      let voiceEnabled = true;
+
+      if (voiceToggle) {
+        voiceToggle.addEventListener('change', (e) => {
+          voiceEnabled = voiceToggle.checked;
+        });
+      }
+
+      if (chatForm) {
+        chatForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const msg = chatInput.value.trim();
+          if (!msg) return;
+          const userMsg = document.createElement('div');
+          userMsg.textContent = '👤 ' + msg;
+          userMsg.style.margin = '0.25rem 0';
+          chatMessages.appendChild(userMsg);
+          chatInput.value = '';
+          // MeeBot reply (simple demo)
+          setTimeout(() => {
+            const botMsg = document.createElement('div');
+            botMsg.textContent = '🤖 พี่ MeeBot: ได้เลยครับ! (' + msg + ')';
+            botMsg.style.margin = '0.25rem 0';
+            chatMessages.appendChild(botMsg);
+            if (voiceEnabled) {
+              speakMeeBot(botMsg.textContent);
+            }
+          }, 700);
+        });
+      }
+
+      function speakMeeBot(text) {
+        if (!window.speechSynthesis) return;
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'th-TH';
+        utter.rate = 1;
+        window.speechSynthesis.speak(utter);
+      }
+
+      if (voiceBtn) {
+        voiceBtn.addEventListener('click', function() {
+          const lastMsg = Array.from(chatMessages.childNodes).reverse().find(n => n.textContent && n.textContent.startsWith('🤖'));
+          if (lastMsg && voiceEnabled) {
+            speakMeeBot(lastMsg.textContent);
+          }
+        });
+      }
+      if (chatBtn) chatBtn.onclick = () => chatBox.classList.add('active');
+      if (closeBtn) closeBtn.onclick = () => chatBox.classList.remove('active');
+    </script>
+
+    <!-- System Description Section -->
+    <section style="max-width:900px;margin:3rem auto 2rem auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;">
+      <div style="background:#f7fafc;padding:2rem;border-radius:1rem;box-shadow:0 2px 8px #667eea11;">
+        <h3 style="margin-bottom:0.5rem;">Contributor Timeline</h3>
+        <p style="margin:0;color:#4a5568;">ติดตามและแสดงผลงานของคุณแบบโปร่งใส</p>
+      </div>
+      <div style="background:#f7fafc;padding:2rem;border-radius:1rem;box-shadow:0 2px 8px #667eea11;">
+        <h3 style="margin-bottom:0.5rem;">Badge & Proof-of-Participation</h3>
+        <p style="margin:0;color:#4a5568;">รับเหรียญตราและยืนยันการมีส่วนร่วมของคุณ</p>
+      </div>
+      <div style="background:#f7fafc;padding:2rem;border-radius:1rem;box-shadow:0 2px 8px #667eea11;">
+        <h3 style="margin-bottom:0.5rem;">Governance & Voting</h3>
+        <p style="margin:0;color:#4a5568;">ร่วมตัดสินใจและโหวตในระบบ MeeChain DAO</p>
+      </div>
+      <div style="background:#f7fafc;padding:2rem;border-radius:1rem;box-shadow:0 2px 8px #667eea11;">
+        <h3 style="margin-bottom:0.5rem;">MeeBot แจ้งเตือนแบบมีอารมณ์</h3>
+        <p style="margin:0;color:#4a5568;">MeeBot เตือนงานและให้กำลังใจคุณเสมอ</p>
+      </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section style="width:100%;background:linear-gradient(90deg,#fff 0%,#e0e7ff 100%);padding:2.5rem 0;text-align:center;">
+      <h2 style="font-size:2rem;font-weight:bold;margin-bottom:1rem;">พร้อมจะเป็นส่วนหนึ่งของ MeeChain แล้วหรือยัง?</h2>
+      <p style="font-size:1.1rem;margin-bottom:2rem;">เริ่มต้นภารกิจของคุณวันนี้ แล้วรับการยอมรับอย่างแท้จริง</p>
+      <button style="font-size:1.1rem;padding:0.75rem 2rem;background:#22c55e;color:#fff;border:none;border-radius:0.5rem;box-shadow:0 2px 8px #22c55e33;cursor:pointer;">เข้าร่วมเลย</button>
+    </section>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

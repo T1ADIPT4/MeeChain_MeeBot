@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { recordAction } from '../services/contributorReputationService';
 
 interface FlagReviewPanelProps {
@@ -7,15 +7,23 @@ interface FlagReviewPanelProps {
   onReviewComplete?: (approved: boolean) => void;
 }
 
-export default function FlagReviewPanel({ 
-  refundId, 
+export default function FlagReviewPanel({
+  refundId,
   currentUserAddress = '0x0000000000000000',
-  onReviewComplete 
+  onReviewComplete
 }: FlagReviewPanelProps) {
   const [reason, setReason] = useState('');
   const [approved, setApproved] = useState<boolean | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Simulate loading for skeleton
+  useEffect(() => {
+    setLoading(true);
+    const t = setTimeout(() => setLoading(false), 1000);
+    return () => clearTimeout(t);
+  }, []);
 
   async function submitReview() {
     if (approved === null) {
@@ -51,7 +59,7 @@ export default function FlagReviewPanel({
       });
 
       setSubmitted(true);
-      
+
       if (onReviewComplete) {
         onReviewComplete(approved);
       }
@@ -67,6 +75,44 @@ export default function FlagReviewPanel({
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (loading) {
+    // Skeleton UI
+    return (
+      <div style={{
+        background: 'white', borderRadius: '1rem', padding: '2rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+        minHeight: 320, display: 'flex', flexDirection: 'column', gap: '1.5rem', justifyContent: 'center',
+      }}>
+        <div style={{ height: 32, width: 180, background: '#e2e8f0', borderRadius: 8, marginBottom: 12, animation: 'pulse 1.2s infinite' }} />
+        <div style={{ height: 24, width: 120, background: '#e2e8f0', borderRadius: 8, marginBottom: 8, animation: 'pulse 1.2s infinite' }} />
+        <div style={{ height: 80, width: '100%', background: '#e2e8f0', borderRadius: 12, marginBottom: 16, animation: 'pulse 1.2s infinite' }} />
+        <div style={{ display: 'flex', gap: 16 }}>
+          <div style={{ flex: 1, height: 40, background: '#e2e8f0', borderRadius: 8, animation: 'pulse 1.2s infinite' }} />
+          <div style={{ flex: 1, height: 40, background: '#e2e8f0', borderRadius: 8, animation: 'pulse 1.2s infinite' }} />
+        </div>
+        <div style={{ height: 40, width: '100%', background: '#e2e8f0', borderRadius: 8, marginTop: 16, animation: 'pulse 1.2s infinite' }} />
+      </div>
+    );
+  }
+
+  // Empty state: no flag to review (simulate with refundId === '')
+  if (!refundId) {
+    return (
+      <div style={{
+        background: 'white', borderRadius: '1rem', padding: '2rem', boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+        minHeight: 220, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center',
+      }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: 8 }}>🕊️</div>
+        <div style={{ fontWeight: 600, fontSize: '1.1rem', marginBottom: 4 }}>
+          ยังไม่มีรายการที่ต้องตรวจสอบในขณะนี้
+        </div>
+        <div style={{ fontSize: '0.95rem', color: '#a0aec0' }}>
+          ระบบจะแจ้งเตือนเมื่อมี Flag ใหม่เข้ามา<br />
+          ขอบคุณที่ช่วยดูแลความโปร่งใสของ MeeChain!
+        </div>
+      </div>
+    );
   }
 
   if (submitted) {

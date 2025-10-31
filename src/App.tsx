@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
+import WelcomePage from './pages/welcome';
 import Admin from './pages/Admin';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
@@ -20,7 +21,9 @@ function App() {
           <Sidebar />
           <main>
             <Routes>
-              <Route path="/" element={<Dashboard />} />
+              <Route path="/" element={<WelcomePage />} />
+              <Route path="/welcome" element={<WelcomePage />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/settings" element={<Settings />} />

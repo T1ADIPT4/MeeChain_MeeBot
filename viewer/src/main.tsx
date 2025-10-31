@@ -5,11 +5,12 @@ import TestAuditorDashboard from './TestAuditorDashboard.tsx';
 import './index.css';
 
 // Toggle between App and TestAuditorDashboard for testing
-// Set to false to use the full App with tabs, or true to show only the Auditor Dashboard
+// เปลี่ยนเป็น true เพื่อแสดงเฉพาะ Auditor Dashboard (dev/test)
 const useTestDashboard = false;
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    {/* เปลี่ยน useTestDashboard เป็น true เพื่อ dev เฉพาะ Auditor Dashboard */}
     {useTestDashboard ? <TestAuditorDashboard /> : <App />}
-  </StrictMode>,
+  </StrictMode>
 );

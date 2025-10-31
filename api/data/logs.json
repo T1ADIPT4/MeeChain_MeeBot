@@ -1,0 +1,15 @@
+[
+  {
+    "refundId": "refund-001",
+    "userAddress": "0x883AD20a1B9F8DE54C088B6c85329EE9fA58cf33",
+    "txHash": "0xabc123def456...",
+    "amount": "1.5",
+    "status": "verified",
+    "verifiedAt": "2025-10-18T13:35:00Z",
+    "refundTxHash": "0xrefund123...",
+    "reason": "Replay failed",
+    "executedBy": "0xValidator001",
+    "createdAt": "2025-10-18T13:00:00Z",
+    "updatedAt": "2025-10-18T13:35:00Z"
+  }
+]

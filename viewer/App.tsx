@@ -24,14 +24,13 @@ function App() {
         </header>
         <main>
           <ProfileViewer userAddress={userAddress} viewerEmail={viewerEmail} />
-          
+
           {/* เพิ่ม Swap T2P to MEE */}
           <SwapT2PtoMEE />
-          
+
           {/* เพิ่ม Leaderboard เข้าไปในหน้าหลัก */}
           <Leaderboard />
-
-        </main>
+          ต่อ                  </main>
       </div>
     </MeeBotProvider>
   );

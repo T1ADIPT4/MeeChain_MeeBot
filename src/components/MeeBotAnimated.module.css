@@ -1,0 +1,45 @@
+.meeBot {
+  font-size: 2rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background-color: #f5f5ff;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+/* อารมณ์ต่าง ๆ */
+.wave {
+  animation: wave 1s infinite;
+}
+@keyframes wave {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(15deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.wink::after {
+  content: "😉";
+  margin-left: 0.5rem;
+}
+
+.nod {
+  animation: nod 1s infinite;
+}
+@keyframes nod {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+  100% { transform: translateY(0); }
+}
+
+.pulse {
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0% { background-color: #f5f5ff; }
+  50% { background-color: #e0d4ff; }
+  100% { background-color: #f5f5ff; }
+}
+
+.idle {
+  opacity: 0.5;
+}

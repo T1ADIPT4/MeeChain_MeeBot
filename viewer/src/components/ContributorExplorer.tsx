@@ -6,8 +6,8 @@ interface ContributorExplorerProps {
   badgeContractAddress?: string;
 }
 
-export default function ContributorExplorer({ 
-  badgeContractAddress = '0x...' 
+export default function ContributorExplorer({
+  badgeContractAddress = '0x...'
 }: ContributorExplorerProps) {
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,22 +32,24 @@ export default function ContributorExplorer({
   };
 
   // Filter contributors based on search and filters
-  const filteredContributors = contributors.filter(contributor => {
-    const matchesSearch = 
-      contributor.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      contributor.address.toLowerCase().includes(searchQuery.toLowerCase());
-    
+  const filteredContributors = contributors.filter((contributor: Contributor) => {
+    const matchesSearch =
+      (contributor.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        contributor.address.toLowerCase().includes(searchQuery.toLowerCase()));
+
     const matchesReputation = contributor.reputation >= minReputation;
-    
-    const matchesBadge = !selectedBadge || 
-      contributor.badges.some(badge => badge.toLowerCase().includes(selectedBadge.toLowerCase()));
+
+    // ป้องกัน badges undefined
+    const badges = Array.isArray(contributor.badges) ? contributor.badges : [];
+    const matchesBadge = !selectedBadge ||
+      badges.some(badge => badge.toLowerCase().includes(selectedBadge.toLowerCase()));
 
     return matchesSearch && matchesReputation && matchesBadge;
   });
 
-  // Get unique badge types for filter
+  // Get unique badge types for filter (ป้องกัน badges undefined)
   const allBadges = Array.from(
-    new Set(contributors.flatMap(c => c.badges))
+    new Set(contributors.flatMap(c => Array.isArray(c.badges) ? c.badges : []))
   );
 
   if (loading) {
@@ -62,7 +64,7 @@ export default function ContributorExplorer({
   return (
     <div className="explorer-container">
       <h2>🌐 Contributor Explorer</h2>
-      
+
       {/* Search and Filter Section */}
       <div className="explorer-filters">
         <input
@@ -72,7 +74,7 @@ export default function ContributorExplorer({
           onChange={(e) => setSearchQuery(e.target.value)}
           className="search-input"
         />
-        
+
         <div className="filter-group">
           <label>
             Reputation ขั้นต่ำ:
@@ -84,7 +86,7 @@ export default function ContributorExplorer({
               className="reputation-filter"
             />
           </label>
-          
+
           <label>
             Badge:
             <select
@@ -135,21 +137,21 @@ export default function ContributorExplorer({
                       </span>
                     </div>
                   </td>
-                  
+
                   <td className="reputation-cell">
                     <span className="reputation-score">
                       ⭐ {contributor.reputation}
                     </span>
                   </td>
-                  
+
                   <td className="badges-cell">
                     <div className="badge-list">
                       {contributor.badges.length === 0 ? (
                         <span className="no-badges">-</span>
                       ) : (
                         contributor.badges.map((badge, index) => (
-                          <span 
-                            key={index} 
+                          <span
+                            key={index}
                             className="badge-item"
                             title={badge}
                           >
@@ -159,7 +161,7 @@ export default function ContributorExplorer({
                       )}
                     </div>
                   </td>
-                  
+
                   <td className="actions-cell">
                     <div className="action-buttons">
                       <a

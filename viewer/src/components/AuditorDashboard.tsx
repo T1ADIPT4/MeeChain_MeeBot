@@ -15,6 +15,7 @@ export default function AuditorDashboard() {
     setShowBadgeAnimation(true);
   };
 
+  // ปิด overlay หลัง BadgeUnlockAnimation จบ (delay 2s)
   const handleBadgeAnimationComplete = () => {
     setTimeout(() => {
       setShowBadgeAnimation(false);
@@ -114,8 +115,12 @@ export default function AuditorDashboard() {
               bottom: 0,
               background: 'rgba(0, 0, 0, 0.5)',
               zIndex: 999,
+              pointerEvents: 'auto',
             }}
-            onClick={() => setShowBadgeAnimation(false)}
+            // ปิด overlay ด้วยการคลิก (แต่ป้องกันซ้อนซ้ำ)
+            onClick={() => {
+              if (showBadgeAnimation) setShowBadgeAnimation(false);
+            }}
           />
           <BadgeUnlockAnimation
             badgeName={newBadgeName}
